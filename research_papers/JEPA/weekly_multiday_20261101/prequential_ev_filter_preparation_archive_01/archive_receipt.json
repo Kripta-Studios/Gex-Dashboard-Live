@@ -1,0 +1,126 @@
+{
+  "status": "PREPARATION_ONLY_FINAL_RUFF_PENDING_RESOURCE_GATE",
+  "created_utc": "2026-11-01T19:44:14.740761+00:00",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt01\\evaluate_weekly_prequential_ev_filter.py.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt01\\evaluate_weekly_prequential_ev_filter.py.before_test",
+      "bytes": 40415,
+      "sha256": "78fbb4b68f36c85c7332da05611efe59283b56a970a3ce4d1cadfbc8414fd9c1"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt01\\PREQUENTIAL_EV_FILTER_CONTRACT_20261101.md.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt01\\PREQUENTIAL_EV_FILTER_CONTRACT_20261101.md.before_test",
+      "bytes": 13155,
+      "sha256": "0b81b77b0f058248e5e55b004c263dd0f97e5089cabb96336ae5c74f622312aa"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt01\\PREQUENTIAL_EV_FILTER_CONTRACT_REVIEW_20261101.md.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt01\\PREQUENTIAL_EV_FILTER_CONTRACT_REVIEW_20261101.md.before_test",
+      "bytes": 5308,
+      "sha256": "d108aa68eac6173a90ea919a8aaa9ffe17f995331b6e729f41e8e022fa320bb6"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt01\\test_evaluate_weekly_prequential_ev_filter.py.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt01\\test_evaluate_weekly_prequential_ev_filter.py.before_test",
+      "bytes": 15399,
+      "sha256": "b057253baacdbc90711df152071ff02abf97f92b91ccf43dd257ea15f9595927"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\evaluate_weekly_prequential_ev_filter.py.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\evaluate_weekly_prequential_ev_filter.py.before_test",
+      "bytes": 40415,
+      "sha256": "78fbb4b68f36c85c7332da05611efe59283b56a970a3ce4d1cadfbc8414fd9c1"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\preflight_metadata.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\preflight_metadata.json",
+      "bytes": 2733,
+      "sha256": "8480ba84a9bfe52458200eb64ff954e802fc8dae174464fd40f880067cd17943"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\PREQUENTIAL_EV_FILTER_CONTRACT_20261101.md.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\PREQUENTIAL_EV_FILTER_CONTRACT_20261101.md.before_test",
+      "bytes": 13155,
+      "sha256": "0b81b77b0f058248e5e55b004c263dd0f97e5089cabb96336ae5c74f622312aa"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\PREQUENTIAL_EV_FILTER_CONTRACT_REVIEW_20261101.md.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\PREQUENTIAL_EV_FILTER_CONTRACT_REVIEW_20261101.md.before_test",
+      "bytes": 5308,
+      "sha256": "d108aa68eac6173a90ea919a8aaa9ffe17f995331b6e729f41e8e022fa320bb6"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\pytest_exit.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\pytest_exit.json",
+      "bytes": 436,
+      "sha256": "744f7674642f37e94d0c09ee635d0a2f7c3c4978a62941c19c7298a8f28f6b8d"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\pytest_stderr.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\pytest_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\pytest_stdout.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\pytest_stdout.txt",
+      "bytes": 101,
+      "sha256": "527b7e75175e69c934d22f267122cda1ffa581a36c387c15c06b611fa25bdce5"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\ruff_exit.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\ruff_exit.json",
+      "bytes": 533,
+      "sha256": "824379c00be6ee39900545aa210d0b8f9bf6e515e0746b2fad7cfd163d4a63a3"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\ruff_stderr.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\ruff_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\ruff_stdout.txt",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\ruff_stdout.txt",
+      "bytes": 1062,
+      "sha256": "0fcaa4682800d39126c3167eb4de28eb790ac13344d50d547da0e495a6805964"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt02\\test_evaluate_weekly_prequential_ev_filter.py.before_test",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt02\\test_evaluate_weekly_prequential_ev_filter.py.before_test",
+      "bytes": 15833,
+      "sha256": "938bc63b9f4b9aafce4eb47f81dafb8957ee55eef45bf02fff9689436e5425fb"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt03\\evaluate_weekly_prequential_ev_filter.py.before_ruff",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt03\\evaluate_weekly_prequential_ev_filter.py.before_ruff",
+      "bytes": 40401,
+      "sha256": "4b17e6518a550813ae4f3480bcceea57e3a5b7fece1f9646c2fda565aabea8af"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt03\\PREQUENTIAL_EV_FILTER_CONTRACT_20261101.md.before_ruff",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt03\\PREQUENTIAL_EV_FILTER_CONTRACT_20261101.md.before_ruff",
+      "bytes": 13155,
+      "sha256": "0b81b77b0f058248e5e55b004c263dd0f97e5089cabb96336ae5c74f622312aa"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt03\\PREQUENTIAL_EV_FILTER_CONTRACT_REVIEW_20261101.md.before_ruff",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt03\\PREQUENTIAL_EV_FILTER_CONTRACT_REVIEW_20261101.md.before_ruff",
+      "bytes": 5308,
+      "sha256": "d108aa68eac6173a90ea919a8aaa9ffe17f995331b6e729f41e8e022fa320bb6"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_preparation_01\\attempt03\\test_evaluate_weekly_prequential_ev_filter.py.before_ruff",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_preparation_archive_01\\attempt03\\test_evaluate_weekly_prequential_ev_filter.py.before_ruff",
+      "bytes": 15803,
+      "sha256": "df5e9f6a2c832bd4d104adfee8afea97dbfcb2aea657e1090b4b961a71d8cb16"
+    }
+  ],
+  "total_bytes": 228520,
+  "limitations": [
+    "attempt01 has snapshots only; review pin mismatch before gate/child; no invented exit",
+    "attempt02 has 17 pytest PASS and Ruff failure with two lint findings",
+    "attempt03 has snapshots only; official resource gate rejected before Ruff child; no persisted resource values"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "ruff",
+    "check",
+    "research_papers/JEPA/weekly_multiday_20261101/evaluate_weekly_prequential_ev_filter.py",
+    "research_papers/JEPA/weekly_multiday_20261101/test_evaluate_weekly_prequential_ev_filter.py"
+  ],
+  "creation_time": 1793562052.9149683,
+  "elapsed_seconds": 0.47240889999375213,
+  "ended_utc": "2026-11-01T19:40:53.385304+00:00",
+  "exit_code": 1,
+  "pid": 48772,
+  "started_utc": "2026-11-01T19:40:52.923139+00:00"
+}

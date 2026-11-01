@@ -1,0 +1,25 @@
+F841 Local variable `score_index` is assigned to but never used
+   --> research_papers\JEPA\weekly_multiday_20261101\evaluate_weekly_prequential_ev_filter.py:503:5
+    |
+501 |     decision_index = {(row["entry_date"], row["ticker"]): row for row in decisions}
+502 |     grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+503 |     score_index = unique(scores, "candidate_id", "filter score")
+    |     ^^^^^^^^^^^
+504 |     for score in scores:
+505 |         grouped[(score["entry_date"], score["ticker"])].append(score)
+    |
+help: Remove assignment to unused variable `score_index`
+
+F401 [*] `datetime.datetime` imported but unused
+ --> research_papers\JEPA\weekly_multiday_20261101\test_evaluate_weekly_prequential_ev_filter.py:7:22
+  |
+5 | import json
+6 | import math
+7 | from datetime import datetime
+  |                      ^^^^^^^^
+8 | from pathlib import Path
+  |
+help: Remove unused import: `datetime.datetime`
+
+Found 2 errors.
+[*] 1 fixable with the `--fix` option (1 hidden fix can be enabled with the `--unsafe-fixes` option).

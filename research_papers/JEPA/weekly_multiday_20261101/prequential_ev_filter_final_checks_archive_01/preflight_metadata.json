@@ -1,0 +1,41 @@
+{
+  "observation_file_sha256": "3ac50ec65e8e7be635c1325cef88aca8f0908fa30cd134bdeab174e0d07083bc",
+  "pins": {
+    "code": {
+      "bytes": 40401,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_prequential_ev_filter.py",
+      "sha256": "4b17e6518a550813ae4f3480bcceea57e3a5b7fece1f9646c2fda565aabea8af"
+    },
+    "contract": {
+      "bytes": 13155,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\PREQUENTIAL_EV_FILTER_CONTRACT_20261101.md",
+      "sha256": "0b81b77b0f058248e5e55b004c263dd0f97e5089cabb96336ae5c74f622312aa"
+    },
+    "gate": {
+      "bytes": 31463,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py",
+      "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    "helper": {
+      "bytes": 20463,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\replay_equal_risk_frozen.py",
+      "sha256": "e4f42a9fa65120939cf5e131911c8f2990a9cd33d21ae036fa98d9eb816d5b9d"
+    },
+    "review": {
+      "bytes": 5308,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\PREQUENTIAL_EV_FILTER_CONTRACT_REVIEW_20261101.md",
+      "sha256": "d108aa68eac6173a90ea919a8aaa9ffe17f995331b6e729f41e8e022fa320bb6"
+    },
+    "tests": {
+      "bytes": 15803,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_evaluate_weekly_prequential_ev_filter.py",
+      "sha256": "df5e9f6a2c832bd4d104adfee8afea97dbfcb2aea657e1090b4b961a71d8cb16"
+    }
+  },
+  "prior_pytest": {
+    "attempt": "attempt02",
+    "exit_code": 0,
+    "stdout_sha256": "527b7e75175e69c934d22f267122cda1ffa581a36c387c15c06b611fa25bdce5"
+  },
+  "scope": "RUFF_ONLY_FINAL_BYTES_AFTER_17PASS_ATTEMPT02"
+}

@@ -1,0 +1,300 @@
+from __future__ import annotations
+
+import copy
+import importlib.util
+import json
+import math
+from pathlib import Path
+
+import pytest
+
+
+MODULE_PATH = Path(__file__).with_name("evaluate_weekly_prequential_ev_filter.py")
+SPEC = importlib.util.spec_from_file_location("evaluate_weekly_prequential_ev_filter", MODULE_PATH)
+assert SPEC and SPEC.loader
+experiment = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(experiment)
+
+
+def score(candidate_id: str, day: str, ticker: str, right: str, ev: float, *, parent: str = "FROZEN_CONTEXT182") -> dict:
+    return {
+        "candidate_id": candidate_id, "entry_date": day, "ticker": ticker, "right": right,
+        "ev_adverse": ev, "ev_base": ev + 1.0, "model_id": "M", "policy": parent,
+    }
+
+
+def intention(
+    number: int, *, parent: str = "FROZEN_CONTEXT182", day: str | None = None,
+    available: str | None = None, residual: float = -0.1, lower: bool = False,
+    status: str = "OBSERVED_EXIT",
+) -> dict:
+    entry = day or f"202601{number + 1:02d}"
+    label = available or f"2026-01-{number + 2:02d}T10:35:00-05:00"
+    return {
+        "parent": parent, "candidate_id": f"SPY:{entry}:20260201:CALL:{number}",
+        "entry_date": entry, "ticker": "SPY", "right": "CALL", "model_id": "M",
+        "ev_base_raw": 11.0, "ev_adverse_raw": 10.0, "decision_ask": 1.0,
+        "scale_usd": 100.0, "net_base": 1.0, "net_adverse": 10.0 + residual * 100.0,
+        "normalized_residual": residual, "status": status, "scenario": 2,
+        "payoff_is_lower_bound": lower, "label_available_at": label,
+    }
+
+
+def candidate(candidate_id: str, day: str, ticker: str, right: str, *, ask: float = 1.0, exit_day: str = "20260106", bid: float = 1.2) -> dict:
+    def debit(slip: float) -> float:
+        return (ask + slip) * 100 + 1.30
+
+    def net(slip: float) -> float:
+        return max(bid - slip, 0) * 100 - 1.30 - debit(slip)
+
+    return {
+        "candidate_id": candidate_id, "ticker": ticker, "entry_date": day, "exit_date": exit_day,
+        "expiration": "20260109", "strike": 100.0, "right": right, "features": {},
+        "decision_ask": ask, "entry_ask": ask, "exit_bid": bid, "status": "OBSERVED_EXIT",
+        "label_available_at": f"{exit_day[:4]}-{exit_day[4:6]}-{exit_day[6:]}T10:35:00-05:00",
+        "scenario": 3, "payoff_is_lower_bound": False,
+        "net_base": net(0.01), "net_adverse": net(0.02),
+        "entry_debit_base": debit(0.01), "entry_debit_adverse": debit(0.02),
+        "source_pins": {},
+    }
+
+
+def test_raw_choice_no_opportunity_nonpositive_tie_and_unique_top1() -> None:
+    assert experiment.raw_choice([]) == (None, "NO_OPPORTUNITY")
+    rows = [score("A", "20260102", "SPY", "CALL", -1), score("B", "20260102", "SPY", "PUT", 0)]
+    assert experiment.raw_choice(rows) == (None, "EV_NOT_POSITIVE")
+    rows[0]["ev_adverse"] = rows[1]["ev_adverse"] = 3.0
+    assert experiment.raw_choice(rows) == (None, "EV_TIE_WAIT")
+    rows[1]["ev_adverse"] = 4.0
+    winner, reason = experiment.raw_choice(rows)
+    assert reason == "EV_TOP1" and winner["candidate_id"] == "B"
+
+
+def test_candidate_semantics_and_probability_bool_fail_closed() -> None:
+    observed = candidate("A", "20260102", "SPY", "CALL")
+    assert experiment.validate_candidate(observed).strftime("%Y%m%d%H%M") == "202601061035"
+    no_fill = candidate("B", "20260102", "SPY", "PUT")
+    no_fill.update({
+        "status": "NO_FILL", "scenario": 0, "payoff_is_lower_bound": False,
+        "net_base": 0.0, "net_adverse": 0.0,
+        "label_available_at": "2026-01-02T10:35:00-05:00",
+    })
+    experiment.validate_candidate(no_fill)
+    with pytest.raises(experiment.ExperimentError, match="NO_FILL semantics"):
+        experiment.validate_candidate({**no_fill, "net_adverse": 1.0})
+    missing = {**observed, "status": "MISSING_EXIT_SOURCE", "scenario": 1, "payoff_is_lower_bound": True}
+    experiment.validate_candidate(missing)
+    with pytest.raises(experiment.ExperimentError, match="p_model finite"):
+        experiment.validate_probability_vector([True, 0.0, 0.0, 0.0, 0.0], "p_model")
+
+
+def test_bridge_overlay_requires_all_six_exact_identities() -> None:
+    original = {
+        (ticker, day): {"status": "HORIZON_OUTSIDE_CALENDAR", "reason": "NO_OFFICIAL_H2", "candidate_ids": []}
+        for ticker in experiment.TICKERS for day in ("20260629", "20260630")
+    }
+    overlay = []
+    for ticker in experiment.TICKERS:
+        overlay.extend([
+            {
+                "ticker": ticker, "entry_date": "20260629", "status": "CANDIDATES_BUILT",
+                "reason": None, "exit_date": "20260701",
+                "candidate_ids": [f"{ticker}:20260629:20260702:CALL", f"{ticker}:20260629:20260702:PUT"],
+            },
+            {
+                "ticker": ticker, "entry_date": "20260630", "status": "NO_SERIES",
+                "reason": "NO_1_TO_8_DTE_SERIES_ALLOWING_H2", "exit_date": "20260702",
+                "candidate_ids": [],
+            },
+        ])
+    assert len(experiment.validate_bridge_overlay(original, overlay)) == 6
+    duplicate = copy.deepcopy(overlay)
+    duplicate[-1] = copy.deepcopy(duplicate[1])
+    with pytest.raises(experiment.ExperimentError, match="overlay identities"):
+        experiment.validate_bridge_overlay(original, duplicate)
+
+
+def test_residual_state_n19_n20_and_zero_variance() -> None:
+    nineteen = [intention(index, residual=-0.2) for index in range(19)]
+    warm = experiment.residual_state(nineteen)
+    assert warm == {
+        "history_ids": [row["candidate_id"] for row in nineteen], "n": 19,
+        "mean": None, "s": None, "w": None, "correction": 0.0,
+        "buffer": 0.0, "state": "WARMUP_RAW",
+    }
+    active = experiment.residual_state([*nineteen, intention(19, residual=-0.2)])
+    assert active["state"] == "ACTIVE_FILTER" and active["n"] == 20
+    assert active["mean"] == pytest.approx(-0.2)
+    assert active["s"] == pytest.approx(0.0)
+    assert active["w"] == pytest.approx(0.5)
+    assert active["correction"] == pytest.approx(-0.1)
+    assert active["buffer"] == pytest.approx(0.0)
+
+
+def test_normalized_residual_is_comparable_across_premium_scales() -> None:
+    first = candidate("A", "20260102", "SPY", "CALL", ask=1.0)
+    second = candidate("B", "20260103", "QQQ", "PUT", ask=10.0)
+    first["net_adverse"] = second["net_adverse"] = 0.0
+    candidates = {"A": first, "B": second}
+    parents = {parent: [] for parent in experiment.PARENTS}
+    parents["FROZEN_CONTEXT182"] = [
+        score("A", "20260102", "SPY", "CALL", 10.0),
+        score("B", "20260103", "QQQ", "PUT", 100.0),
+    ]
+    rows, _ = experiment.build_intentions(parents, candidates, ["20260102", "20260103"])
+    assert [row["scale_usd"] for row in rows] == [100.0, 1000.0]
+    assert [row["normalized_residual"] for row in rows] == [-0.1, -0.1]
+
+
+def test_strict_midnight_cutoff_excludes_same_day_and_future_labels() -> None:
+    old = intention(0, day="20260102", available="2026-01-04T10:35:00-05:00")
+    same_day = intention(1, day="20260103", available="2026-01-05T10:35:00-05:00")
+    future = intention(2, day="20260104", available="2026-01-06T10:35:00-05:00")
+    choices = {
+        (parent, "20260105", ticker): (old["candidate_id"], "EV_TOP1")
+        if parent == "FROZEN_CONTEXT182" and ticker == "SPY" else (None, "NO_OPPORTUNITY")
+        for parent in experiment.PARENTS for ticker in experiment.TICKERS
+    }
+    decisions = experiment.build_decisions([old, same_day, future], choices, ["20260105"])
+    frozen = [row for row in decisions if row["parent"] == "FROZEN_CONTEXT182"]
+    assert all(row["history_ids"] == [old["candidate_id"]] for row in frozen)
+    assert all(row["n"] == 1 for row in frozen)
+
+
+def test_future_entry_is_excluded_even_if_malformed_availability_is_old() -> None:
+    old = intention(0, day="20260102", available="2026-01-03T10:35:00-05:00")
+    impossible_future = intention(1, day="20260106", available="2026-01-03T10:35:00-05:00")
+    choices = {(parent, "20260105", ticker): (None, "NO_OPPORTUNITY") for parent in experiment.PARENTS for ticker in experiment.TICKERS}
+    decisions = experiment.build_decisions([old, impossible_future], choices, ["20260105"])
+    frozen = [row for row in decisions if row["parent"] == "FROZEN_CONTEXT182"]
+    assert all(row["history_ids"] == [old["candidate_id"]] for row in frozen)
+
+
+def test_lower_bounds_no_fill_and_unexecuted_intentions_remain_in_history() -> None:
+    lower = intention(0, available="2026-01-03T10:35:00-05:00", lower=True, status="MISSING_EXIT_SOURCE")
+    no_fill = intention(1, available="2026-01-03T10:35:00-05:00", residual=-0.1, status="NO_FILL")
+    unexecuted = intention(2, available="2026-01-03T10:35:00-05:00", residual=0.1)
+    choices = {(parent, "20260104", ticker): (None, "NO_OPPORTUNITY") for parent in experiment.PARENTS for ticker in experiment.TICKERS}
+    decisions = experiment.build_decisions([lower, no_fill, unexecuted], choices, ["20260104"])
+    expected = [row["candidate_id"] for row in sorted([lower, no_fill, unexecuted], key=lambda row: (row["entry_date"], row["ticker"], row["candidate_id"]))]
+    frozen = [row for row in decisions if row["parent"] == "FROZEN_CONTEXT182"]
+    assert all(row["history_ids"] == expected for row in frozen)
+
+
+def test_filter_only_abstains_and_never_reranks() -> None:
+    candidates = {
+        "A": candidate("A", "20260102", "SPY", "CALL"),
+        "B": candidate("B", "20260102", "SPY", "PUT"),
+    }
+    scores = [score("A", "20260102", "SPY", "CALL", 10), score("B", "20260102", "SPY", "PUT", 9)]
+    rejected = [{"entry_date": "20260102", "ticker": "SPY", "raw_winner_id": "A", "raw_reason": "EV_TOP1", "accepted": False, "ev_gate": -1.0}]
+    rows, gates = experiment.filter_rows(candidates, scores, rejected)
+    assert gates == {} and {row["candidate_id"]: row["_ev_adverse"] for row in rows} == {"A": 0.0, "B": 0.0}
+    accepted = [{**rejected[0], "accepted": True, "ev_gate": 1.0}]
+    rows, gates = experiment.filter_rows(candidates, scores, accepted)
+    assert {row["candidate_id"]: row["_ev_adverse"] for row in rows} == {"A": 10.0, "B": 0.0}
+    assert gates == {"A": 1.0}
+
+
+def test_tie_and_nonpositive_keep_original_scores_for_original_reasons() -> None:
+    candidates = {
+        "A": candidate("A", "20260102", "SPY", "CALL"),
+        "B": candidate("B", "20260102", "SPY", "PUT"),
+    }
+    tied = [score("A", "20260102", "SPY", "CALL", 4), score("B", "20260102", "SPY", "PUT", 4)]
+    decision = [{"entry_date": "20260102", "ticker": "SPY", "raw_winner_id": None, "raw_reason": "EV_TIE_WAIT", "accepted": False, "ev_gate": None}]
+    rows, _ = experiment.filter_rows(candidates, tied, decision)
+    assert [row["_ev_adverse"] for row in rows] == [4.0, 4.0]
+
+
+def test_decorate_restores_raw_entry_scores_and_separate_gate() -> None:
+    raw = {"A": score("A", "20260102", "SPY", "CALL", 10)}
+    internal = [{"event": "ENTRY", "candidate_id": "A", "ev_base": 0.0, "ev_adverse": 0.0}]
+    result = experiment.decorate_ledger(internal, "FROZEN_CONTEXT182_FILTER", "FROZEN_CONTEXT182", "FILTER", raw, {"A": 2.5})
+    assert result[0]["ev_base"] == 11.0 and result[0]["ev_adverse"] == 10.0
+    assert result[0]["ev_gate"] == 2.5 and result[0]["model_id"] == "M"
+
+
+def coverage(sessions: list[str], candidates: list[dict]) -> dict:
+    by_key = {(row["ticker"], row["entry_date"]): row for row in candidates}
+    rows = []
+    for day in sessions:
+        for ticker in experiment.TICKERS:
+            candidate_row = by_key.get((ticker, day))
+            rows.append({
+                "ticker": ticker, "entry_date": day,
+                "status": "CANDIDATES_BUILT" if candidate_row else "NO_SERIES",
+                "reason": None if candidate_row else "NO_1_TO_8_DTE_SERIES_ALLOWING_H2",
+                "candidate_ids": [candidate_row["candidate_id"]] if candidate_row else [],
+            })
+    return {"rows": rows, "calendar": []}
+
+
+def test_real_frozen_replay_position_change_june_july_and_cash_closure() -> None:
+    replay_pair, _ = experiment.load_replay()
+    sessions = ["20260629", "20260630", "20260701", "20260702"]
+    first = candidate("A", "20260629", "SPY", "CALL", exit_day="20260701")
+    second = candidate("B", "20260630", "SPY", "PUT", exit_day="20260702")
+    control = []
+    for source in (first, second):
+        row = dict(source)
+        row["_ev_base"] = row["_ev_adverse"] = 10.0
+        control.append(row)
+    filtered = copy.deepcopy(control)
+    filtered[0]["_ev_adverse"] = 0.0
+    cover = coverage(sessions, [first, second])
+    control_books = replay_pair(control, cover, sessions, "20260630", "EV_TOP1_H2")
+    filter_books = replay_pair(filtered, cover, sessions, "20260630", "EV_TOP1_H2")
+    assert [(row["event"], row["candidate_id"]) for row in control_books["adverse"] if row["event"] in {"ENTRY", "EXIT"}] == [("ENTRY", "A"), ("EXIT", "A")]
+    assert [(row["event"], row["candidate_id"]) for row in filter_books["adverse"] if row["event"] in {"ENTRY", "EXIT"}] == [("ENTRY", "B"), ("EXIT", "B")]
+    for books in (control_books, filter_books):
+        for cost in experiment.COSTS:
+            exits = [row for row in books[cost] if row["event"] == "EXIT"]
+            assert books[cost][-1]["cash"] == pytest.approx(100000 + math.fsum(row["net_usd"] for row in exits))
+
+
+def test_extended_metrics_has_nine_months_and_separate_partial_september() -> None:
+    _, book_metrics = experiment.load_replay()
+    ledger = [{
+        "event": "EXIT", "date": "20260106", "ticker": "SPY", "candidate_id": "A",
+        "right": "CALL", "net_usd": 5.0, "quantity": 1, "status": "OBSERVED_EXIT",
+        "realized_delta": 6.3, "premium_reserved": 0.0,
+    }]
+    result = experiment.extended_metrics(ledger, book_metrics)
+    assert list(result["monthly_net_including_zeros"]) == list(experiment.MONTHS)
+    assert result["monthly_net_including_zeros"]["202601"] == 5.0
+    assert result["monthly_net_including_zeros"]["202609"] == 0.0
+
+
+def test_ev_diagnostics_empty_cells_are_null_and_lower_view_keeps_no_fill() -> None:
+    lower = intention(0, lower=True, status="MISSING_EXIT_QUOTE")
+    no_fill = intention(1, status="NO_FILL", lower=False)
+    decisions = []
+    for row, accepted in ((lower, False), (no_fill, True)):
+        decisions.append({"parent": row["parent"], "raw_winner_id": row["candidate_id"], "accepted": accepted, "ev_gate": 1.0})
+    values = experiment.build_ev_diagnostics([lower, no_fill], decisions)
+    observed = next(row for row in values if row["parent"] == "FROZEN_CONTEXT182" and row["universe"] == "INTENTIONS" and row["view"] == "without_lower_bounds" and row["partition"] == "TOTAL")
+    assert observed["n"] == 1 and observed["lower_bound_n"] == 0
+    empty = next(row for row in values if row["parent"] == "MONTHLY_RAW" and row["universe"] == "INTENTIONS" and row["view"] == "conservative_all" and row["partition"] == "TOTAL")
+    assert empty["n"] == 0 and empty["mean_ev_raw"] is None and empty["mae_gate"] is None
+
+
+def test_rehash_detects_mutation(tmp_path: Path) -> None:
+    path = tmp_path / "sealed.json"
+    path.write_text("{}", encoding="utf-8")
+    snapshots = {str(path): experiment.pin(path)}
+    path.write_text('{"x":1}', encoding="utf-8")
+    with pytest.raises(experiment.ExperimentError, match="input changed"):
+        experiment.rehash(snapshots)
+
+
+def test_unique_rejects_duplicate_ids() -> None:
+    with pytest.raises(experiment.ExperimentError, match="duplicate/missing"):
+        experiment.unique([{"candidate_id": "A"}, {"candidate_id": "A"}], "candidate_id", "fixture")
+
+
+def test_default_cli_is_readiness_only(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    output = tmp_path / "absent"
+    assert experiment.main(["--output", str(output)]) == 0
+    assert json.loads(capsys.readouterr().out)["status"] == "READY_NOT_EXECUTED"
+    assert not output.exists()

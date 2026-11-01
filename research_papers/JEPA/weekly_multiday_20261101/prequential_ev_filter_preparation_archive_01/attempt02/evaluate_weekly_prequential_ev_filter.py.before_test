@@ -1,0 +1,748 @@
+"""Prequential residual EV admission experiment on sealed 2026 scores.
+
+This module does not fit or infer a model.  It selects the already-published
+raw winner, learns only from mature prior winner labels, and can only abstain.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import json
+import math
+import stat
+from collections import defaultdict
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Callable, Iterable
+from zoneinfo import ZoneInfo
+
+
+BASE = Path("D:/GexResearchArtifacts/weekly_multiday_20261101")
+HERE = Path(__file__).resolve().parent
+CONTRACT = HERE / "PREQUENTIAL_EV_FILTER_CONTRACT_20261101.md"
+REVIEW = HERE / "PREQUENTIAL_EV_FILTER_CONTRACT_REVIEW_20261101.md"
+HELPER = HERE / "replay_equal_risk_frozen.py"
+TESTS = HERE / "test_evaluate_weekly_prequential_ev_filter.py"
+PRODUCER = BASE / "h2_context_adaptation_01"
+MANIFEST = PRODUCER / "manifest.json"
+AUDIT = BASE / "h2_context_adaptation_audit_04" / "audit.json"
+EXIT = BASE / "h2_context_adaptation_audit_observer_04" / "exit.json"
+DIAGNOSTIC_RESULT = HERE / "EV_COMPONENT_DIAGNOSTIC_RESULT_20261101.md"
+ACCEPTANCE = HERE / "USER_MONTHLY_PROFITABILITY_ACCEPTANCE_20261101.md"
+OUTPUT = BASE / "prequential_ev_filter_01"
+
+MANIFEST_SHA256 = "e8cf5cd4a001cd98cdf29e54cf47bbdf3c34d6652abf34ef7c71fffa0bd97f23"
+AUDIT_SHA256 = "9a487fba18504ae4faff2c1dba17d1c000eb237436a09a7fe22747e328cb307a"
+EXIT_SHA256 = "5d59d1a3978d8d9aa31c7c3fab567d1ae7e901494aa8efb12377ca65f91de420"
+DIAGNOSTIC_RESULT_SHA256 = "980611e26c3badf945d95d9669b53b5f9e99ac11d462629e88a3259969d0832c"
+ACCEPTANCE_SHA256 = "806f7728a2ad434bc08929d3715f307455bd37862ae4c19a2cd2cc1d64a5ee5b"
+HELPER_SHA256 = "e4f42a9fa65120939cf5e131911c8f2990a9cd33d21ae036fa98d9eb816d5b9d"
+AUDIT_STATUS = "PASS_INDEPENDENT_NUMERIC_RECONSTRUCTION_GIVEN_SAVED_WEIGHTS_NOT_REFIT"
+MANIFEST_SCHEMA = "weekly_context_adaptation_walkforward_v1"
+MANIFEST_STATUS = "PASS_SEEN_DEVELOPMENT_GIVEN_BRIDGE_AND_FROZEN_AUTHORITIES"
+MANIFEST_FLAGS = {
+    "models_fit": True, "seen_development": True, "api_read": False, "broker_read": False,
+    "frozen_fit": False, "future_labels_used": False, "production_changed": False,
+    "promotion_approved": False, "raw_read": False,
+}
+AUDIT_SCHEMA = "weekly_context_adaptation_audit_v1"
+AUDIT_FLAGS = {
+    "saved_weights_used": True, "seen_development": True, "api_read": False,
+    "broker_read": False, "fit_performed": False, "producer_imported": False,
+    "production_changed": False, "promotion_approved": False, "raw_read": False,
+}
+SCORE_KEYS = {
+    "candidate_id", "entry_date", "ev_adverse", "ev_base", "is_bridge", "model_id",
+    "p_cal", "p_model", "payoff_is_lower_bound", "policy", "right", "scenario", "ticker",
+}
+
+PARENTS = ("FROZEN_CONTEXT182", "MONTHLY_RAW", "WEEKLY_RAW")
+VARIANTS = ("CONTROL", "FILTER")
+COSTS = ("base", "adverse")
+TICKERS = ("SPY", "QQQ", "SPXW")
+MONTHS = tuple(f"2026{month:02d}" for month in range(1, 10))
+COMPLETE_MONTHS = MONTHS[:8]
+START, LAST_ENTRY, END = "20260102", "20260915", "20260917"
+NY = ZoneInfo("America/New_York")
+WARMUP = 20
+SHRINKAGE = 20
+BUFFER_Z = 1.645
+NORMALIZED_TOL = 1e-10
+SCORE_TOL = 1e-8
+AGG_TOL = 1e-6
+
+CANDIDATES = (
+    BASE / "h2_dataset_v2_01" / "candidates.jsonl",
+    BASE / "h2_dataset_v2_extension_2026q3_partial_01" / "candidates.jsonl",
+    BASE / "h2_boundary_bridge_01" / "candidates.jsonl",
+)
+COVERAGE_H1 = BASE / "h2_dataset_v2_01" / "coverage.json"
+COVERAGE_Q3 = BASE / "h2_dataset_v2_extension_2026q3_partial_01" / "coverage.json"
+COVERAGE_BRIDGE = BASE / "h2_boundary_bridge_01" / "coverage_overlay.json"
+SCORES = PRODUCER / "candidate_scores.jsonl"
+SUMMARY = PRODUCER / "summary.json"
+CONTROL_LEDGERS = {
+    (parent, cost): PRODUCER / f"ledger_{parent.lower()}_{cost}.jsonl"
+    for parent in PARENTS for cost in COSTS
+}
+POLICIES = tuple(f"{parent}_{variant}" for parent in PARENTS for variant in VARIANTS)
+
+
+class ExperimentError(RuntimeError):
+    pass
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ExperimentError(message)
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def pin(path: Path) -> dict[str, Any]:
+    return {"path": str(path), "bytes": path.stat().st_size, "sha256": sha256_file(path)}
+
+
+def guard_plain(path: Path, roots: Iterable[Path]) -> None:
+    require(path.is_absolute(), f"absolute path required: {path}")
+    selected: tuple[Path, Path] | None = None
+    for root in roots:
+        try:
+            selected = root, path.relative_to(root)
+            break
+        except ValueError:
+            pass
+    require(selected is not None, f"outside declared roots: {path}")
+    root, relative = selected
+    cursor = root
+    for part in relative.parts:
+        require(cursor.exists() and cursor.is_dir(), f"missing ancestor: {cursor}")
+        require(not cursor.is_symlink(), f"symlink ancestor: {cursor}")
+        attrs = getattr(cursor.lstat(), "st_file_attributes", 0)
+        require(not attrs & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0), f"reparse ancestor: {cursor}")
+        cursor /= part
+    require(path.is_file() and not path.is_symlink(), f"plain file required: {path}")
+    attrs = getattr(path.lstat(), "st_file_attributes", 0)
+    require(not attrs & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0), f"reparse file: {path}")
+    require(path.resolve(strict=True).is_relative_to(root.resolve(strict=True)), f"resolved outside root: {path}")
+
+
+def guard_output(path: Path) -> None:
+    require(path == OUTPUT and not path.exists(), "exclusive contracted output required")
+    require(BASE.is_dir() and not BASE.is_symlink(), "output BASE")
+    attrs = getattr(BASE.lstat(), "st_file_attributes", 0)
+    require(not attrs & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0), "output BASE reparse")
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    require(isinstance(value, dict), f"JSON object: {path}")
+    return value
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    rows = []
+    with path.open("r", encoding="utf-8") as stream:
+        for number, line in enumerate(stream, 1):
+            require(line.strip() != "", f"blank row {path}:{number}")
+            row = json.loads(line)
+            require(isinstance(row, dict), f"object row {path}:{number}")
+            rows.append(row)
+    return rows
+
+
+def write_json(path: Path, value: Any) -> None:
+    with path.open("x", encoding="utf-8", newline="\n") as stream:
+        stream.write(json.dumps(value, sort_keys=True, ensure_ascii=False, indent=2, allow_nan=False) + "\n")
+
+
+def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> None:
+    with path.open("x", encoding="utf-8", newline="\n") as stream:
+        for row in rows:
+            stream.write(json.dumps(row, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")
+
+
+def close(left: Any, right: Any, tolerance: float) -> bool:
+    return math.isclose(float(left), float(right), abs_tol=tolerance, rel_tol=0.0)
+
+
+def finite_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(float(value))
+
+
+def manifest_pin(manifest: dict[str, Any], path: Path) -> dict[str, Any]:
+    consumed = manifest.get("consumed_payloads", {})
+    item = consumed.get(str(path)) or manifest.get("outputs", {}).get(path.name)
+    require(isinstance(item, dict) and set(item) >= {"bytes", "sha256"}, f"manifest pin {path}")
+    return {"path": str(path), "bytes": int(item["bytes"]), "sha256": str(item["sha256"])}
+
+
+def load_replay() -> tuple[Callable[..., Any], Callable[..., Any]]:
+    require(sha256_file(HELPER) == HELPER_SHA256, "replay helper pin")
+    spec = importlib.util.spec_from_file_location("sealed_equal_risk_replay", HELPER)
+    require(spec is not None and spec.loader is not None, "replay helper import")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    require(sha256_file(HELPER) == HELPER_SHA256, "replay helper changed during import")
+    return module.replay_pair, module.book_metrics
+
+
+def admit(
+    contract_sha256: str, implementation_sha256: str, tests_sha256: str, review_sha256: str,
+) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+    roots = (BASE, HERE)
+    authorities = {
+        MANIFEST: MANIFEST_SHA256, AUDIT: AUDIT_SHA256, EXIT: EXIT_SHA256,
+        DIAGNOSTIC_RESULT: DIAGNOSTIC_RESULT_SHA256, ACCEPTANCE: ACCEPTANCE_SHA256,
+        HELPER: HELPER_SHA256, CONTRACT: contract_sha256,
+        Path(__file__).resolve(): implementation_sha256, TESTS: tests_sha256, REVIEW: review_sha256,
+    }
+    for path, digest in authorities.items():
+        require(len(digest) == 64, f"SHA required: {path}")
+        guard_plain(path, roots)
+        require(sha256_file(path) == digest, f"authority pin: {path}")
+    audit = read_json(AUDIT)
+    require(audit.get("schema") == AUDIT_SCHEMA and audit.get("status") == AUDIT_STATUS, "upstream audit status")
+    require(audit.get("flags") == AUDIT_FLAGS, "upstream audit flags")
+    producer_binding = audit.get("inputs", {}).get("producer_manifest", {})
+    require(producer_binding == {"path": str(MANIFEST), "bytes": 17599, "sha256": MANIFEST_SHA256}, "audit binding")
+    require(read_json(EXIT).get("exit_code") == 0, "audit exit")
+    manifest = read_json(MANIFEST)
+    require(manifest.get("schema") == MANIFEST_SCHEMA and manifest.get("status") == MANIFEST_STATUS, "upstream manifest status")
+    require(manifest.get("flags") == MANIFEST_FLAGS, "upstream manifest flags")
+    payloads = (*CANDIDATES, COVERAGE_H1, COVERAGE_Q3, COVERAGE_BRIDGE, SCORES, SUMMARY, *CONTROL_LEDGERS.values())
+    snapshots: dict[str, dict[str, Any]] = {}
+    for path in payloads:
+        guard_plain(path, roots)
+        expected = manifest_pin(manifest, path)
+        actual = pin(path)
+        require(actual["bytes"] == expected["bytes"] and actual["sha256"] == expected["sha256"], f"payload pin {path}")
+        snapshots[str(path)] = actual
+    for path in authorities:
+        snapshots[str(path)] = pin(path)
+    return manifest, snapshots
+
+
+def rehash(snapshots: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    closing = {}
+    for name, before in snapshots.items():
+        current = pin(Path(name))
+        require(current["bytes"] == before["bytes"] and current["sha256"] == before["sha256"], f"input changed: {name}")
+        closing[name] = current
+    return closing
+
+
+def unique(rows: list[dict[str, Any]], key: str, label: str) -> dict[str, dict[str, Any]]:
+    output = {}
+    for row in rows:
+        value = row.get(key)
+        require(isinstance(value, str) and value and value not in output, f"duplicate/missing {label}: {value}")
+        output[value] = row
+    return output
+
+
+def validate_candidate(row: dict[str, Any]) -> datetime:
+    require(row.get("ticker") in TICKERS and row.get("right") in {"CALL", "PUT"}, "candidate identity")
+    require(finite_number(row.get("decision_ask")) and float(row["decision_ask"]) > 0, "candidate scale")
+    require(row.get("status") in {"NO_FILL", "OBSERVED_EXIT", "MISSING_EXIT_QUOTE", "MISSING_EXIT_SOURCE"}, "candidate status")
+    require(type(row.get("scenario")) is int and 0 <= row["scenario"] <= 4, "candidate scenario")
+    require(finite_number(row.get("net_base")) and finite_number(row.get("net_adverse")), "candidate net")
+    available = datetime.fromisoformat(row["label_available_at"])
+    require(available.tzinfo is not None, "label timezone")
+    local = available.astimezone(NY)
+    require(local.strftime("%H:%M:%S") == "10:35:00", "candidate label clock")
+    expected_day = row["entry_date"] if row["status"] == "NO_FILL" else row["exit_date"]
+    require(local.strftime("%Y%m%d") == expected_day, "candidate label date")
+    lower = row.get("payoff_is_lower_bound")
+    require(type(lower) is bool, "candidate lower-bound flag")
+    if row["status"] == "NO_FILL":
+        require(row["scenario"] == 0 and not lower and close(row["net_base"], 0.0, SCORE_TOL) and close(row["net_adverse"], 0.0, SCORE_TOL), "candidate NO_FILL semantics")
+    elif row["status"] == "OBSERVED_EXIT":
+        require(not lower, "candidate observed semantics")
+    else:
+        require(row["scenario"] == 1 and lower, "candidate missing-exit semantics")
+    return local
+
+
+def load_candidates() -> dict[str, dict[str, Any]]:
+    output = {}
+    for path in CANDIDATES:
+        for row in read_jsonl(path):
+            candidate_id = row.get("candidate_id")
+            require(isinstance(candidate_id, str) and candidate_id not in output, f"candidate ID {candidate_id}")
+            row["_available"] = validate_candidate(row)
+            row["_source_root"] = path.parent.name
+            output[candidate_id] = row
+    require(len(output) == 3240, "candidate count")
+    return output
+
+
+def validate_probability_vector(values: Any, label: str) -> None:
+    require(isinstance(values, list) and len(values) == 5, f"{label} length")
+    require(all(finite_number(value) and 0 <= float(value) <= 1 for value in values), f"{label} finite")
+    require(close(math.fsum(float(value) for value in values), 1.0, NORMALIZED_TOL), f"{label} sum")
+
+
+def load_parent_scores(candidates: dict[str, dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    all_rows = read_jsonl(SCORES)
+    require(len(all_rows) == 3060, "score count")
+    seen: set[tuple[str, str]] = set()
+    by_parent = {parent: [] for parent in PARENTS}
+    all_sets: dict[str, set[str]] = defaultdict(set)
+    for row in all_rows:
+        require(set(row) == SCORE_KEYS, "score schema")
+        policy, candidate_id = row.get("policy"), row.get("candidate_id")
+        require(policy in {"FROZEN_CONTEXT182", "MONTHLY_RAW", "WEEKLY_RAW", "MONTHLY_GUARDED", "WEEKLY_GUARDED"}, "score policy")
+        require(candidate_id in candidates and (policy, candidate_id) not in seen, "score ID")
+        require(type(row["is_bridge"]) is bool, "score bridge flag type")
+        seen.add((policy, candidate_id))
+        all_sets[policy].add(candidate_id)
+        source = candidates[candidate_id]
+        for name in ("entry_date", "ticker", "right", "scenario", "payoff_is_lower_bound"):
+            require(row.get(name) == source.get(name), f"score mismatch {name}")
+        require(bool(row["is_bridge"]) == (source["_source_root"] == "h2_boundary_bridge_01"), "score bridge flag")
+        require(START <= row["entry_date"] <= LAST_ENTRY, "score entry range")
+        require(source["_available"] <= datetime(2026, 9, 17, 10, 35, tzinfo=NY), "score label final cutoff")
+        expected_label_day = source["entry_date"] if source["status"] == "NO_FILL" else source["exit_date"]
+        require(source["_available"].strftime("%Y%m%d") == expected_label_day, "score label day")
+        require(finite_number(row["ev_base"]) and finite_number(row["ev_adverse"]), "score finite")
+        for field in ("p_model", "p_cal"):
+            validate_probability_vector(row.get(field), field)
+        if policy in by_parent:
+            by_parent[policy].append(row)
+    require(all(len(values) == 612 for values in all_sets.values()), "score set count")
+    first = all_sets["FROZEN_CONTEXT182"]
+    require(all(values == first for values in all_sets.values()), "score common universe")
+    require(all(len(rows) == 612 for rows in by_parent.values()), "parent score count")
+    return by_parent
+
+
+def validate_bridge_overlay(original_bridge: dict[tuple[str, str], dict[str, Any]], overlay_rows: Any) -> set[str]:
+    require(set(original_bridge) == {(ticker, day) for ticker in TICKERS for day in ("20260629", "20260630")}, "original bridge identities")
+    require(all(row["status"] == "HORIZON_OUTSIDE_CALENDAR" and row["reason"] == "NO_OFFICIAL_H2" and row["candidate_ids"] == [] for row in original_bridge.values()), "original bridge rows")
+    require(isinstance(overlay_rows, list) and len(overlay_rows) == 6, "bridge overlay count")
+    overlay_keys = [(row.get("ticker"), row.get("entry_date")) for row in overlay_rows]
+    require(len(set(overlay_keys)) == 6 and set(overlay_keys) == {(ticker, day) for ticker in TICKERS for day in ("20260629", "20260630")}, "bridge overlay identities")
+    bridge_ids: set[str] = set()
+    for row in overlay_rows:
+        if row["entry_date"] == "20260629":
+            expected_ids = {f"{row['ticker']}:20260629:20260702:CALL", f"{row['ticker']}:20260629:20260702:PUT"}
+            require(row["status"] == "CANDIDATES_BUILT" and row["reason"] is None and row["exit_date"] == "20260701", "bridge June29 row")
+            require(set(row["candidate_ids"]) == expected_ids, "bridge June29 IDs")
+            bridge_ids.update(expected_ids)
+        else:
+            require(row["status"] == "NO_SERIES" and row["reason"] == "NO_1_TO_8_DTE_SERIES_ALLOWING_H2", "bridge June30 row")
+            require(row["candidate_ids"] == [] and row["exit_date"] == "20260702", "bridge June30 IDs")
+    require(len(bridge_ids) == 6, "bridge candidate count")
+    return bridge_ids
+
+
+def combine_coverage() -> tuple[dict[str, Any], list[str]]:
+    h1, q3, bridge = read_json(COVERAGE_H1), read_json(COVERAGE_Q3), read_json(COVERAGE_BRIDGE)
+    calendar_rows = [*h1["calendar"], *q3["calendar"]]
+    calendar_index: dict[tuple[str, str], dict[str, Any]] = {}
+    for row in calendar_rows:
+        key = (row["ticker"], row["date"])
+        require(key not in calendar_index, f"calendar duplicate {key}")
+        calendar_index[key] = row
+    full_by_ticker = {
+        ticker: sorted(row["date"] for (name, _), row in calendar_index.items() if name == ticker)
+        for ticker in TICKERS
+    }
+    require(all(len(values) == 930 for values in full_by_ticker.values()), "full calendar count")
+    require(all(values == full_by_ticker["SPY"] for values in full_by_ticker.values()), "full common calendar")
+    sessions_by_ticker = {
+        ticker: sorted(row["date"] for (name, _), row in calendar_index.items() if name == ticker and START <= row["date"] <= END)
+        for ticker in TICKERS
+    }
+    sessions = sessions_by_ticker["SPY"]
+    require(len(sessions) == 178 and all(values == sessions for values in sessions_by_ticker.values()), "evaluation calendar")
+    coverage_index: dict[tuple[str, str], dict[str, Any]] = {}
+    for row in [*h1["rows"], *q3["rows"]]:
+        key = (row["ticker"], row["entry_date"])
+        require(key not in coverage_index, f"coverage duplicate {key}")
+        coverage_index[key] = row
+    original_bridge = {(row["ticker"], row["entry_date"]): row for row in h1["rows"] if row["entry_date"] in {"20260629", "20260630"}}
+    overlay_rows = bridge.get("rows")
+    validate_bridge_overlay(original_bridge, overlay_rows)
+    for row in overlay_rows:
+        key = (row["ticker"], row["entry_date"])
+        require(key in coverage_index and row["entry_date"] in {"20260629", "20260630"}, "bridge replacement")
+        coverage_index[key] = row
+    rows = [coverage_index[(ticker, day)] for day in sessions for ticker in TICKERS]
+    require(len(rows) == 534, "evaluation coverage rows")
+    return {"rows": rows, "calendar": [calendar_index[(ticker, day)] for day in sessions for ticker in TICKERS]}, sessions
+
+
+def raw_choice(rows: list[dict[str, Any]]) -> tuple[dict[str, Any] | None, str]:
+    if not rows:
+        return None, "NO_OPPORTUNITY"
+    best = max(float(row["ev_adverse"]) for row in rows)
+    matches = [row for row in rows if float(row["ev_adverse"]) == best]
+    if best <= 0:
+        return None, "EV_NOT_POSITIVE"
+    if len(matches) != 1:
+        return None, "EV_TIE_WAIT"
+    return matches[0], "EV_TOP1"
+
+
+def build_intentions(
+    parents: dict[str, list[dict[str, Any]]], candidates: dict[str, dict[str, Any]], sessions: list[str],
+) -> tuple[list[dict[str, Any]], dict[tuple[str, str, str], tuple[str | None, str]]]:
+    intentions = []
+    choices: dict[tuple[str, str, str], tuple[str | None, str]] = {}
+    for parent in PARENTS:
+        grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+        for score in parents[parent]:
+            grouped[(score["entry_date"], score["ticker"])].append(score)
+        for day in sessions:
+            if day > LAST_ENTRY:
+                continue
+            for ticker in TICKERS:
+                winner, reason = raw_choice(grouped.get((day, ticker), []))
+                choices[(parent, day, ticker)] = (winner["candidate_id"] if winner else None, reason)
+                if winner is None:
+                    continue
+                source = candidates[winner["candidate_id"]]
+                scale = float(source["decision_ask"]) * 100.0
+                ev_base, ev_adverse = float(winner["ev_base"]), float(winner["ev_adverse"])
+                net_base, net_adverse = float(source["net_base"]), float(source["net_adverse"])
+                require(all(math.isfinite(value) for value in (scale, ev_base, ev_adverse, net_base, net_adverse)) and scale > 0, "finite intention values")
+                residual = (net_adverse - ev_adverse) / scale
+                require(math.isfinite(residual), "normalized residual")
+                intentions.append({
+                    "parent": parent, "candidate_id": winner["candidate_id"], "entry_date": day,
+                    "ticker": ticker, "right": winner["right"], "model_id": winner["model_id"],
+                    "ev_base_raw": ev_base, "ev_adverse_raw": ev_adverse,
+                    "decision_ask": float(source["decision_ask"]), "scale_usd": scale,
+                    "net_base": net_base, "net_adverse": net_adverse,
+                    "normalized_residual": residual, "status": source["status"],
+                    "scenario": int(source["scenario"]), "payoff_is_lower_bound": bool(source["payoff_is_lower_bound"]),
+                    "label_available_at": source["label_available_at"],
+                })
+    intentions.sort(key=lambda row: (PARENTS.index(row["parent"]), row["entry_date"], row["ticker"], row["candidate_id"]))
+    require(len({(row["parent"], row["candidate_id"]) for row in intentions}) == len(intentions), "intention uniqueness")
+    return intentions, choices
+
+
+def residual_state(history: list[dict[str, Any]]) -> dict[str, Any]:
+    ordered = sorted(history, key=lambda row: (row["entry_date"], row["ticker"], row["candidate_id"]))
+    values = [float(row["normalized_residual"]) for row in ordered]
+    n = len(values)
+    if n < WARMUP:
+        return {"history_ids": [row["candidate_id"] for row in ordered], "n": n, "mean": None, "s": None, "w": None, "correction": 0.0, "buffer": 0.0, "state": "WARMUP_RAW"}
+    mean = math.fsum(values) / n
+    s = math.sqrt(math.fsum((value - mean) ** 2 for value in values) / (n - 1))
+    w = n / (n + SHRINKAGE)
+    correction = min(0.0, w * mean)
+    buffer = BUFFER_Z * w * s / math.sqrt(n)
+    require(all(math.isfinite(value) for value in (mean, s, w, correction, buffer)), "finite residual state")
+    require(correction <= 0 and buffer >= 0, "residual state signs")
+    return {"history_ids": [row["candidate_id"] for row in ordered], "n": n, "mean": mean, "s": s, "w": w, "correction": correction, "buffer": buffer, "state": "ACTIVE_FILTER"}
+
+
+def build_decisions(
+    intentions: list[dict[str, Any]], choices: dict[tuple[str, str, str], tuple[str | None, str]], sessions: list[str],
+) -> list[dict[str, Any]]:
+    by_parent = {parent: [row for row in intentions if row["parent"] == parent] for parent in PARENTS}
+    index = {(row["parent"], row["candidate_id"]): row for row in intentions}
+    output = []
+    for parent in PARENTS:
+        for day in sessions:
+            if day > LAST_ENTRY:
+                continue
+            cutoff = datetime.strptime(day, "%Y%m%d").replace(tzinfo=NY)
+            history = [
+                row for row in by_parent[parent]
+                if row["entry_date"] < day
+                and datetime.fromisoformat(row["label_available_at"]).astimezone(NY) < cutoff
+            ]
+            state = residual_state(history)
+            for ticker in TICKERS:
+                candidate_id, raw_reason = choices[(parent, day, ticker)]
+                row = {
+                    "parent": parent, "entry_date": day, "ticker": ticker,
+                    **state, "raw_winner_id": candidate_id, "raw_reason": raw_reason,
+                    "ev_raw": None, "ev_gate": None, "accepted": False, "filter_reason": raw_reason,
+                }
+                if candidate_id is not None:
+                    intention = index[(parent, candidate_id)]
+                    ev_raw = intention["ev_adverse_raw"]
+                    ev_gate = ev_raw + intention["scale_usd"] * (state["correction"] - state["buffer"])
+                    require(math.isfinite(ev_raw) and math.isfinite(ev_gate) and ev_gate <= ev_raw, "gate increased EV")
+                    accepted = ev_raw > 0 and ev_gate > 0
+                    row.update({"ev_raw": ev_raw, "ev_gate": ev_gate, "accepted": accepted, "filter_reason": "FILTER_ACCEPT" if accepted else "FILTER_ABSTAIN"})
+                output.append(row)
+    return output
+
+
+def attach_raw_scores(candidates: dict[str, dict[str, Any]], scores: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    score_index = unique(scores, "candidate_id", "parent score")
+    output = []
+    for candidate_id in sorted(score_index):
+        source, score = candidates[candidate_id], score_index[candidate_id]
+        row = dict(source)
+        row["_ev_base"], row["_ev_adverse"] = float(score["ev_base"]), float(score["ev_adverse"])
+        output.append(row)
+    return output
+
+
+def filter_rows(
+    candidates: dict[str, dict[str, Any]], scores: list[dict[str, Any]], decisions: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], dict[str, float]]:
+    decision_index = {(row["entry_date"], row["ticker"]): row for row in decisions}
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    score_index = unique(scores, "candidate_id", "filter score")
+    for score in scores:
+        grouped[(score["entry_date"], score["ticker"])].append(score)
+    output, accepted_gate = [], {}
+    for key in sorted(grouped):
+        decision = decision_index[key]
+        winner_id, raw_reason = decision["raw_winner_id"], decision["raw_reason"]
+        for score in sorted(grouped[key], key=lambda row: row["candidate_id"]):
+            row = dict(candidates[score["candidate_id"]])
+            row["_ev_base"] = float(score["ev_base"])
+            if winner_id is None:
+                row["_ev_adverse"] = float(score["ev_adverse"])
+            elif score["candidate_id"] == winner_id and decision["accepted"]:
+                row["_ev_adverse"] = float(score["ev_adverse"])
+                accepted_gate[winner_id] = float(decision["ev_gate"])
+            else:
+                row["_ev_adverse"] = 0.0
+            output.append(row)
+        if winner_id is not None and not decision["accepted"]:
+            require(raw_reason == "EV_TOP1", "filter can only prune a positive unique winner")
+    return output, accepted_gate
+
+
+def strip_upstream_fields(row: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in row.items() if key not in {"policy", "model_id"}}
+
+
+def assert_close_value(actual: Any, expected: Any, label: str) -> None:
+    if type(expected) is int:
+        require(type(actual) is int and actual == expected, label)
+    elif type(expected) is float:
+        require(isinstance(actual, (int, float)) and not isinstance(actual, bool) and close(actual, expected, AGG_TOL), label)
+    else:
+        require(actual == expected, label)
+
+
+def reconcile_control(actual: dict[str, list[dict[str, Any]]], parent: str) -> None:
+    for cost in COSTS:
+        expected = [strip_upstream_fields(row) for row in read_jsonl(CONTROL_LEDGERS[(parent, cost)])]
+        rows = actual[cost]
+        require(len(rows) == len(expected), f"control ledger length {parent}/{cost}")
+        for number, (left, right) in enumerate(zip(rows, expected, strict=True)):
+            require(set(left) == set(right), f"control ledger keys {parent}/{cost}/{number}")
+            for key in right:
+                assert_close_value(left[key], right[key], f"control ledger {parent}/{cost}/{number}/{key}")
+
+
+def decorate_ledger(
+    rows: list[dict[str, Any]], policy: str, parent: str, variant: str,
+    raw_scores: dict[str, dict[str, Any]], gates: dict[str, float],
+) -> list[dict[str, Any]]:
+    output = []
+    for source in rows:
+        row = dict(source)
+        candidate_id = row.get("candidate_id")
+        raw = raw_scores.get(candidate_id) if candidate_id else None
+        row.update({"policy": policy, "parent": parent, "variant": variant, "model_id": raw.get("model_id") if raw else None})
+        if row["event"] == "ENTRY":
+            require(raw is not None, "ENTRY raw score")
+            row["ev_base"] = float(raw["ev_base"])
+            row["ev_adverse"] = float(raw["ev_adverse"])
+            row["ev_gate"] = gates.get(candidate_id, float(raw["ev_adverse"]))
+        output.append(row)
+    return output
+
+
+def extended_metrics(ledger: list[dict[str, Any]], helper_metrics: Callable[[list[dict[str, Any]]], dict[str, Any]]) -> dict[str, Any]:
+    metrics = helper_metrics(ledger)
+    exits = [row for row in ledger if row["event"] == "EXIT"]
+    monthly = {month: math.fsum(float(row["net_usd"]) for row in exits if row["date"][:6] == month) for month in MONTHS}
+    h1 = math.fsum(float(row["net_usd"]) for row in exits if row["date"] <= "20260630")
+    q3 = math.fsum(float(row["net_usd"]) for row in exits if row["date"] >= "20260701")
+    largest_trade = max(exits, key=lambda row: (abs(float(row["net_usd"])), row["candidate_id"]), default=None)
+    largest_month = max(MONTHS, key=lambda month: (abs(monthly[month]), month))
+    metrics.update({
+        "monthly_net_including_zeros": monthly, "monthly_convention": "exit_date_realization",
+        "block_net_by_exit": {"H1_2026": h1, "Q3_PARTIAL_2026": q3},
+        "lower_bound_exits": sum(row.get("status") in {"MISSING_EXIT_SOURCE", "MISSING_EXIT_QUOTE"} for row in exits),
+        "largest_trade": None if largest_trade is None else {key: largest_trade[key] for key in ("candidate_id", "date", "ticker", "right", "net_usd", "quantity")},
+        "largest_month": {"month": largest_month, "net_usd": monthly[largest_month]},
+    })
+    return metrics
+
+
+def diagnostic_cell(rows: list[dict[str, Any]], parent: str, universe: str, view: str, partition: str, value: str) -> dict[str, Any]:
+    fields = (("ev_raw", "ev_adverse_raw"), ("ev_gate", "ev_gate"), ("net", "net_adverse"))
+    output = {"parent": parent, "universe": universe, "view": view, "partition": partition, "value": value, "n": len(rows)}
+    for target, source in fields:
+        values = [float(row[source]) for row in rows]
+        output[f"mean_{target}"] = math.fsum(values) / len(values) if values else None
+    raw_errors = [float(row["ev_adverse_raw"]) - float(row["net_adverse"]) for row in rows]
+    gate_errors = [float(row["ev_gate"]) - float(row["net_adverse"]) for row in rows]
+    for name, values in (("raw", raw_errors), ("gate", gate_errors)):
+        output[f"bias_{name}"] = math.fsum(values) / len(values) if values else None
+        output[f"mae_{name}"] = math.fsum(abs(value_) for value_ in values) / len(values) if values else None
+    output["lower_bound_n"] = sum(row["payoff_is_lower_bound"] for row in rows)
+    return output
+
+
+def build_ev_diagnostics(intentions: list[dict[str, Any]], decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    decision_index = {(row["parent"], row["raw_winner_id"]): row for row in decisions if row["raw_winner_id"] is not None}
+    enriched = []
+    for row in intentions:
+        value = dict(row)
+        decision = decision_index[(row["parent"], row["candidate_id"])]
+        value["accepted"], value["ev_gate"] = bool(decision["accepted"]), float(decision["ev_gate"])
+        enriched.append(value)
+    partitions = (("TOTAL", ("ALL",)), ("ENTRY_BLOCK", ("H1_2026", "Q3_PARTIAL_2026")), ("ENTRY_MONTH", MONTHS))
+    output = []
+    for parent in PARENTS:
+        parent_rows = [row for row in enriched if row["parent"] == parent]
+        universes = {"INTENTIONS": parent_rows, "ACCEPTED": [row for row in parent_rows if row["accepted"]], "PRUNED": [row for row in parent_rows if not row["accepted"]]}
+        for universe, universe_rows in universes.items():
+            for view in ("conservative_all", "without_lower_bounds"):
+                viewed = [row for row in universe_rows if view == "conservative_all" or not row["payoff_is_lower_bound"]]
+                for partition, values in partitions:
+                    for value in values:
+                        if partition == "TOTAL":
+                            rows = viewed
+                        elif partition == "ENTRY_BLOCK":
+                            rows = [row for row in viewed if ("H1_2026" if row["entry_date"] <= "20260630" else "Q3_PARTIAL_2026") == value]
+                        else:
+                            rows = [row for row in viewed if row["entry_date"][:6] == value]
+                        output.append(diagnostic_cell(rows, parent, universe, view, partition, value))
+    require(len(output) == 3 * 3 * 2 * 12, "EV diagnostic row count")
+    return output
+
+
+def run(
+    output: Path, contract_sha256: str, implementation_sha256: str, tests_sha256: str, review_sha256: str,
+) -> dict[str, Any]:
+    guard_output(output)
+    _manifest, snapshots = admit(contract_sha256, implementation_sha256, tests_sha256, review_sha256)
+    replay_pair, book_metrics = load_replay()
+    candidates = load_candidates()
+    parents = load_parent_scores(candidates)
+    coverage, sessions = combine_coverage()
+    covered_ids = {candidate_id for row in coverage["rows"] for candidate_id in row["candidate_ids"]}
+    common_score_ids = {row["candidate_id"] for row in parents[PARENTS[0]]}
+    require(covered_ids == common_score_ids, "coverage/score candidate closure")
+    intentions, choices = build_intentions(parents, candidates, sessions)
+    decisions = build_decisions(intentions, choices, sessions)
+    decisions_by_parent = {parent: [row for row in decisions if row["parent"] == parent] for parent in PARENTS}
+    ledgers: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    policy_summary = {}
+    summary_upstream = read_json(SUMMARY)
+    for parent in PARENTS:
+        raw_score_map = {row["candidate_id"]: row for row in parents[parent]}
+        control_rows = attach_raw_scores(candidates, parents[parent])
+        control = replay_pair(control_rows, coverage, sessions, LAST_ENTRY, "EV_TOP1_H2")
+        reconcile_control(control, parent)
+        filter_input, gates = filter_rows(candidates, parents[parent], decisions_by_parent[parent])
+        filtered = replay_pair(filter_input, coverage, sessions, LAST_ENTRY, "EV_TOP1_H2")
+        for variant, books in (("CONTROL", control), ("FILTER", filtered)):
+            policy = f"{parent}_{variant}"
+            books_summary = {}
+            for cost in COSTS:
+                decorated = decorate_ledger(books[cost], policy, parent, variant, raw_score_map, gates if variant == "FILTER" else {})
+                ledgers[(policy, cost)] = decorated
+                books_summary[cost] = extended_metrics(decorated, book_metrics)
+            acceptance = all(books_summary["adverse"]["monthly_net_including_zeros"][month] > 0 for month in COMPLETE_MONTHS)
+            policy_summary[policy] = {"books": books_summary, "eight_of_eight_positive_adverse": acceptance}
+        require(close(policy_summary[f"{parent}_CONTROL"]["books"]["adverse"]["net_usd"], summary_upstream["policies"][parent]["economics"]["adverse"]["net_usd"], AGG_TOL), f"upstream summary {parent}")
+    ev_diagnostics = build_ev_diagnostics(intentions, decisions)
+    intent_stats = {}
+    for parent in PARENTS:
+        parent_intentions = [row for row in intentions if row["parent"] == parent]
+        all_parent_decisions = [row for row in decisions if row["parent"] == parent]
+        parent_decisions = [row for row in all_parent_decisions if row["raw_winner_id"] is not None]
+        active = [row for row in all_parent_decisions if row["state"] == "ACTIVE_FILTER"]
+        intent_stats[parent] = {
+            "intentions": len(parent_intentions), "accepted": sum(row["accepted"] for row in parent_decisions),
+            "pruned": sum(not row["accepted"] for row in parent_decisions),
+            "activation_entry_date": active[0]["entry_date"] if active else None,
+            "activation_n": active[0]["n"] if active else None,
+            "decision_reasons": dict(sorted({reason: sum(row["filter_reason"] == reason for row in all_parent_decisions) for reason in {row["filter_reason"] for row in all_parent_decisions}}.items())),
+        }
+    summary = {
+        "schema": "weekly_prequential_ev_filter_summary_v1",
+        "status": "COMPLETE_SEEN_DEVELOPMENT_NOT_PROMOTED",
+        "scope": {"sessions": len(sessions), "candidate_universe": 612, "parents": list(PARENTS), "policies": list(POLICIES)},
+        "intentions": intent_stats, "policies": policy_summary,
+        "filter_minus_control": {
+            parent: {
+                cost: policy_summary[f"{parent}_FILTER"]["books"][cost]["net_usd"] - policy_summary[f"{parent}_CONTROL"]["books"][cost]["net_usd"]
+                for cost in COSTS
+            } for parent in PARENTS
+        },
+        "criterion": {"months": list(COMPLETE_MONTHS), "necessary": "adverse exit-date net strictly positive in every month", "promotion_approved": False},
+        "flags": {
+            "models_fit": False, "inference_run": False, "raw_read": False, "api_read": False,
+            "broker_read": False, "future_labels_used": False, "scores_changed": False,
+            "replay_run": True, "seen_development": True, "technical_ready": False,
+            "promotion_approved": False, "production_changed": False,
+        },
+    }
+    rehash(snapshots)
+    output.mkdir(parents=False, exist_ok=False)
+    write_jsonl(output / "intentions.jsonl", intentions)
+    write_jsonl(output / "decision_states.jsonl", decisions)
+    for (policy, cost), rows in ledgers.items():
+        write_jsonl(output / f"ledger_{policy.lower()}_{cost}.jsonl", rows)
+    write_jsonl(output / "ev_diagnostics.jsonl", ev_diagnostics)
+    write_json(output / "summary.json", summary)
+    outputs = {path.name: {"bytes": path.stat().st_size, "sha256": sha256_file(path)} for path in sorted(output.iterdir())}
+    closing = rehash(snapshots)
+    input_pins = {
+        name: {
+            "before": {"bytes": before["bytes"], "sha256": before["sha256"]},
+            "after": {"bytes": closing[name]["bytes"], "sha256": closing[name]["sha256"]},
+        }
+        for name, before in sorted(snapshots.items())
+    }
+    final = {
+        "schema": "weekly_prequential_ev_filter_manifest_v1", "status": summary["status"],
+        "inputs": input_pins, "outputs": outputs, "flags": summary["flags"],
+    }
+    write_json(output / "manifest.json", final)
+    return final
+
+
+def parser() -> argparse.ArgumentParser:
+    value = argparse.ArgumentParser(description=__doc__)
+    value.add_argument("--execute-reviewed-experiment", action="store_true")
+    value.add_argument("--output", type=Path, default=OUTPUT)
+    value.add_argument("--contract-sha256")
+    value.add_argument("--implementation-sha256")
+    value.add_argument("--tests-sha256")
+    value.add_argument("--review-sha256")
+    return value
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parser().parse_args(argv)
+    if not args.execute_reviewed_experiment:
+        print(json.dumps({"status": "READY_NOT_EXECUTED", "output": str(args.output), "scope": "sealed-score prequential EV abstention; no fit or inference"}, sort_keys=True))
+        return 0
+    pins = (args.contract_sha256, args.implementation_sha256, args.tests_sha256, args.review_sha256)
+    require(all(isinstance(value, str) and len(value) == 64 for value in pins), "four reviewed SHA256 pins required")
+    result = run(args.output.resolve(), *pins)
+    print(json.dumps({"status": result["status"], "manifest": str(args.output / "manifest.json")}, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

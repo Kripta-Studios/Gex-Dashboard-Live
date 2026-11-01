@@ -1,0 +1,57 @@
+{
+  "gate_helper": {
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py",
+    "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+  },
+  "observed_utc": "2026-11-01T19:40:51.079758+00:00",
+  "parent_cpu_affinity": [
+    0
+  ],
+  "parent_pid": 39336,
+  "pins": {
+    "code": {
+      "bytes": 40415,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_prequential_ev_filter.py",
+      "sha256": "78fbb4b68f36c85c7332da05611efe59283b56a970a3ce4d1cadfbc8414fd9c1"
+    },
+    "contract": {
+      "bytes": 13155,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\PREQUENTIAL_EV_FILTER_CONTRACT_20261101.md",
+      "sha256": "0b81b77b0f058248e5e55b004c263dd0f97e5089cabb96336ae5c74f622312aa"
+    },
+    "gate": {
+      "bytes": 31463,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py",
+      "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    "helper": {
+      "bytes": 20463,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\replay_equal_risk_frozen.py",
+      "sha256": "e4f42a9fa65120939cf5e131911c8f2990a9cd33d21ae036fa98d9eb816d5b9d"
+    },
+    "review": {
+      "bytes": 5308,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\PREQUENTIAL_EV_FILTER_CONTRACT_REVIEW_20261101.md",
+      "sha256": "d108aa68eac6173a90ea919a8aaa9ffe17f995331b6e729f41e8e022fa320bb6"
+    },
+    "tests": {
+      "bytes": 15833,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_evaluate_weekly_prequential_ev_filter.py",
+      "sha256": "938bc63b9f4b9aafce4eb47f81dafb8957ee55eef45bf02fff9689436e5425fb"
+    }
+  },
+  "resources": {
+    "available_ram_bytes": 5942669312,
+    "free_commit_bytes": 2741497856
+  },
+  "thread_variables": {
+    "ARROW_NUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  }
+}
