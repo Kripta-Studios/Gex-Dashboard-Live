@@ -1,0 +1,21 @@
+{
+  "pid": 30092,
+  "creation_time": 1793549100.3054,
+  "utc": "2026-11-01T16:05:00.338747+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_models.py",
+    "--execute-reviewed-audit",
+    "--comparison-root",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_01",
+    "--comparison-manifest-sha256",
+    "662ac63eaa2895beff4363b9e94a97cd7adc91aac3558139bdd919d8fbf2861a",
+    "--auditor-sha256",
+    "3eb6b9795ad260971435259858f86d3c00111bcc141973faf986411d4a68ad99",
+    "--output-dir",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_model_comparison_audit_01"
+  ]
+}

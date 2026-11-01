@@ -113,15 +113,28 @@ Las declaraciones de dos fits y su orden se apoyan en artefactos y flujo del
 código pineado, no en instrumentación independiente o mtimes como prueba.
 
 La auditoría independiente de matrices TRAIN, transformaciones, inferencia
-desde coeficientes guardados, calibración, EV, libros y métricas está preparada,
-pero todavía pendiente de revisión final y ejecución. Los intentos sintéticos
-gated previos no arrancaron pytest por commit libre inferior a 2 GB; se
-preservan y no equivalen a fallos económicos ni a un audit PASS. El productor
-cerrado y sus resultados no se modifican durante esta preparación.
+desde coeficientes guardados, calibración, EV, seis libros y métricas terminó
+**PASS_INDEPENDENT_NUMERIC_AUDIT_SEEN_DEVELOPMENT**. Código3eb6b979, revisión
+CLEAR y nueve fixtures finales PASS publicados en ea401924 antes del único
+run. PID30092, inicio16:05:00.338747UTC, exit0retenido16:05:14.863882UTC,
+14,565s, stdout/stderr vacíos. Gate RAM6.543.953.920/commit5.194.399.744 bytes,
+CPU0/hilo1. Auditbb661fe916f65ed6ee40dd3cf684650a8d318447005a7f224edec6a4b814b3eb;
+manifest7d6e360edf648bde5633e8f7d5f20ebc55da8ad47616b14718acc4d09cd96eb2;
+exit1d658aaa36f01aef0064c89342de1bca5e8c631d8d0c474ca4e9679a9caf31a0.
+
+Review_producer_exit verificó identidad, cierre, flags, ocho pins y publicación;
+CLEAR limitado al cierre, sin volver a ejecutar la auditoría. Root archivó
+siete copias exactas, 175.201 bytes, en context_model_audit_result_evidence_01,
+receipt90e99c0e89ec11fbb386634c1e87e859b7494148e56b693cfa012c70f0afb4aa.
+La auditoría no importó el productor ni ajustó coeficientes; las medias y
+scores BASE18 se apoyan en sus autoridades previas. Acredita reproducción
+numérica dados parámetros, no reconstrucción raw o entrenamiento independiente.
+Los intentos sintéticos anteriores, incluidos fallos de gate y una aserción
+del fixture, permanecen preservados. No relanzar productor ni auditor cerrados.
 
 ## Continuación
 
-Cerrar primero la auditoría numérica. Después preparar y revisar una extensión
+Con la auditoría numérica cerrada, preparar y revisar una extensión
 causal del contexto a julio–17 de septiembre, conservar los tres modelos y
 aplicar sus parámetros sin refit, recalibración o selección. La inspección
 estructural de Q3 encontró 318 de 330 fuentes 0DTE presentes y reloj nativo;

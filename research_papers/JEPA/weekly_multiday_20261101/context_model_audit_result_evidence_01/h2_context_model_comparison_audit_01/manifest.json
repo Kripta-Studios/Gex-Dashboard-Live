@@ -1,0 +1,51 @@
+{
+  "files": {
+    "audit.json": {
+      "bytes": 170344,
+      "sha256": "bb661fe916f65ed6ee40dd3cf684650a8d318447005a7f224edec6a4b814b3eb"
+    }
+  },
+  "flags": {
+    "development_seen": true,
+    "fit_performed": false,
+    "producer_imported": false,
+    "promotion_approved": false,
+    "raw_or_api_used": false,
+    "technical_ready": false
+  },
+  "implementation": {
+    "CONTEXT_MODEL_COMPARISON_CONTRACT_20261101.md": "8a535acd67ae36e6854ccf3aa02ab0f4f699c08be91bbeae5e17f7925e670ca4",
+    "audit_weekly_context_models.py": "3eb6b9795ad260971435259858f86d3c00111bcc141973faf986411d4a68ad99",
+    "evaluate_weekly_context_models.py": "bdc6534f059ade7acc58f23952a88ed2068c7a712518b04f438945a583a07a2f"
+  },
+  "inputs": {
+    "comparison_manifest": {
+      "bytes": 6382,
+      "sha256": "662ac63eaa2895beff4363b9e94a97cd7adc91aac3558139bdd919d8fbf2861a"
+    },
+    "external_manifests": {
+      "context": {
+        "bytes": 612610,
+        "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_1030_01\\manifest.json",
+        "sha256": "77aaf00d60accc071ff1f58ec099cee72bc3a4150f89e4ad41a601821a74a38a"
+      },
+      "dataset": {
+        "bytes": 1541,
+        "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\manifest.json",
+        "sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8"
+      },
+      "frozen_eval": {
+        "bytes": 6249,
+        "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\manifest.json",
+        "sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+      },
+      "risk": {
+        "bytes": 3973,
+        "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\manifest.json",
+        "sha256": "50fa6b7a02aad9d122dc0bfdd84f8c01f9a5f468bafc7f175eed39aa3ea9418d"
+      }
+    }
+  },
+  "schema": "weekly_h2_context_model_comparison_numeric_audit_manifest_v1",
+  "status": "PASS_INDEPENDENT_NUMERIC_AUDIT_SEEN_DEVELOPMENT"
+}

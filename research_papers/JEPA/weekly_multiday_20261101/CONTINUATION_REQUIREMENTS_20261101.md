@@ -1,5 +1,35 @@
 # Continuación: requisitos abiertos y siguiente evidencia
 
+## Checkpoint 1 de noviembre, 16:05 UTC
+
+PROGRESS: riesgo comparable y contexto causal están cerrados. El riesgo de
+5.000 USD por entrada reveló H1 −14.931 USD y Q3 +9.872,80 USD para BASE18.
+Dos nuevos modelos predeclarados se ajustaron una sola vez: CATEGORY30 da
+−32.666,20 USD y CONTEXT182 +41.871 USD adversos H1. Este último empeora la
+métrica primaria probabilística (logloss1,247644 frente a1,204875), gana sólo
+3/6meses y sinabril suma−2.508,20 USD. No selección ni promoción.
+
+Productor manifest662ac63e y auditor independiente bb661fe9 cerrados exit0;
+reconstrucción TRAIN/transform/inferencia/calibración/EV/seis libros PASS
+dado parámetros, sin refit ni raw. NO RELANZAR. Véase
+[resultado completo](CONTEXT_MODEL_RESULT_20261101.md).
+
+Siguiente trabajo autorizado: preparar contrato y wrapper de contexto Q3,
+inventariar/pinear fuentes exactas antes de valores, construir sólo state60
+sin acciones/labels/oracle, y comparar contra funciones congeladas. La lectura
+estructural encontró318/330fuentes:153Greek y165OI con reloj nativo, sin
+demostrar aún calidad de valores o state_valid. Conservar12Greeks ausentes.
+Después aplicar los tres modelos congelados al mismo Q3parcial, mismos costes,
+riesgo y abstención, sin refit/recalibración ni seleccionar sólo el positivo.
+
+Q3 ya visto sigue SEEN_DEVELOPMENT; no se presenta como holdout limpio. La
+hipótesis contextual no pasa su criterio probabilístico primario y su economía
+necesita contraste temporal. El objetivo completo IB/Fibonacci/walls sigue
+abierto; la duración fija H2 no implementa entradas por toque ni salidas por
+zonas. No nuevos procesos activos de esta etapa, goal activo y promociónfalse.
+
+## Historia de la etapa anterior
+
 Clasificación del turno anterior: PROGRESS. Cerró dataset, modelo y backtest
 weekly H2, reconstrucción independiente y trazabilidad de la mayor operación.
 El goal general permanece activo; un backtest positivo no lo completa.

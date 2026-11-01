@@ -1,5 +1,22 @@
 # Investigación 0DTE por niveles
 
+Checkpoint 1-nov, 16:05 UTC: comparación contextual weekly H2 CERRADA y auditada.
+Dos nuevos fits predeclarados, CATEGORY30 y CONTEXT182; BASE18 congelado.
+Con riesgo máximo 5.000 USD/entrada, netos adversos H1: BASE18 −14.931,
+CATEGORY30 −32.666,20, CONTEXT182 +41.871 USD (82 trades, PF1,4241,
+DD realizado18.020, 3/6meses positivos). CONTEXT182 empeora la métrica primaria
+logloss1,247644 frente a1,204875; sinabril −2.508,20 USD. No selección/promoción.
+Productor bdc6534, PID43220 exit0retenido15:46:32UTC, manifest662ac63e.
+Auditor independiente3eb6b979, PID30092 exit0retenido16:05:14UTC;
+auditbb661fe9 PASS dado parámetros, manifest7d6e360e. No refit ni raw/API.
+Revisión final de cierre CLEAR; 20copias productor y7audit exactas conservadas.
+NO RELANZAR los procesos cerrados. Goal activo; SEEN_DEVELOPMENT, readinessfalse.
+Siguiente: extensión causal Q3 del contexto, luego scoring de los tres modelos
+congelados sin selección/refit. Factibilidad318/330fuentes; extracciónQ3 aún
+no ejecutada. Entradas por toque Fibonacci/salidas walls siguen pendientes.
+[Resultado contextual y límites](../weekly_multiday_20261101/CONTEXT_MODEL_RESULT_20261101.md).
+Los checkpoints inferiores son historia; producción y cambios ajenos intactos.
+
 REANUDADA por orden expresa del usuario el 1 de noviembre de 2026. Goal activo.
 OOF enero–junio completo, auditor FULL_H1 PASS eed09d14, exit0 retenido
 13:25:38UTC a0f5851c; supervisor793bd6c9 y CLI f3926bed cerrados. No relanzar.
