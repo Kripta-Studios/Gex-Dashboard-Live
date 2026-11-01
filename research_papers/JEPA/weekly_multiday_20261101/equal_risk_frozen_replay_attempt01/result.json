@@ -1,0 +1,64 @@
+{
+  "schema": "weekly_h2_equal_risk_frozen_implementation_evidence_v1",
+  "status": "SYNTHETIC_IMPLEMENTATION_ONLY",
+  "observed_utc": "2026-11-01T15:24:08.5234194Z",
+  "sources": {
+    "replay_equal_risk_frozen.py": "e4f42a9fa65120939cf5e131911c8f2990a9cd33d21ae036fa98d9eb816d5b9d",
+    "test_replay_equal_risk_frozen.py": "2cddcf124929761bbc0ce3ccd762eb0818f71ab2f7f83378ae2d9da2dc42a8b1",
+    "EQUAL_RISK_FROZEN_REPLAY_CONTRACT_20261101.md": "9c387e9bea74ba65777808b5ac5e5fccfdc2437645e7b301c15eab2d33bbeb7b"
+  },
+  "checks": {
+    "pytest_exit": 0,
+    "pytest": "10 passed",
+    "ruff_exit": 0,
+    "source_unchanged_after_snapshot": true,
+    "output_absent": true
+  },
+  "limitations": [
+    "No frozen H1/Q3 candidate, score, coverage, or economic output was read.",
+    "No real replay was executed.",
+    "Synthetic fixtures do not establish economic performance or production readiness."
+  ],
+  "evidence": {
+    "resource_gate.json": {
+      "bytes": 307,
+      "sha256": "771a6b59dab91be6f3dc85de24c4b8fe4831845a4171f46ec383a6b04b75432d"
+    },
+    "pytest.stdout.txt": {
+      "bytes": 101,
+      "sha256": "b91a90f2627628c3e5e0115bb0432d5ea4745da6abb2267d4558ad27d957e24b"
+    },
+    "pytest.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "ruff.stdout.txt": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "ruff.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ruff.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "replay_equal_risk_frozen.py.pretest": {
+      "bytes": 20463,
+      "sha256": "e4f42a9fa65120939cf5e131911c8f2990a9cd33d21ae036fa98d9eb816d5b9d"
+    },
+    "test_replay_equal_risk_frozen.py.pretest": {
+      "bytes": 8395,
+      "sha256": "2cddcf124929761bbc0ce3ccd762eb0818f71ab2f7f83378ae2d9da2dc42a8b1"
+    },
+    "EQUAL_RISK_FROZEN_REPLAY_CONTRACT_20261101.md.pretest": {
+      "bytes": 5663,
+      "sha256": "9c387e9bea74ba65777808b5ac5e5fccfdc2437645e7b301c15eab2d33bbeb7b"
+    }
+  }
+}
