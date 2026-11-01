@@ -1,0 +1,9 @@
+{
+  "schema": "weekly_h2_builder_attempt01_exit_v1",
+  "exit_code": 1,
+  "result": "7 failed in 1.24s",
+  "failure_scope": "dynamic frozen-helper import omitted sys.modules registration required by Python 3.14 dataclasses",
+  "stdout_sha256": "8080e031dc24d948cf8eab6274070eee9ca8614bc0e0067507e270b750ab0580",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "real_theta_values_read": false
+}

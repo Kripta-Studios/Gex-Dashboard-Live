@@ -106,7 +106,12 @@ las ofertas seleccionadas por top1, porque calibración pooled no la garantiza.
 
 ## Replay y medición
 
-Cartera hipotética inicial 100.000 USD; una posición por ticker, máximo tres.
+Cartera hipotética inicial 100.000 USD por bloque TRAIN/CAL/EVAL, con libros
+independientes. EVAL arranca sin posiciones ni cash procedente de decisiones
+retrospectivas TRAIN/CAL. Los bloques descriptivos pueden cerrar sus últimas
+entradas H2 después de su fecha final, atribuidas al bloque de entrada; esas
+posiciones nunca se trasladan al siguiente libro. Una posición por ticker,
+máximo tres.
 Prioridad fija SPY,QQQ,SPXW si capital insuficiente. A 10:30 ticker abierto puede
 planificar entrada sólo si su salida programada es ese mismo día a10:35. A10:35
 se procesan salidas antes de entradas. Reservar débito y comisión de entrada;
@@ -157,3 +162,8 @@ ee72ad37 recibió FIX_FIRST por omitir las salidas ausentes del modelo de EV y
 confundir bloqueo de capital con NO_FILL. Esta versión conserva las cotas en
 TRAIN/CAL/EVAL, separa CAPITAL_BLOCKED y fija las ecuaciones de contabilidad.
 No se abrió ningún outcome para decidir esta corrección.
+
+La inspección inicial del evaluador detectó además que un replay continuo de
+TRAIN/CAL/EVAL trasladaría a EVAL cash o posiciones decididos retrospectivamente
+en los bloques descriptivos. Se explicitan libros independientes antes de cualquier
+runtime real. Ningún saldo o posición de TRAIN/CAL entra en EVAL.

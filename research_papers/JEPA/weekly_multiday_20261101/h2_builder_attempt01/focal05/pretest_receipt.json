@@ -1,0 +1,17 @@
+{
+  "schema": "weekly_h2_builder_focal05_pretest_v1",
+  "observed_utc": "2026-11-01T13:49:05.7295051Z",
+  "scope": "real CLI frozen calendar SHA fail-closed",
+  "copies": {
+    "build_weekly_h2_dataset.py": "683e5cee2a795cc30883da95df8506ee683bc935734ddf21a0a79d77f0cf13dc",
+    "test_build_weekly_h2_dataset.py": "504ebd0b25aebf43ae51740f8358fa97f72d7c590b037cd3dc23fafd7a96b96d",
+    "weekly_multiday_source_pilot.py": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878",
+    "ECONOMIC_H2_CONTRACT.md": "245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5"
+  },
+  "available_ram_bytes": 14028845056,
+  "free_commit_bytes": 23154671616,
+  "minimum_each_bytes": 2000000000,
+  "cpu_affinity_mask_inherited_before_python_start": 1,
+  "threads": 1,
+  "real_theta_values_read": false
+}

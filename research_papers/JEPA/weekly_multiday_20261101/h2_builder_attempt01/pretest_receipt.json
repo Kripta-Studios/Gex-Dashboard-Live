@@ -1,0 +1,21 @@
+{
+  "schema": "weekly_h2_builder_attempt01_pretest_v1",
+  "observed_utc": "2026-11-01T13:43:51.8999377Z",
+  "physical_copies_created_before_tests": true,
+  "copies": {
+    "build_weekly_h2_dataset.py": "bcabc692982eb9de395da2a53acdfaf12aefe2b9307c97657f32c08c932d5ed7",
+    "test_build_weekly_h2_dataset.py": "605dd510060b3a5c9193926703ea22cfd0dfd327748bd9db2ad2fc2cac4a54ec",
+    "weekly_multiday_source_pilot.py": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878",
+    "ECONOMIC_H2_CONTRACT.md": "9459feaed8a819a53c2e430d8e223884c82d35dbb2ec00bc9a59246599d39ae5"
+  },
+  "gate_helper_sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+  "resources": {
+    "available_ram_bytes": 13809090560,
+    "free_commit_bytes": 23128379392,
+    "minimum_each_bytes": 2000000000,
+    "cpu_affinity_mask_inherited_before_python_start": 1,
+    "threads": 1
+  },
+  "real_theta_values_read": false,
+  "real_builder_invoked": false
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "weekly_h2_builder_focal04_pretest_v1",
+  "observed_utc": "2026-11-01T13:48:32.6218345Z",
+  "scope": "contract pin only after independent TRAIN/CAL/EVAL book amendment",
+  "copies": {
+    "build_weekly_h2_dataset.py": "3c98c07449ecd10d6aaf0887820e9a962f6733ba8cdac95fd42a1d68dee678e4",
+    "test_build_weekly_h2_dataset.py": "1dfe1f05809739e2ecb00284d39bdf574783332616a7a19dfdfc7986cd9c693e",
+    "weekly_multiday_source_pilot.py": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878",
+    "ECONOMIC_H2_CONTRACT.md": "245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5"
+  },
+  "available_ram_bytes": 14038900736,
+  "free_commit_bytes": 23143309312,
+  "minimum_each_bytes": 2000000000,
+  "cpu_affinity_mask_inherited_before_python_start": 1,
+  "threads": 1,
+  "real_theta_values_read": false
+}

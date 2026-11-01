@@ -2,8 +2,15 @@
 
 Revisor independiente `/root/review_weekly_source_pilot`, sólo lectura, sin
 outcomes ni fuentes raw. Dictamen final `CLEAR / ship` el 1 de noviembre de 2026.
-Contrato final SHA256:
+Primer contrato corregido SHA256:
 `9459feaed8a819a53c2e430d8e223884c82d35dbb2ec00bc9a59246599d39ae5`.
+
+Contrato vigente tras la inspección inicial del evaluador:
+`245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5`.
+La enmienda fija libros TRAIN/CAL/EVAL independientes; EVAL empieza con 100.000
+USD sin heredar posiciones o saldos retrospectivos. El mismo revisor confirmó
+coherencia de esta enmienda y CLEAR en su revisión final del builder. No cambia
+features, etiquetas, selección o costes del dataset.
 
 Primera versión ee72ad37 recibió FIX_FIRST por dos puntos materiales: excluir
 salidas ausentes del ajuste de EV omitía su riesgo; y confundir falta de capital

@@ -1,0 +1,647 @@
+FFFFFFF                                                                  [100%]
+================================== FAILURES ===================================
+_____________ test_observed_interface_selector_and_manifest_pins ______________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7393/test_observed_interface_select0')
+
+    def test_observed_interface_selector_and_manifest_pins(tmp_path: Path) -> None:
+>       output, manifest, candidates, coverage = build_fixture(tmp_path)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+test_build_weekly_h2_dataset.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_build_weekly_h2_dataset.py:64: in build_fixture
+    manifest = builder.build_dataset(source, calendar, calendar_sha, output, pilot_path=PILOT, pilot_sha256=builder.PILOT_SHA256)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:363: in build_dataset
+    pilot = load_pilot(pilot_path, pilot_sha256)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:68: in load_pilot
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:759: in exec_module
+    ???
+<frozen importlib._bootstrap>:491: in _call_with_frames_removed
+    ???
+weekly_multiday_source_pilot.py:43: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python314\Lib\dataclasses.py:1432: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+C:\Program Files\Python314\Lib\dataclasses.py:1055: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+annotation = 'str'
+cls = <class 'weekly_multiday_source_pilot_frozen.NominalFile'>
+a_module = <module 'dataclasses' from 'C:\\Program Files\\Python314\\Lib\\dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x0000024A8231FE00>
+is_type_predicate = <function _is_kw_only at 0x0000024A8249B1C0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'. Did you mean: '__dir__'?
+
+C:\Program Files\Python314\Lib\dataclasses.py:814: AttributeError
+_________________ test_nofill_is_zero_and_available_at_entry __________________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7393/test_nofill_is_zero_and_availa0')
+
+    def test_nofill_is_zero_and_available_at_entry(tmp_path: Path) -> None:
+>       _, _, candidates, _ = build_fixture(tmp_path, execution_ask=50.0)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_build_weekly_h2_dataset.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_build_weekly_h2_dataset.py:64: in build_fixture
+    manifest = builder.build_dataset(source, calendar, calendar_sha, output, pilot_path=PILOT, pilot_sha256=builder.PILOT_SHA256)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:363: in build_dataset
+    pilot = load_pilot(pilot_path, pilot_sha256)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:68: in load_pilot
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:759: in exec_module
+    ???
+<frozen importlib._bootstrap>:491: in _call_with_frames_removed
+    ???
+weekly_multiday_source_pilot.py:43: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python314\Lib\dataclasses.py:1432: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+C:\Program Files\Python314\Lib\dataclasses.py:1055: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+annotation = 'str'
+cls = <class 'weekly_multiday_source_pilot_frozen.NominalFile'>
+a_module = <module 'dataclasses' from 'C:\\Program Files\\Python314\\Lib\\dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x0000024A8231FE00>
+is_type_predicate = <function _is_kw_only at 0x0000024A8249B1C0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'. Did you mean: '__dir__'?
+
+C:\Program Files\Python314\Lib\dataclasses.py:814: AttributeError
+_ test_missing_exit_retained_as_scenario1_lower_bound[MISSING_SOURCE-MISSING_EXIT_SOURCE] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7393/test_missing_exit_retained_as_0')
+mode = 'MISSING_SOURCE', status = 'MISSING_EXIT_SOURCE'
+
+    @pytest.mark.parametrize("mode,status", [("MISSING_SOURCE", "MISSING_EXIT_SOURCE"), ("MISSING_QUOTE", "MISSING_EXIT_QUOTE")])
+    def test_missing_exit_retained_as_scenario1_lower_bound(tmp_path: Path, mode: str, status: str) -> None:
+>       _, _, candidates, _ = build_fixture(tmp_path, exit_mode=mode)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_build_weekly_h2_dataset.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_build_weekly_h2_dataset.py:64: in build_fixture
+    manifest = builder.build_dataset(source, calendar, calendar_sha, output, pilot_path=PILOT, pilot_sha256=builder.PILOT_SHA256)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:363: in build_dataset
+    pilot = load_pilot(pilot_path, pilot_sha256)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:68: in load_pilot
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:759: in exec_module
+    ???
+<frozen importlib._bootstrap>:491: in _call_with_frames_removed
+    ???
+weekly_multiday_source_pilot.py:43: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python314\Lib\dataclasses.py:1432: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+C:\Program Files\Python314\Lib\dataclasses.py:1055: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+annotation = 'str'
+cls = <class 'weekly_multiday_source_pilot_frozen.NominalFile'>
+a_module = <module 'dataclasses' from 'C:\\Program Files\\Python314\\Lib\\dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x0000024A8231FE00>
+is_type_predicate = <function _is_kw_only at 0x0000024A8249B1C0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'. Did you mean: '__dir__'?
+
+C:\Program Files\Python314\Lib\dataclasses.py:814: AttributeError
+_ test_missing_exit_retained_as_scenario1_lower_bound[MISSING_QUOTE-MISSING_EXIT_QUOTE] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7393/test_missing_exit_retained_as_1')
+mode = 'MISSING_QUOTE', status = 'MISSING_EXIT_QUOTE'
+
+    @pytest.mark.parametrize("mode,status", [("MISSING_SOURCE", "MISSING_EXIT_SOURCE"), ("MISSING_QUOTE", "MISSING_EXIT_QUOTE")])
+    def test_missing_exit_retained_as_scenario1_lower_bound(tmp_path: Path, mode: str, status: str) -> None:
+>       _, _, candidates, _ = build_fixture(tmp_path, exit_mode=mode)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_build_weekly_h2_dataset.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+test_build_weekly_h2_dataset.py:64: in build_fixture
+    manifest = builder.build_dataset(source, calendar, calendar_sha, output, pilot_path=PILOT, pilot_sha256=builder.PILOT_SHA256)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:363: in build_dataset
+    pilot = load_pilot(pilot_path, pilot_sha256)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:68: in load_pilot
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:759: in exec_module
+    ???
+<frozen importlib._bootstrap>:491: in _call_with_frames_removed
+    ???
+weekly_multiday_source_pilot.py:43: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python314\Lib\dataclasses.py:1432: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+C:\Program Files\Python314\Lib\dataclasses.py:1055: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+annotation = 'str'
+cls = <class 'weekly_multiday_source_pilot_frozen.NominalFile'>
+a_module = <module 'dataclasses' from 'C:\\Program Files\\Python314\\Lib\\dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x0000024A8231FE00>
+is_type_predicate = <function _is_kw_only at 0x0000024A8249B1C0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'. Did you mean: '__dir__'?
+
+C:\Program Files\Python314\Lib\dataclasses.py:814: AttributeError
+_____________ test_h2_preexpiry_and_calendar_end_are_not_shifted ______________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7393/test_h2_preexpiry_and_calendar0')
+
+    def test_h2_preexpiry_and_calendar_end_are_not_shifted(tmp_path: Path) -> None:
+        source, calendar = tmp_path / "source", tmp_path / "calendar.parquet"
+        dates = ["20250106", "20250107", "20250108"]
+        calendar_sha = write_calendar(calendar, dates)
+        write_source(source_path(source, "SPY", "20250108", dates[0]), [quote("SPY", "20250108", dates[0], "10:30", 500, "CALL", 1, 1.2, 0.5)])
+        output = tmp_path / "output"
+>       builder.build_dataset(source, calendar, calendar_sha, output, pilot_path=PILOT, pilot_sha256=builder.PILOT_SHA256)
+
+test_build_weekly_h2_dataset.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+build_weekly_h2_dataset.py:363: in build_dataset
+    pilot = load_pilot(pilot_path, pilot_sha256)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:68: in load_pilot
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:759: in exec_module
+    ???
+<frozen importlib._bootstrap>:491: in _call_with_frames_removed
+    ???
+weekly_multiday_source_pilot.py:43: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python314\Lib\dataclasses.py:1432: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+C:\Program Files\Python314\Lib\dataclasses.py:1055: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+annotation = 'str'
+cls = <class 'weekly_multiday_source_pilot_frozen.NominalFile'>
+a_module = <module 'dataclasses' from 'C:\\Program Files\\Python314\\Lib\\dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x0000024A8231FE00>
+is_type_predicate = <function _is_kw_only at 0x0000024A8249B1C0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'. Did you mean: '__dir__'?
+
+C:\Program Files\Python314\Lib\dataclasses.py:814: AttributeError
+____________________ test_duplicate_used_snapshot_is_fatal ____________________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7393/test_duplicate_used_snapshot_i0')
+
+    def test_duplicate_used_snapshot_is_fatal(tmp_path: Path) -> None:
+        source, calendar = tmp_path / "source", tmp_path / "calendar.parquet"
+        dates = ["20250106", "20250107", "20250108"]
+        calendar_sha = write_calendar(calendar, dates)
+        row = quote("SPY", "20250110", dates[0], "10:30", 500, "CALL", 1, 1.2, 0.5)
+        write_source(source_path(source, "SPY", "20250110", dates[0]), [row, dict(row)])
+        with pytest.raises(builder.DatasetError, match="duplicate contract snapshot"):
+>           builder.build_dataset(source, calendar, calendar_sha, tmp_path / "output", pilot_path=PILOT, pilot_sha256=builder.PILOT_SHA256)
+
+test_build_weekly_h2_dataset.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+build_weekly_h2_dataset.py:363: in build_dataset
+    pilot = load_pilot(pilot_path, pilot_sha256)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:68: in load_pilot
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:759: in exec_module
+    ???
+<frozen importlib._bootstrap>:491: in _call_with_frames_removed
+    ???
+weekly_multiday_source_pilot.py:43: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python314\Lib\dataclasses.py:1432: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+C:\Program Files\Python314\Lib\dataclasses.py:1055: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+annotation = 'str'
+cls = <class 'weekly_multiday_source_pilot_frozen.NominalFile'>
+a_module = <module 'dataclasses' from 'C:\\Program Files\\Python314\\Lib\\dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x0000024A8231FE00>
+is_type_predicate = <function _is_kw_only at 0x0000024A8249B1C0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'. Did you mean: '__dir__'?
+
+C:\Program Files\Python314\Lib\dataclasses.py:814: AttributeError
+__________________ test_calendar_and_helper_pins_fail_closed __________________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7393/test_calendar_and_helper_pins_0')
+
+    def test_calendar_and_helper_pins_fail_closed(tmp_path: Path) -> None:
+        calendar = tmp_path / "calendar.parquet"
+        calendar_sha = write_calendar(calendar, ["20250106", "20250107", "20250108"])
+        with pytest.raises(builder.DatasetError, match="calendar SHA"):
+>           builder.build_dataset(tmp_path / "source", calendar, "0" * 64, tmp_path / "out1", pilot_path=PILOT, pilot_sha256=builder.PILOT_SHA256)
+
+test_build_weekly_h2_dataset.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+build_weekly_h2_dataset.py:363: in build_dataset
+    pilot = load_pilot(pilot_path, pilot_sha256)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+build_weekly_h2_dataset.py:68: in load_pilot
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:759: in exec_module
+    ???
+<frozen importlib._bootstrap>:491: in _call_with_frames_removed
+    ???
+weekly_multiday_source_pilot.py:43: in <module>
+    @dataclass(frozen=True)
+     ^^^^^^^^^^^^^^^^^^^^^^
+C:\Program Files\Python314\Lib\dataclasses.py:1432: in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+C:\Program Files\Python314\Lib\dataclasses.py:1055: in _process_class
+    and _is_type(type, cls, dataclasses, dataclasses.KW_ONLY,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+annotation = 'str'
+cls = <class 'weekly_multiday_source_pilot_frozen.NominalFile'>
+a_module = <module 'dataclasses' from 'C:\\Program Files\\Python314\\Lib\\dataclasses.py'>
+a_type = <dataclasses._KW_ONLY_TYPE object at 0x0000024A8231FE00>
+is_type_predicate = <function _is_kw_only at 0x0000024A8249B1C0>
+
+    def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
+        # Given a type annotation string, does it refer to a_type in
+        # a_module?  For example, when checking that annotation denotes a
+        # ClassVar, then a_module is typing, and a_type is
+        # typing.ClassVar.
+    
+        # It's possible to look up a_module given a_type, but it involves
+        # looking in sys.modules (again!), and seems like a waste since
+        # the caller already knows a_module.
+    
+        # - annotation is a string type annotation
+        # - cls is the class that this annotation was found in
+        # - a_module is the module we want to match
+        # - a_type is the type in that module we want to match
+        # - is_type_predicate is a function called with (obj, a_module)
+        #   that determines if obj is of the desired type.
+    
+        # Since this test does not do a local namespace lookup (and
+        # instead only a module (global) lookup), there are some things it
+        # gets wrong.
+    
+        # With string annotations, cv0 will be detected as a ClassVar:
+        #   CV = ClassVar
+        #   @dataclass
+        #   class C0:
+        #     cv0: CV
+    
+        # But in this example cv1 will not be detected as a ClassVar:
+        #   @dataclass
+        #   class C1:
+        #     CV = ClassVar
+        #     cv1: CV
+    
+        # In C1, the code in this function (_is_type) will look up "CV" in
+        # the module and not find it, so it will not consider cv1 as a
+        # ClassVar.  This is a fairly obscure corner case, and the best
+        # way to fix it would be to eval() the string "CV" with the
+        # correct global and local namespaces.  However that would involve
+        # a eval() penalty for every single field of every dataclass
+        # that's defined.  It was judged not worth it.
+    
+        match = _MODULE_IDENTIFIER_RE.match(annotation)
+        if match:
+            ns = None
+            module_name = match.group(1)
+            if not module_name:
+                # No module name, assume the class's module did
+                # "from dataclasses import InitVar".
+>               ns = sys.modules.get(cls.__module__).__dict__
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               AttributeError: 'NoneType' object has no attribute '__dict__'. Did you mean: '__dir__'?
+
+C:\Program Files\Python314\Lib\dataclasses.py:814: AttributeError
+=========================== short test summary info ===========================
+FAILED test_build_weekly_h2_dataset.py::test_observed_interface_selector_and_manifest_pins
+FAILED test_build_weekly_h2_dataset.py::test_nofill_is_zero_and_available_at_entry
+FAILED test_build_weekly_h2_dataset.py::test_missing_exit_retained_as_scenario1_lower_bound[MISSING_SOURCE-MISSING_EXIT_SOURCE]
+FAILED test_build_weekly_h2_dataset.py::test_missing_exit_retained_as_scenario1_lower_bound[MISSING_QUOTE-MISSING_EXIT_QUOTE]
+FAILED test_build_weekly_h2_dataset.py::test_h2_preexpiry_and_calendar_end_are_not_shifted
+FAILED test_build_weekly_h2_dataset.py::test_duplicate_used_snapshot_is_fatal
+FAILED test_build_weekly_h2_dataset.py::test_calendar_and_helper_pins_fail_closed
+7 failed in 1.24s
