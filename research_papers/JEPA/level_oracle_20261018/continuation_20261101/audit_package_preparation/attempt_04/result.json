@@ -1,0 +1,17 @@
+{
+  "status": "PASS_SYNTHETIC_AUDIT_PACKAGE_PREPARATION_TESTS_FINAL_REVIEW_FIXES",
+  "exit_code": 0,
+  "passed": 11,
+  "failed": 0,
+  "seconds": 1.43,
+  "production_code_sha256": "be8ff46bc322e1bc42480b5675b1489b1ceb41f6766d90fec42159c6b48b2cab",
+  "tests_sha256": "ef97295ce17b63d0025a21431859ab7d54976086213ae1b48e5827d2ecf13c59",
+  "stdout_sha256": "071b2cd18aa33cc6cf78cd8772ecb1b8c365d62e0037ff616b7d0fde46cef14d",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "available_ram_bytes": 12808273920,
+  "free_commit_bytes": 22464958464,
+  "cpu_affinity": [0],
+  "threads": 1,
+  "real_package_prepared": false,
+  "scientific_runtime_executed": false
+}

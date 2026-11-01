@@ -1,0 +1,27 @@
+{
+  "child_cpu_affinity": [
+    0
+  ],
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\run_oof_calibrated_pipeline_v2r1.py",
+    "--request",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_PIPELINE_V2R1_RUNTIME_REQUEST_20261024_01.json",
+    "--request-sha256",
+    "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+    "--resume"
+  ],
+  "creation_time": 1793534310.550339,
+  "creation_time_source": "GetProcessTimes_retained_Popen_handle",
+  "implementation_review_sha256": "6a06521fc74fd9b8afd4efeab0209066f9138749e7e1acde562ce6c50ede16bf",
+  "initial_child_affinity_verified": true,
+  "monitor_code_sha256": "599f6d5c347ebdc3801bbe8cc21de55603a80a46858a8bad1d20729d307eee11",
+  "monitor_started_utc": "2026-11-01T11:58:30.555247+00:00",
+  "pid": 38568,
+  "preflight_sha256": "ee42d98d047f8aec38cc4abb4631859a9530dc3ec13eb347652f39ffc6bfa5d6",
+  "publication_commit": "8bf198a501719775029f375776552d193f99ab76",
+  "request_sha256": "f32e35e965722631e2f685db3c3a38aefc6021f5edd35db18f55984061982fef",
+  "runtime_binding_sha256": "4197cd14d7110211164238c3863df8c88c7eca9d26db248aa4c1e11a3bdb9510",
+  "status": "PROCESS_HANDLE_RETAINED"
+}

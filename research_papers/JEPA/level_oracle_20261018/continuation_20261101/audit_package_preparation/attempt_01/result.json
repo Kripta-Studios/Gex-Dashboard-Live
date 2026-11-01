@@ -1,0 +1,17 @@
+{
+  "status": "FAILED_SYNTHETIC_TEST_PRESERVED",
+  "exit_code": 1,
+  "passed": 5,
+  "failed": 1,
+  "seconds": 1.88,
+  "failure": "test_exact_schemas_and_chain: Pipeline completion pin differs",
+  "cause": "Synthetic fixture did not bind its generated pipeline completion hash into the upstream reference",
+  "production_code_sha256": "5140f0a63d92dc369ed08d334e4927b3c30b1653fda33a789c163fe91488a4b4",
+  "tests_sha256": "6b50d3480eb8723703a82865b88d9181e4cabec8d1ec60e4c05dd66733ef46bf",
+  "available_ram_bytes": 12881584128,
+  "free_commit_bytes": 22733021184,
+  "cpu_affinity": [0],
+  "threads": 1,
+  "real_package_prepared": false,
+  "scientific_runtime_executed": false
+}

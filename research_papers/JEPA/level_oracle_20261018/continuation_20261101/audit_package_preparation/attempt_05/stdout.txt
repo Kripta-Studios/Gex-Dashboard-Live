@@ -1,0 +1,3 @@
+{'gate': {'available_ram_bytes': 12953743360, 'free_commit_bytes': 23403282432}, 'cpu_affinity': [0], 'threads': 1, 'command': ['C:\\Program Files\\Python314\\python.exe', '-m', 'pytest', '-q', 'research_papers/JEPA/level_oracle_20261018/test_prepare_oof_continuation_audit_package_20261101.py']}
+..................                                                       [100%]
+18 passed in 1.18s

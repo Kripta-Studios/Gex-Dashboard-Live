@@ -1,0 +1,12 @@
+{
+  "utc": "2026-11-01T12:00:37.292371+00:00",
+  "status": "ROOT_FINAL_IMPLEMENTATION_ARTIFACT_CHECK_ONLY",
+  "manifest_sha256": "f53fd571f720a68088a320ed4ee0c04fd48b754557b54112ac222e309adc44e3",
+  "copy_pairs": 17,
+  "exact_tree": true,
+  "source_sha256": "0ef5f0a3ab7a275943741d81e5214cdfee20172e2f934bc2b283cda528a95d2b",
+  "tests_sha256": "0e9635c69e14055f431ace91093798c1c2a5dfaaed9105ff2891c17f63a17906",
+  "review_json_sha256": "925efec0b47f5b8dba212b0a8cee7b7747d9af746fa8ca42daa0f7d29b424f1f",
+  "tests_rerun_by_root": false,
+  "real_package_prepared": false
+}

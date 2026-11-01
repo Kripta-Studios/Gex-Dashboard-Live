@@ -1,0 +1,23 @@
+{
+  "status": "PASS_SYNTHETIC_AUDIT_PACKAGE_PREPARATION_TESTS",
+  "exit_code": 0,
+  "passed": 6,
+  "failed": 0,
+  "seconds": 1.10,
+  "production_code_sha256": "5140f0a63d92dc369ed08d334e4927b3c30b1653fda33a789c163fe91488a4b4",
+  "tests_sha256": "ff77f550b63ce6b02e5ac10f9290d18214f327d559e4be85249b5558a8359392",
+  "available_ram_bytes": 13005860864,
+  "free_commit_bytes": 22770192384,
+  "cpu_affinity": [0],
+  "threads": 1,
+  "cases": [
+    "exact_nine_field_request_and_twelve_phase_chain",
+    "reject_nonzero_continuation_exit",
+    "reject_process_identity_mismatch",
+    "reject_missing_supervisor_closure",
+    "reject_package_overwrite",
+    "default_cli_is_read_only"
+  ],
+  "real_package_prepared": false,
+  "scientific_runtime_executed": false
+}

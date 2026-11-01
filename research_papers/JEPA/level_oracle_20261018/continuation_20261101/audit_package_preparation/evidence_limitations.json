@@ -1,0 +1,23 @@
+{
+  "status": "EVIDENCE_LIMITATIONS_SUPPLEMENT",
+  "attempts_01_to_03": {
+    "stdout_stderr_original_files_retained": false,
+    "code_snapshots_retained": false,
+    "tool_output_observed": true,
+    "result_json_written_after_observation": true,
+    "attempt_01_test_hash_reconstructed_in_memory_without_snapshot": true,
+    "claim": "Chronology declared from observed tool output; not self-contained historical executable evidence"
+  },
+  "attempt_04": {
+    "stdout_stderr_direct_process_files": false,
+    "stdout_stderr_copied_by_patch_from_displayed_capture": true,
+    "stderr_was_empty": true,
+    "final_code_snapshots_retained": false
+  },
+  "attempt_05": {
+    "stdout_stderr_direct_process_files": true,
+    "final_code_snapshots_created_before_test": true,
+    "exit_and_hash_receipt_retained": true
+  },
+  "no_history_reconstructed_or_deleted": true
+}

@@ -1,0 +1,28 @@
+{
+  "status": "COMPLETE_SYNTHETIC_AUDIT_PACKAGE_PREPARATION_EVIDENCE",
+  "scope": "IMPLEMENTATION_ONLY_NO_REAL_PACKAGE_OR_AUDIT",
+  "files": {
+    "attempt_01/result.json": "c1b7994954fb956ec5bb244dc836323f9ba179659da2a15996e183eac109b615",
+    "attempt_02/result.json": "3bbaf3cdd38dd88856884464e41348720d1e644a9a02826df3464aaac6888803",
+    "attempt_03/result.json": "21803c33a7131e20b6b2bd007cd20417389229b277d3d2a3eb3e127b5ace4e48",
+    "attempt_04/result.json": "eb5a8d1faef11111692b44797e82d5fa88eada45cedaee51859c9c97f1c4ca04",
+    "attempt_04/stdout.txt": "071b2cd18aa33cc6cf78cd8772ecb1b8c365d62e0037ff616b7d0fde46cef14d",
+    "attempt_04/stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "attempt_05/prepare_oof_continuation_audit_package_20261101.py": "0ef5f0a3ab7a275943741d81e5214cdfee20172e2f934bc2b283cda528a95d2b",
+    "attempt_05/test_prepare_oof_continuation_audit_package_20261101.py": "0e9635c69e14055f431ace91093798c1c2a5dfaaed9105ff2891c17f63a17906",
+    "attempt_05/run_tests.py": "7b68b7c8f9ecaa518e5c84c616d402b8b2807fc1a0a91d9618810c0d79e698db",
+    "attempt_05/stdout.txt": "e4f58aad9c934e70e07459fc98c02f409c7f8023c25620004229096ec5af5748",
+    "attempt_05/stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "attempt_05/exit.json": "0e8245a48b688d39a5ddfa0ecaecad934323d453e5ffaf88e422c972310415d8",
+    "attempt_05/result.json": "c468a113aaaeebefc13ffb17257a5f8372c698fc60a39f745113272d0977629b",
+    "evidence_limitations.json": "ff83b31cf6f2ed5ef0531898c5503f3ec779ec28874de81a08c622d386b17c3a",
+    "readiness_01/result.json": "466e455af09fe2fa6b1b8f4840f4d2357df139eabd18d50919983017bb0a897f",
+    "readiness_02/result.json": "9e498c841623f7273e96636854e64494154d90e9a91289c65c44229852d5a60c"
+  },
+  "production_code_sha256": "0ef5f0a3ab7a275943741d81e5214cdfee20172e2f934bc2b283cda528a95d2b",
+  "tests_sha256": "0e9635c69e14055f431ace91093798c1c2a5dfaaed9105ff2891c17f63a17906",
+  "failed_attempts_preserved": 1,
+  "passing_attempts": 4,
+  "real_package_prepared": false,
+  "audit_executed": false
+}

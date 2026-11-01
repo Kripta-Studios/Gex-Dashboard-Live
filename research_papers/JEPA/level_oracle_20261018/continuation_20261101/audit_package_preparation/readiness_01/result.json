@@ -1,0 +1,16 @@
+{
+  "status": "PASS_READ_ONLY_READINESS_AND_PUBLICATION_MAP_CHECK",
+  "exit_code": 0,
+  "default_prepared": false,
+  "real_required_receipts_present": 0,
+  "real_required_receipts_expected": 5,
+  "package_destinations_absent": true,
+  "audit_destinations_absent": true,
+  "implementation_review_files": 74,
+  "constructed_publication_files": 81,
+  "request_in_publication_map": true,
+  "request_or_binding_written": false,
+  "production_code_sha256": "5140f0a63d92dc369ed08d334e4927b3c30b1653fda33a789c163fe91488a4b4",
+  "tests_sha256": "ff77f550b63ce6b02e5ac10f9290d18214f327d559e4be85249b5558a8359392",
+  "scope": "DOCUMENTARY_BUILDER_REQUIRES_INDEPENDENT_REVIEW_PUBLICATION_AND_OFFICIAL_PREFLIGHT"
+}

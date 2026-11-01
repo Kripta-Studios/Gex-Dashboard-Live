@@ -1,0 +1,17 @@
+{
+  "status": "PASS_FINAL_BYTES_DOCUMENTARY_BUILDER_READY_FOR_INDEPENDENT_REVIEW",
+  "production_code_sha256": "367ee6965bd539931bf79155cab57c63c1dc759b299088749783c4f0e8bbde0b",
+  "tests_sha256": "ff77f550b63ce6b02e5ac10f9290d18214f327d559e4be85249b5558a8359392",
+  "request_schema_fields": 9,
+  "binding_schema_fields": 9,
+  "upstream_references": 10,
+  "allowed_read_roots": 16,
+  "published_files": 81,
+  "compact_closure_files": 45,
+  "pipeline_control_files": 27,
+  "real_package_prepared": false,
+  "requires_independent_review": true,
+  "requires_publication": true,
+  "requires_official_preflight": true,
+  "audit_executed": false
+}

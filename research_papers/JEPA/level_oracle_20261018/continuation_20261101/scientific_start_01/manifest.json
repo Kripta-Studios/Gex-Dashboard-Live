@@ -1,0 +1,29 @@
+{
+  "copies": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_launch_20261029_01\\preflight.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\scientific_start_01\\preflight.json",
+      "sha256": "ee42d98d047f8aec38cc4abb4631859a9530dc3ec13eb347652f39ffc6bfa5d6",
+      "bytes": 8788898
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_launch_20261029_01\\admission.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\scientific_start_01\\admission.json",
+      "sha256": "d10b4d0a6f19fbc955e92343df3759447836ce419752edd6696f62fc6ef72414",
+      "bytes": 993
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_launch_20261029_01\\process.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\scientific_start_01\\process.json",
+      "sha256": "36ecc09921073eb40c054d80a45343c0efd188344d9906673ca8c826ff772450",
+      "bytes": 1421
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_observer_20261029_01\\scientific_start_root_checks_20261101_01.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\scientific_start_01\\scientific_start_root_checks_20261101_01.json",
+      "sha256": "f66de2c4f8a349a4463031443db5b3ef01e66380b1e8bb99c5db1d0b49694739",
+      "bytes": 41090
+    }
+  ],
+  "mutable_logs_copied": false
+}

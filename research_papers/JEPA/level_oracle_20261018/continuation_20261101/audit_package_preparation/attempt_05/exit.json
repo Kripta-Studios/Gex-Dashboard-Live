@@ -1,0 +1,10 @@
+{
+  "status": "PROCESS_EXIT_OBSERVED",
+  "pid": 20760,
+  "exit_code": 0,
+  "stdout_sha256": "e4f58aad9c934e70e07459fc98c02f409c7f8023c25620004229096ec5af5748",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "runner_sha256": "7b68b7c8f9ecaa518e5c84c616d402b8b2807fc1a0a91d9618810c0d79e698db",
+  "production_snapshot_sha256": "0ef5f0a3ab7a275943741d81e5214cdfee20172e2f934bc2b283cda528a95d2b",
+  "tests_snapshot_sha256": "0e9635c69e14055f431ace91093798c1c2a5dfaaed9105ff2891c17f63a17906"
+}

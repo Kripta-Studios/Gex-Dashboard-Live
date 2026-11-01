@@ -5,11 +5,20 @@ Autoridad actual: [RESUMPTION_20261101.md](RESUMPTION_20261101.md).
 Goal activo restablecido; cierre del29 conservado como historia. Root verificó
 127 pins compactos; revisión independiente confirma prefijo8 y destinos nuevos
 ausentes. Se autoriza único CLI de continuación con admisión contemporánea,
-CPU0/threads1/gate2GB. CLI único iniciado11:35:36UTC, PID10596/parent36848,
-sesiónroot16020, publicaciónb75dc785. Corte11:36:31UTC sigue en admisión,
-sin hijo científico/exit, stderr0; no relanzar. Recibo OOF_CONTINUATION_CLI_START_20261101.
+CPU0/threads1/gate2GB. Supervisor10596 creó child38568 a11:58:30UTC,
+sesiónroot16020/invocador36848. Preflight efectivoee42d98d PASS19143pins;
+root166pins compactos y4copias8832402B verificados. Inicio independienteCLEAR.
+Corte11:59:21UTC vivo, starts/receipts00–07, sin exit/cierre. No relanzar.
+Recibo OOF_CONTINUATION_SCIENTIFIC_START_20261101.md.
 Sólo mayo/junio pendientes; FULL_H1 y reporter después del cierre real.
 Producción/API/bróker/VPS intactos, selección null, promoción false.
+
+Orientación nueva1nov: probabilidades de escenarios y valor esperado neto.
+Usuario permite días sin operar en la siguiente etapa; WAIT legítima sin gate
+mínimo diario. OOF actual conserva criterios anteriores. Dirección para contrato futuro:
+[EXPECTED_VALUE_SCENARIO_DIRECTION_20261101.md](EXPECTED_VALUE_SCENARIO_DIRECTION_20261101.md).
+Helper documental auditor preparado/revisado,18tests finalesPASS; aún sin paquete
+real ni auditoría. Ver OOF_AUDIT_PACKAGE_PREPARATION_RESULT_20261101.md.
 
 ## Pausa histórica del 29 de octubre de 2026
 

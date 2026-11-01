@@ -1,0 +1,46 @@
+{
+  "utc": "2026-11-01T11:58:27.595932+00:00",
+  "status": "VERIFIED_WAIT_SAME_CONTINUATION_CLI",
+  "pid": 10596,
+  "creation_time": 1793532936.962302,
+  "parent_pid": 36848,
+  "cpu_seconds": 692.359375,
+  "io": {
+    "read_count": 706379,
+    "write_count": 72,
+    "read_bytes": 10860671245,
+    "write_bytes": 8788902,
+    "other_count": 18412643,
+    "other_bytes": 708598492
+  },
+  "children": [
+    {
+      "pid": 30968,
+      "command": [
+        "\\??\\C:\\Windows\\system32\\conhost.exe",
+        "0x4"
+      ]
+    },
+    {
+      "pid": 16280,
+      "command": [
+        "git",
+        "show",
+        "8bf198a501719775029f375776552d193f99ab76:research_papers/JEPA/level_oracle_20261018/OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md"
+      ]
+    },
+    {
+      "pid": 24960,
+      "command": [
+        "git.exe",
+        "show",
+        "8bf198a501719775029f375776552d193f99ab76:research_papers/JEPA/level_oracle_20261018/OOF_TRANSITIVE_SOURCE_V2R1_IMPLEMENTATION_CONTRACT_20261024.md"
+      ]
+    }
+  ],
+  "launch_root_exists": true,
+  "cli_exit_exists": false,
+  "stderr_bytes": 0,
+  "root_tool_session": 16020,
+  "goal_active": true
+}

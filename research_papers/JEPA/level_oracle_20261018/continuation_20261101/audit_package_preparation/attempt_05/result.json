@@ -1,0 +1,16 @@
+{
+  "status": "PASS_FINAL_COMPACT_CHAIN_METADATA_TESTS",
+  "exit_code": 0,
+  "passed": 18,
+  "failed": 0,
+  "seconds": 1.18,
+  "available_ram_bytes": 12953743360,
+  "free_commit_bytes": 23403282432,
+  "cpu_affinity": [0],
+  "threads": 1,
+  "stdout_directly_redirected": true,
+  "stderr_directly_redirected": true,
+  "snapshots_created_before_test": true,
+  "real_package_prepared": false,
+  "scientific_runtime_executed": false
+}
