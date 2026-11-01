@@ -1,0 +1,43 @@
+{
+  "schema": "root_compact_archive_v1",
+  "copies": 6,
+  "total_bytes": 7002,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_audit_01\\audit.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_audit_archive_01/audit.json",
+      "bytes": 3332,
+      "sha256": "83c9ade0b6b7205484dd275df8593107238f94468d8564f7351e9481a475033c"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_audit_observer_01\\admission.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_audit_archive_01/observer/admission.json",
+      "bytes": 1986,
+      "sha256": "8662d62d7d782f100edc8377eedef647ee86fb58142139d7c6e132b4e5885759"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_audit_observer_01\\process.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_audit_archive_01/observer/process.json",
+      "bytes": 785,
+      "sha256": "c4e22ce78ca6d476a0617251126a600e50cdbc2beca7010cb0a4202235d53619"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_audit_observer_01\\exit.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_audit_archive_01/observer/exit.json",
+      "bytes": 899,
+      "sha256": "278ff49b30e84506eb6e063d4cf7dd471396b10d901441fdd93ffe93e4ea41fa"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_audit_observer_01\\stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_audit_archive_01/observer/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_audit_observer_01\\stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_audit_archive_01/observer/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

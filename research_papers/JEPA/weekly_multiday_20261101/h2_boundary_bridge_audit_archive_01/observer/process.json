@@ -1,0 +1,20 @@
+{
+  "pid": 26052,
+  "creation_time": 1793556365.7144313,
+  "utc": "2026-11-01T18:06:05.742301+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_h2_boundary_bridge.py",
+    "--bridge-manifest-sha256",
+    "9d1455c601ac38224c4f56365f20c3fb31978e997f8652454dbc69807e0abb86",
+    "--inventory-sha256",
+    "599ca400fecae12ce4098187a45af3ee0cf8c1b070e060d8c84e422ce92c6161",
+    "--wrapper-sha256",
+    "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2",
+    "--auditor-sha256",
+    "69cb5c8bc018b80f12a9cf2203ecb1ba2928f419a17d2252dfe383c279a18750"
+  ]
+}

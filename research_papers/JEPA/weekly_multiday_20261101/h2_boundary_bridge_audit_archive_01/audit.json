@@ -1,0 +1,71 @@
+{
+  "counts": {
+    "new_candidate_ids": 6,
+    "old_candidate_ids": 3234,
+    "overlay_rows": 6,
+    "sources_missing": 2,
+    "sources_present": 4,
+    "unified_calendar_rows": 2790
+  },
+  "flags": {
+    "development_seen": true,
+    "economic_evaluation_performed": false,
+    "fit_performed": false,
+    "outcomes_reinterpreted": false,
+    "promotion_approved": false
+  },
+  "inputs": {
+    "inventory": {
+      "bytes": 14721,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\inventory.json",
+      "sha256": "599ca400fecae12ce4098187a45af3ee0cf8c1b070e060d8c84e422ce92c6161"
+    },
+    "producer_manifest": {
+      "bytes": 4748,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\manifest.json",
+      "sha256": "9d1455c601ac38224c4f56365f20c3fb31978e997f8652454dbc69807e0abb86"
+    },
+    "wrapper": {
+      "bytes": 25626,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_boundary_bridge.py",
+      "sha256": "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2"
+    }
+  },
+  "limitations": [
+    "Reproduces the frozen ec19/ad5 functions; it is not a second independent raw parser or an economic/model audit."
+  ],
+  "pins": {
+    "auditor": {
+      "bytes": 24101,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_h2_boundary_bridge.py",
+      "sha256": "69cb5c8bc018b80f12a9cf2203ecb1ba2928f419a17d2252dfe383c279a18750"
+    },
+    "builder_v2": {
+      "bytes": 33142,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_dataset_v2.py",
+      "sha256": "ec19e2c9066f0bb6103526ccf30a5b156c69a25a96349220d9fd680a92822945"
+    },
+    "closing_bridge_manifest": {
+      "bytes": 4748,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\manifest.json",
+      "sha256": "9d1455c601ac38224c4f56365f20c3fb31978e997f8652454dbc69807e0abb86"
+    },
+    "contract": {
+      "bytes": 5069,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+    },
+    "source_pilot": {
+      "bytes": 31380,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py",
+      "sha256": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878"
+    },
+    "wrapper": {
+      "bytes": 25626,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_boundary_bridge.py",
+      "sha256": "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2"
+    }
+  },
+  "schema": "weekly_h2_boundary_bridge_audit_v1",
+  "status": "PASS_INDEPENDENT_BOUNDARY_BRIDGE_GIVEN_FROZEN_BUILDERS"
+}
