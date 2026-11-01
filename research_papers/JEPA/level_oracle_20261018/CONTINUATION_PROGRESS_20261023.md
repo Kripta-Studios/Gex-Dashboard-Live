@@ -54,6 +54,21 @@ Resultado H2_Q3_PARTIAL_RESULT_20261101.md en weekly_multiday_20261101;
 Goal general activo: rentabilidadrobusta, riesgo comparable e IB/walls abiertos.
 Producción/API/bróker/VPS y cambios ajenos intactos.
 
+Nueva etapa1nov: riesgo comparable cerrado, únicoPID35112 exit0retenido
+15:27:19UTC. Manifest50fa6b7a,16libros,qty10:30,budget5000incluyendodosfees.
+H1EV−14931USDadverso/71trades;Q3+9872,80/28. No ventaja estable entrebloques.
+Review_producer_exit reconstruyó16decisiones/libros y320campos:sin diferencias;
+verificación efímera de sólolectura, noauditoríaraw.23copias1371959B archivadas.
+ContextoIB/walls1030 completo:2619B81válidos+6missing,2625identidadesfull/short.
+Extractor e70be193 PID43332 exit0retenido15:34:17UTC,manifest77aaf00d,
+context28ce7e45/coverage2ae5b4cf. Independiente91785checks, NPZ pre/post y filas
+exactas;10copias9573287Breceiptb52c1a54. Contexto0DTE,sinQ3, nofitduranteextracción.
+Próxima comparación predeclarada8a535acd publicada1ae623a7: BASE18frozen,
+CATEGORY30 yCONTEXT182(18+81+side81+2flags),dosfits TRAIN2023/24,CAL2025,
+EVALH12026seen,6librosrisk5k. Implementación enrevisión/sintéticos,sinfitreal aún.
+No repetir cierresanteriores. Goalactivo; IB/wallscomo entradas/salidasporzonas
+originales siguenpendientes, weeklyactualmantieneH2fijo. Promociónfalse.
+
 Orientación nueva: probabilidades de escenarios y valor esperado neto.
 Usuario permite días sin operar en la siguiente etapa; WAIT sin mínimo diario.
 OOF actual conserva sus reglas. [Dirección](EXPECTED_VALUE_SCENARIO_DIRECTION_20261101.md)
