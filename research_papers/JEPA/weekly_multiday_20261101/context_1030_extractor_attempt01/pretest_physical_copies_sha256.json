@@ -1,0 +1,18 @@
+[
+  {
+    "Path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\context_1030_extractor_attempt01\\CAUSAL_CONTEXT_1030_EXTRACTION_CONTRACT_20261101.md",
+    "Hash": "C7E6DD53AB35B2B982F5871689768478600B5C90F61A5113F4FCABE41091FF02"
+  },
+  {
+    "Path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\context_1030_extractor_attempt01\\extract_weekly_context_1030.py",
+    "Hash": "E70BE193286FFB1A314530B224E8DE73A6F33CB774FAC6692D0E4144B82A1B7E"
+  },
+  {
+    "Path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\context_1030_extractor_attempt01\\metadata_incident.json",
+    "Hash": "CDB138A494204304DF07837DF2000AB445D8D7A8139377E0219F7399B3B51AF9"
+  },
+  {
+    "Path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\context_1030_extractor_attempt01\\test_extract_weekly_context_1030.py",
+    "Hash": "3DE7DE051781B4AFB641AE0BE2D6809F9FB50FEB94BD7CB720424DB2B9E1A182"
+  }
+]

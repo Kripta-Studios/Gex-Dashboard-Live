@@ -1,0 +1,10 @@
+{
+  "schema": "weekly_context_1030_metadata_incident_v1",
+  "status": "DISCLOSED_NON_INFLUENTIAL_COMPACT_READ",
+  "path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\session_clock_dataset_v1_audit\\audit.json",
+  "sha256": "678eb21bca80b38855979d8a7386cdadd6827a6dfdd5acbf3df6fde5a5a2f3b9",
+  "scope": "The compact audit JSON was displayed in full during interface inspection although only its pin was needed.",
+  "impact": "No NPZ arrays or raw files were opened. No displayed economic field was used in code, variable selection, support selection, tests, or admission. The contract had already frozen all 81 feature names.",
+  "runtime_policy": "The extractor hashes this authority but never parses its fields.",
+  "outcomes_reproduced_here": false
+}
