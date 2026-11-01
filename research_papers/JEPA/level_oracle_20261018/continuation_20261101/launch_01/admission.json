@@ -1,0 +1,35 @@
+{
+  "utc": "2026-11-01T11:35:36.703407+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_pipeline_user_stop_continuation_20261029.py",
+    "--request",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_USER_STOP_CONTINUATION_REQUEST_20261029_01.json",
+    "--request-sha256",
+    "f32e35e965722631e2f685db3c3a38aefc6021f5edd35db18f55984061982fef",
+    "--runtime-binding",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_USER_STOP_CONTINUATION_RUNTIME_BINDING_20261029_01.json",
+    "--runtime-binding-sha256",
+    "4197cd14d7110211164238c3863df8c88c7eca9d26db248aa4c1e11a3bdb9510",
+    "--implementation-review-sha256",
+    "6a06521fc74fd9b8afd4efeab0209066f9138749e7e1acde562ce6c50ede16bf",
+    "--publication-commit",
+    "8bf198a501719775029f375776552d193f99ab76",
+    "--execute-reviewed-continuation"
+  ],
+  "resources": {
+    "available_ram_bytes": 11815448576,
+    "free_commit_bytes": 20885176320
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "helper_sha256": "b9ace22732899838891d91df64f93b208387785b5c16ea9ccfbdbc688f9457a5",
+  "previous_process_receipt_sha256": "d04c3911b411863d9a7e245f9f0f42bb359608654680d6430fd7e99f2caf92f0",
+  "authorization_sha256": "e5a7d1ed47b9e15288d13b911ad3f386aa07191f6b1d26018fb6bc1cda14adb3",
+  "git_head": "b75dc7856a28598057d60ea32e77b89861bcd765",
+  "scientific_pipeline_started": false
+}

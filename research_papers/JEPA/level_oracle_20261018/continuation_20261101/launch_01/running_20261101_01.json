@@ -1,0 +1,59 @@
+{
+  "status": "CONTINUATION_CLI_RUNNING_ADMISSION_PENDING",
+  "utc": "2026-11-01T11:36:31.563759+00:00",
+  "pid": 10596,
+  "creation_time": 1793532936.962302,
+  "parent_pid": 36848,
+  "cpu_affinity": [
+    0
+  ],
+  "cpu_times": {
+    "user": 10.515625,
+    "system": 5.4375,
+    "children_user": 0.0,
+    "children_system": 0.0
+  },
+  "io_counters": {
+    "read_count": 3009,
+    "write_count": 0,
+    "read_bytes": 38635635,
+    "write_bytes": 0,
+    "other_count": 15825,
+    "other_bytes": 1269884
+  },
+  "children": [
+    {
+      "pid": 30968,
+      "cmdline": [
+        "\\??\\C:\\Windows\\system32\\conhost.exe",
+        "0x4"
+      ],
+      "creation_time": 1793532937.002954
+    }
+  ],
+  "launch_root_exists": false,
+  "cli_exit_exists": false,
+  "stderr_bytes": 0,
+  "starts": [
+    "00.json",
+    "01.json",
+    "02.json",
+    "03.json",
+    "04.json",
+    "05.json",
+    "06.json",
+    "07.json"
+  ],
+  "receipts": [
+    "00.json",
+    "01.json",
+    "02.json",
+    "03.json",
+    "04.json",
+    "05.json",
+    "06.json",
+    "07.json"
+  ],
+  "pipeline_completion_exists": false,
+  "root_tool_session": 16020
+}

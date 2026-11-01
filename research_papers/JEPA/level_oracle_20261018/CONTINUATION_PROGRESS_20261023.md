@@ -5,7 +5,9 @@ Autoridad actual: [RESUMPTION_20261101.md](RESUMPTION_20261101.md).
 Goal activo restablecido; cierre del29 conservado como historia. Root verificó
 127 pins compactos; revisión independiente confirma prefijo8 y destinos nuevos
 ausentes. Se autoriza único CLI de continuación con admisión contemporánea,
-CPU0/threads1/gate2GB. Aún sin nueva ejecución al emitir este checkpoint.
+CPU0/threads1/gate2GB. CLI único iniciado11:35:36UTC, PID10596/parent36848,
+sesiónroot16020, publicaciónb75dc785. Corte11:36:31UTC sigue en admisión,
+sin hijo científico/exit, stderr0; no relanzar. Recibo OOF_CONTINUATION_CLI_START_20261101.
 Sólo mayo/junio pendientes; FULL_H1 y reporter después del cierre real.
 Producción/API/bróker/VPS intactos, selección null, promoción false.
 
