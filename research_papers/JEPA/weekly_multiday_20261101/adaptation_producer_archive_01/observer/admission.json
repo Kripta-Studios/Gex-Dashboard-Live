@@ -1,0 +1,43 @@
+{
+  "utc": "2026-11-01T18:09:54.090783+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_context_adaptation.py",
+    "--execute-reviewed-adaptation",
+    "--bridge-manifest-sha256",
+    "9d1455c601ac38224c4f56365f20c3fb31978e997f8652454dbc69807e0abb86",
+    "--bridge-audit-sha256",
+    "83c9ade0b6b7205484dd275df8593107238f94468d8564f7351e9481a475033c"
+  ],
+  "publication_commit": "091058d65423dd88ef0a536c969bcdea2574bd8b",
+  "pins": {
+    "evaluate_weekly_context_adaptation.py": "d03494bf68e281bc7c9e68f385aa111567eac4206cf5b44133e17bb480ed5df8",
+    "test_evaluate_weekly_context_adaptation.py": "2f44f17d459cd7cb43c5c3842fb4b2d72c689278f797426a75ac006f0d5db43f",
+    "ADAPTATION_WALKFORWARD_CONTRACT_20261101.md": "608dae37c21c19277a36dbcc1eeaa36da0135385a080618d461a4e240855cc61",
+    "ADAPTATION_AND_BRIDGE_IMPLEMENTATION_REVIEW_20261101.md": "f4fe3591c0244236573618f52ec167cc490b53698e838915608b6209dc69b674",
+    "ADAPTATION_RUNTIME_BINDING_20261101.md": "56e603018df186e049623a0715758dc258ad1b33bb8d7c89553b89bfee02d27e",
+    "ADAPTATION_REPORT_ATTRIBUTION_CLARIFICATION_20261101.md": "5b21927e109c22c24af91599b019933b8132f7b1f52f359a7fa2936bcfee5c86",
+    "USER_MONTHLY_PROFITABILITY_ACCEPTANCE_20261101.md": "806f7728a2ad434bc08929d3715f307455bd37862ae4c19a2cd2cc1d64a5ee5b",
+    "h2_boundary_bridge_audit_archive_01/archive_receipt.json": "c389bbd89bcf59d442a5e3af33bbb0e2a8f8d9e53cdbbdb3a1682cf6732daf40"
+  },
+  "resources": {
+    "available_ram_bytes": 6402863104,
+    "free_commit_bytes": 3392970752
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "thread_variables": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "ARROW_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1"
+  }
+}
