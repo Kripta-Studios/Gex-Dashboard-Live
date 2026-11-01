@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint 1-nov: comparación DAILY_RAW predeclarada, sin nuevos fits aún.
+Contrato5d388e48/reviewbd0f5146 CLEAR documental:178sesiones,42estados existentes
+sinfit/mutación/reinferencia productor y136nuevos; terminalSep16/17 sin scoring.
+Cuatro políticas frozen/mensual/semanal/diaria; controles1836scores y6ledgers
+copiados exactos, daily612scores/2libros. Auditor reconstruirá2448scores/8libros.
+Receta182/TRAINexpansivo/CAL63/hiperparámetros/riesgo/costes intactos;8/8EXIT
+ene–ago,septiembreparcial. Journals ygateoficial antes de cada fit. Código nuevo
+productor/auditor en preparación; requierepublicación antesfixtures, luego
+reviews/binding antesrunúnico. No resultado DAILY ni modelo aceptado. Goalactivo.
+
 Checkpoint 1-nov19:54UTC: filtro EV CERRADO y auditado, todos fallan8/8.
 Productor10716exit0/manifest4c166202; auditor47400exit0retenido19:54:51UTC,
 audit2012cc51/exitbc2fef5e:515intenciones,1584estados,12libros,216diagnósticos,
