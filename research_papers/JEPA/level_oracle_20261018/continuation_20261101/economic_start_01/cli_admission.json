@@ -1,0 +1,39 @@
+{
+  "utc": "2026-11-01T12:30:44.809992+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_economic_audit_user_stop_continuation_20261029.py",
+    "--request",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_REQUEST_20261101_01.json",
+    "--request-sha256",
+    "69d45a141bdb23e5f0a2723e6e85b4b6457746a0c4782c1176b930fed16d3415",
+    "--runtime-binding",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_BINDING_20261101_01.json",
+    "--runtime-binding-sha256",
+    "87f0e49fc0dd6e0837fe1e920d10214573482ad0f2b15a78fa43601e63e60f63",
+    "--implementation-review-sha256",
+    "0c4edfd7c74b74f1573f8ce7133c79d7339cf4da06c243edc36699164622403b",
+    "--publication-commit",
+    "7482bfbf29976d1228f8601de554f496ba4d79e6",
+    "--execute-reviewed-audit"
+  ],
+  "resources": {
+    "available_ram_bytes": 15858286592,
+    "free_commit_bytes": 28009865216
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "pins": {
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_REQUEST_20261101_01.json": "69d45a141bdb23e5f0a2723e6e85b4b6457746a0c4782c1176b930fed16d3415",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_BINDING_20261101_01.json": "87f0e49fc0dd6e0837fe1e920d10214573482ad0f2b15a78fa43601e63e60f63",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_oof_economic_audit_user_stop_continuation_20261029.py": "48169acfe736a55855f742a26af53cc262a0450b57cc7bea3ce43a623ac7bfa7",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_IMPLEMENTATION_REVIEW_20261029.json": "0c4edfd7c74b74f1573f8ce7133c79d7339cf4da06c243edc36699164622403b",
+    "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\invoke_economic_audit_cli.py": "dbc7443922affff9c00953fb39398acecd5974d8d80af89b9ff6fc61b0cd5fb7"
+  },
+  "mode": "EXECUTE",
+  "scientific_auditor_started": false
+}

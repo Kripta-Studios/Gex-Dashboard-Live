@@ -1,0 +1,28 @@
+{
+  "binding_sha256": "87f0e49fc0dd6e0837fe1e920d10214573482ad0f2b15a78fa43601e63e60f63",
+  "child_cpu_affinity": [
+    0
+  ],
+  "child_identity_affinity_errors": [],
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\audit_oof_calibrated_policy.py",
+    "--request",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_REQUEST_20261101_01.json",
+    "--request-sha256",
+    "69d45a141bdb23e5f0a2723e6e85b4b6457746a0c4782c1176b930fed16d3415",
+    "--output",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_20261029_01"
+  ],
+  "creation_time": 1793536506.7673733,
+  "creation_time_source": "GetProcessTimes_retained_Popen_handle",
+  "implementation_review_sha256": "0c4edfd7c74b74f1573f8ce7133c79d7339cf4da06c243edc36699164622403b",
+  "monitor_code_sha256": "48169acfe736a55855f742a26af53cc262a0450b57cc7bea3ce43a623ac7bfa7",
+  "monitor_started_utc": "2026-11-01T12:35:06.796202+00:00",
+  "pid": 24592,
+  "preflight_sha256": "c9f5c4c1bf0c874aaa2c3efb8b6b2cce902a23526801beb47e2f39bfb2d87ef8",
+  "publication_commit": "7482bfbf29976d1228f8601de554f496ba4d79e6",
+  "request_sha256": "69d45a141bdb23e5f0a2723e6e85b4b6457746a0c4782c1176b930fed16d3415",
+  "status": "PROCESS_HANDLE_RETAINED"
+}
