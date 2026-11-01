@@ -1,0 +1,44 @@
+@'
+import hashlib,importlib.util,json,os,pathlib,subprocess,sys,time
+from datetime import datetime,timezone
+import psutil
+repo=pathlib.Path.cwd();week=repo/'research_papers/JEPA/weekly_multiday_20261101';base=pathlib.Path('D:/GexResearchArtifacts/weekly_multiday_20261101')
+sha=lambda p:hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest();now=lambda:datetime.now(timezone.utc).isoformat()
+commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert subprocess.check_output(['git','ls-remote','origin','refs/heads/research/multiscale-v1r1-net-usd'],text=True).split()[0]==commit
+pins={
+  "diagnose_weekly_ev_components.py": "f83b42fc8b6dd8afb51ede64a5fbdd054ccdde86d0d605a638cd95eff1a49d23",
+  "test_diagnose_weekly_ev_components.py": "c1fb0109172ad404c1f27ae3743ded789d1409cabd33004775626a511f361d05",
+  "EV_COMPONENT_DIAGNOSTIC_CONTRACT_20261101.md": "4ff230ecb566225184077eef2632e00976588e8357e419b523667528894cb4a5",
+  "EV_COMPONENT_DIAGNOSTIC_CONTRACT_REVIEW_20261101.md": "5e00a79be968ba681a5938e46d63b333a79e91fad3c6b976db0670b572f8b185",
+  "EV_COMPONENT_IMPLEMENTATION_REVIEW_20261101.md": "66dc1e14286efdfba02bf0076e7e6a32bf437ede68b26a47ca48fc00c321f679",
+  "EV_COMPONENT_RUNTIME_BINDING_20261101.md": "6ed921c040a803266c4b38e8c80f49a749b071bbb68dc5e546834a2a24f90f4a",
+  "ev_components_implementation_archive_01/archive_receipt.json": "996b5fa8db006584bf4b8f6b5197add7740a9ea2d487f8158b8da709599c74c4"
+}
+for name,h in pins.items():assert sha(week/name)==h,name
+for name in [*pins,'launch_ev_components_diagnostic_20261101.ps1']:
+ p=week/name;assert subprocess.check_output(['git','show',commit+':'+p.relative_to(repo).as_posix()])==p.read_bytes(),name
+helper=repo/'research_papers/JEPA/level_oracle_20261018/launch_monthly_test_index_v2_audit_20261024.py'
+assert sha(helper)=='3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046'
+spec=importlib.util.spec_from_file_location('resource_gate',helper);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+psutil.Process().cpu_affinity([0])
+keys=['OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','NUMEXPR_NUM_THREADS','VECLIB_MAXIMUM_THREADS','BLIS_NUM_THREADS','ARROW_NUM_THREADS','POLARS_MAX_THREADS']
+for k in keys:os.environ[k]='1'
+for rel,h in [('h2_context_adaptation_01/manifest.json','e8cf5cd4a001cd98cdf29e54cf47bbdf3c34d6652abf34ef7c71fffa0bd97f23'),('h2_context_adaptation_audit_04/audit.json','9a487fba18504ae4faff2c1dba17d1c000eb237436a09a7fe22747e328cb307a'),('h2_context_adaptation_audit_observer_04/exit.json','5d59d1a3978d8d9aa31c7c3fab567d1ae7e901494aa8efb12377ca65f91de420')]:assert sha(base/rel)==h
+assert json.loads((base/'h2_context_adaptation_audit_observer_04/exit.json').read_text(encoding='utf-8'))['exit_code']==0
+obs=base/'ev_components_observer_01';out=base/'ev_components_diagnostic_01'
+assert not obs.exists() and not out.exists()
+args=[sys.executable,'-X','utf8','-u',str(week/'diagnose_weekly_ev_components.py'),'--execute-reviewed-diagnostic','--output',str(out),'--contract-sha256',pins['EV_COMPONENT_DIAGNOSTIC_CONTRACT_20261101.md'],'--implementation-sha256',pins['diagnose_weekly_ev_components.py']]
+resources=m.observation();m.gate(resources)
+obs.mkdir()
+def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8')
+write(obs/'admission.json',dict(utc=now(),command=args,publication_commit=commit,pins=pins,resources=resources,cpu_affinity=psutil.Process().cpu_affinity(),thread_variables={k:os.environ[k] for k in keys}))
+start=time.monotonic()
+with (obs/'stdout.log').open('wb') as stdout,(obs/'stderr.log').open('wb') as stderr:
+ p=subprocess.Popen(args,stdout=stdout,stderr=stderr,creationflags=subprocess.CREATE_NO_WINDOW)
+ write(obs/'process.json',dict(pid=p.pid,creation_time=psutil.Process(p.pid).create_time(),utc=now(),command=args));result=p.wait()
+write(obs/'exit.json',dict(exit_code=result,utc=now(),source='subprocess.Popen.wait_retained_handle',elapsed_seconds=time.monotonic()-start,files={str(obs/n):sha(obs/n) for n in ['admission.json','process.json','stdout.log','stderr.log']}))
+print(json.dumps(dict(pid=p.pid,exit_code=result,observer=str(obs))))
+if result:print((obs/'stderr.log').read_text(encoding='utf-8'))
+sys.exit(result)
+'@ | & 'C:/Program Files/Python314/python.exe' -X utf8 -u -
