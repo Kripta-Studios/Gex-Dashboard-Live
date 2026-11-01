@@ -8,7 +8,11 @@ ausentes. Se autoriza único CLI de continuación con admisión contemporánea,
 CPU0/threads1/gate2GB. Supervisor10596 creó child38568 a11:58:30UTC,
 sesiónroot16020/invocador36848. Preflight efectivoee42d98d PASS19143pins;
 root166pins compactos y4copias8832402B verificados. Inicio independienteCLEAR.
-Corte11:59:21UTC vivo, starts/receipts00–07, sin exit/cierre. No relanzar.
+Corte12:10:06UTC vivo: mayo08/09 cerrados, junio10 iniciado12:08:13UTC.
+Recibos a465e101/067d30f7; root39compactos originales intactos,9copias6596830B.
+Sin exit/cierre global ni economía auditada. No relanzar.
+Detalle OOF_MAY_CLOSURE_CHECKPOINT_20261101.md; borrador admisión escenarios/EV
+SCENARIO_EV_DATA_ADMISSION_DRAFT_20261101.md no ejecutable.
 Recibo OOF_CONTINUATION_SCIENTIFIC_START_20261101.md.
 Sólo mayo/junio pendientes; FULL_H1 y reporter después del cierre real.
 Producción/API/bróker/VPS intactos, selección null, promoción false.

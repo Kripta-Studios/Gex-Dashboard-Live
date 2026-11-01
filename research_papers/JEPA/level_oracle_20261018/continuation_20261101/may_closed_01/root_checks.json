@@ -1,0 +1,54 @@
+{
+  "status": "MAY_TWO_PHASE_METADATA_CLOSURE_VERIFIED_JUNE_RUNNING_NOT_AUDITED",
+  "utc": "2026-11-01T12:10:06.784272+00:00",
+  "pid": 38568,
+  "creation_time": 1793534310.5503387,
+  "parent_pid": 10596,
+  "phases": [
+    {
+      "phase": [
+        "202605",
+        "correction"
+      ],
+      "start_sha256": "74275f0f885e9ec9688c3965bbb608ea4e1d803a4f92aff0616416f37e130bfe",
+      "receipt_sha256": "a465e101d8d5bf943a77b40415378ff14424dba3c54148ead08632f78a6dbb63",
+      "completion_sha256": "fefb194b26b60135418ce2b21b634814c9d114878af70899e0e41fe61ff3cd9a",
+      "started_at_utc": "2026-11-01T11:59:41.576555+00:00",
+      "output_count_declared": 9263,
+      "cumulative_output_bytes_declared": 282103858
+    },
+    {
+      "phase": [
+        "202605",
+        "replay"
+      ],
+      "start_sha256": "81cae2b72118ae98f61913ed7fd617090fb2347baabfb001ad5f62d891a00b4c",
+      "receipt_sha256": "067d30f7b0d5fa17ae4c7b0615eaaed68c8f51f589bb013d9ff1806476807bd5",
+      "completion_sha256": "c2c62879a7bfa6e06761aa9f0e30f45f478394fd544085d70263c525eccb7fdd",
+      "started_at_utc": "2026-11-01T12:07:13.450489+00:00",
+      "output_count_declared": 9807,
+      "cumulative_output_bytes_declared": 294568523
+    }
+  ],
+  "next_phase": {
+    "phase": [
+      "202606",
+      "correction"
+    ],
+    "previous_receipt_sha256": "067d30f7b0d5fa17ae4c7b0615eaaed68c8f51f589bb013d9ff1806476807bd5",
+    "request_sha256": "37f2018c7145d3b82cba2e34fbff9ae3008e33f32b004c5580e433157f38ef15",
+    "resources": {
+      "available_ram_bytes": 14400811008,
+      "free_commit_bytes": 26347798528
+    },
+    "rss_start_bytes": 286687232,
+    "started_at_utc": "2026-11-01T12:08:13.300086+00:00"
+  },
+  "original_compact_pins_rehashed": 39,
+  "payloads_rehashed_by_root": false,
+  "economics_interpreted": false,
+  "exit_exists": false,
+  "supervisor_completion_exists": false,
+  "stderr_bytes": 0,
+  "root_tool_session": 16020
+}

@@ -1,0 +1,59 @@
+{
+  "copies": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\08.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\may_closed_01\\start08.json",
+      "sha256": "74275f0f885e9ec9688c3965bbb608ea4e1d803a4f92aff0616416f37e130bfe",
+      "bytes": 370
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\09.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\may_closed_01\\start09.json",
+      "sha256": "81cae2b72118ae98f61913ed7fd617090fb2347baabfb001ad5f62d891a00b4c",
+      "bytes": 366
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\starts\\10.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\may_closed_01\\start10.json",
+      "sha256": "f5aa466db154ede065211cdf00d187e61dfddbe75520c221fdbfa44aaba98cb1",
+      "bytes": 370
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\08.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\may_closed_01\\receipt08.json",
+      "sha256": "a465e101d8d5bf943a77b40415378ff14424dba3c54148ead08632f78a6dbb63",
+      "bytes": 1879654
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_runtime_20261024_v2r1_01\\receipts\\09.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\may_closed_01\\receipt09.json",
+      "sha256": "067d30f7b0d5fa17ae4c7b0615eaaed68c8f51f589bb013d9ff1806476807bd5",
+      "bytes": 1995047
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\monthly_oof_correction_20261024_v2r1_01\\202605.complete.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\may_closed_01\\correction_completion.json",
+      "sha256": "fefb194b26b60135418ce2b21b634814c9d114878af70899e0e41fe61ff3cd9a",
+      "bytes": 608495
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202605_20261024_v2r1_01\\completion.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\may_closed_01\\replay_completion.json",
+      "sha256": "c2c62879a7bfa6e06761aa9f0e30f45f478394fd544085d70263c525eccb7fdd",
+      "bytes": 2109417
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_calibrated_policy_202605_20261024_v2r1_01\\run_contract.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\may_closed_01\\replay_run_contract.json",
+      "sha256": "f08c2e8a4f04d8adf62f493fed8603eb2173647046b94b898f97eb5500fae8e9",
+      "bytes": 1134
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_pipeline_user_stop_continuation_observer_20261029_01\\may_closed_root_checks_20261101_01.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\may_closed_01\\root_checks.json",
+      "sha256": "c445409c0193bd7a05fe1f0479425bd131867c0ec8ec0b378b7a7f6cd0bd00e7",
+      "bytes": 1977
+    }
+  ],
+  "original_payloads_local": true
+}
