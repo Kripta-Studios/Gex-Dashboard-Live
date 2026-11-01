@@ -1,0 +1,17 @@
+[
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pretest_snapshot\\build_weekly_h2_boundary_bridge.py",
+    "bytes": 25626,
+    "sha256": "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2"
+  },
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pretest_snapshot\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+    "bytes": 5069,
+    "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+  },
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pretest_snapshot\\test_build_weekly_h2_boundary_bridge.py",
+    "bytes": 13444,
+    "sha256": "a3655cda635544cd87d2cb8d1535e2369e10470a4a2651a5c67ba9635c57cc30"
+  }
+]

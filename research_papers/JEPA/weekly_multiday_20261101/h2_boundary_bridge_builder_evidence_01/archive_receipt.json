@@ -1,0 +1,301 @@
+{
+  "schema": "root_compact_archive_v1",
+  "copies": 49,
+  "total_bytes": 241161,
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\gate.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/gate.json",
+      "bytes": 431,
+      "sha256": "2b6de38f60ac5cb19ac427a38477a7ea88bbb4b47a4a534e4e8a161fe44edc70"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\pretest_pins.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/pretest_pins.json",
+      "bytes": 834,
+      "sha256": "5291c01d65b82c4c86e394247f3301ce2f07269c53ade3f279ccfaaf548704cc"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\pretest_snapshot\\build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/pretest_snapshot/build_weekly_h2_boundary_bridge.py",
+      "bytes": 23610,
+      "sha256": "eb694e3d57f591843262c97f1690e22febc70c718d98ecf2c1f02b4eca90c0cb"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\pretest_snapshot\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/pretest_snapshot/H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "bytes": 5069,
+      "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\pretest_snapshot\\test_build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/pretest_snapshot/test_build_weekly_h2_boundary_bridge.py",
+      "bytes": 11276,
+      "sha256": "3f1d808ad0ba582afac333b346874a22fd050d60da55c226a337d33aa9e4be00"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\pytest.stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/pytest.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\pytest.stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/pytest.stdout.log",
+      "bytes": 24704,
+      "sha256": "b32e77b99a2e045e2aad088fdb974b8754396f1b27674f787980fbeb487d38ea"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\pytest_receipt.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/pytest_receipt.json",
+      "bytes": 136,
+      "sha256": "587a63ef0b95efaeb19f32b6964c7ff6797afb4751ea38926b5833d2b4f0031f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\ruff.stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/ruff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\ruff.stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/ruff.stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_attempt01\\ruff_receipt.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_attempt01/ruff_receipt.json",
+      "bytes": 136,
+      "sha256": "d78e09bb9742c0ac5defa003a0cec10abc7016d207869ce8bbccf07cfed1159f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\gate.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/gate.json",
+      "bytes": 431,
+      "sha256": "fa0c77a43c2beae174c928cb3b84c41cbe805c4465846f7684de74352f6f984a"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\pretest_pins.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/pretest_pins.json",
+      "bytes": 828,
+      "sha256": "e46c0060dea3e0bdff18d307e8308ff3edc343d423ff9108cc418832257d2d9c"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\pretest_snapshot\\build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/pretest_snapshot/build_weekly_h2_boundary_bridge.py",
+      "bytes": 23882,
+      "sha256": "14bcfc7d85d56523340814fad0ea0fa689d1847c6fe0688ebecb4be4a3d93526"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\pretest_snapshot\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/pretest_snapshot/H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "bytes": 5069,
+      "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\pretest_snapshot\\test_build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/pretest_snapshot/test_build_weekly_h2_boundary_bridge.py",
+      "bytes": 11276,
+      "sha256": "3f1d808ad0ba582afac333b346874a22fd050d60da55c226a337d33aa9e4be00"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\pytest.stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/pytest.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\pytest.stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/pytest.stdout.log",
+      "bytes": 101,
+      "sha256": "9462cd82b4fc8cd4d30626d98270ad49cdb27675125fda0018fdf798fe6c104f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\pytest_receipt.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/pytest_receipt.json",
+      "bytes": 136,
+      "sha256": "9eb6db897a647332f940d31af87bbeb23f5167149e0cafd8fe34152017ccac0e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\ruff.stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/ruff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\ruff.stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/ruff.stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry02\\ruff_receipt.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry02/ruff_receipt.json",
+      "bytes": 136,
+      "sha256": "9f412130bf227823016755ce4b933caa93c48a7569edde8421c599313776c9ae"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\gate.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/gate.json",
+      "bytes": 431,
+      "sha256": "a764ad8e3a3f9b3bb7d6b6dd8733f3d65a268d0f1e1352afcfc13ee8aabe6142"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\pretest_pins.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/pretest_pins.json",
+      "bytes": 828,
+      "sha256": "a6b459486209cbf286ad7acbe6ed3a718908e55449eced293dfea8af78b0e150"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\pretest_snapshot\\build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/pretest_snapshot/build_weekly_h2_boundary_bridge.py",
+      "bytes": 24921,
+      "sha256": "8e322452d4ad81458067d2558079ced424e2e6f3d82291a45e01ce4a53d34dfd"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\pretest_snapshot\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/pretest_snapshot/H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "bytes": 5069,
+      "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\pretest_snapshot\\test_build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/pretest_snapshot/test_build_weekly_h2_boundary_bridge.py",
+      "bytes": 11898,
+      "sha256": "b3d6939d60265c35913ec4ece20a39ca105a71d063883b9b775d3a1a998807f1"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\pytest.stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/pytest.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\pytest.stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/pytest.stdout.log",
+      "bytes": 101,
+      "sha256": "d4b8166425663725544ec32024dfc21be0024ac9801901b2c62f4801b6135959"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\pytest_receipt.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/pytest_receipt.json",
+      "bytes": 136,
+      "sha256": "d46f8d9dd68c86c7448cabf375ea1299464e3adb33291f0af965216937d2617e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\ruff.stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/ruff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\ruff.stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/ruff.stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry03\\ruff_receipt.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry03/ruff_receipt.json",
+      "bytes": 136,
+      "sha256": "6b7d090b7d598417affaa5c5a90d7f56a3d0a9ff77990947a3a89a5bae75a805"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry04\\gate.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry04/gate.json",
+      "bytes": 432,
+      "sha256": "7271a67d70a4fb3b5d1d5b64b018dd88a18d6e6313062ef6678ed95dcbe9cf1f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry04\\pretest_pins.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry04/pretest_pins.json",
+      "bytes": 828,
+      "sha256": "4a76b0c6439946eef52a069209826eb6ba069298c32c13d778d61098eb6dc594"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry04\\pretest_snapshot\\build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry04/pretest_snapshot/build_weekly_h2_boundary_bridge.py",
+      "bytes": 25211,
+      "sha256": "f8ddcbed6ed9d94bb6c52f4bb30c5f77cc3bbef3c948039344f479af91202e9a"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry04\\pretest_snapshot\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry04/pretest_snapshot/H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "bytes": 5069,
+      "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry04\\pretest_snapshot\\test_build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry04/pretest_snapshot/test_build_weekly_h2_boundary_bridge.py",
+      "bytes": 12199,
+      "sha256": "12ccb1e132bfdb95dba6c3943bca38a68dc6fa6a77bb67174dd3f90d4cb6c192"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\gate.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/gate.json",
+      "bytes": 431,
+      "sha256": "98b7f60d339b2a0a0d5d398bb8edf58d2f0cc2c44644b9d3e2fe14faadc81c69"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pretest_pins.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/pretest_pins.json",
+      "bytes": 828,
+      "sha256": "c1718a53e46087ff33e6a81330fc0953e68d75cf374fa74fa4d67621ec0b5e70"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pretest_snapshot\\build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/pretest_snapshot/build_weekly_h2_boundary_bridge.py",
+      "bytes": 25626,
+      "sha256": "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pretest_snapshot\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/pretest_snapshot/H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "bytes": 5069,
+      "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pretest_snapshot\\test_build_weekly_h2_boundary_bridge.py",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/pretest_snapshot/test_build_weekly_h2_boundary_bridge.py",
+      "bytes": 13444,
+      "sha256": "a3655cda635544cd87d2cb8d1535e2369e10470a4a2651a5c67ba9635c57cc30"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pytest.stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/pytest.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pytest.stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/pytest.stdout.log",
+      "bytes": 101,
+      "sha256": "873c8f9d65108229769ef219e8f3a455abf48ea0a91661308c75a4182bde426f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\pytest_receipt.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/pytest_receipt.json",
+      "bytes": 136,
+      "sha256": "0fc2fdc54194ed9e1d44952c43f2faa92d8a399ae1c42bd8bdca037997db2cd4"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\ruff.stderr.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/ruff.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\ruff.stdout.log",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/ruff.stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_builder_retry05\\ruff_receipt.json",
+      "copy": "research_papers/JEPA/weekly_multiday_20261101/h2_boundary_bridge_builder_evidence_01/h2_boundary_bridge_builder_retry05/ruff_receipt.json",
+      "bytes": 136,
+      "sha256": "67a480c4798dd31f2dfe408177bcee9ba0f629f628a51ef582633720c6cec467"
+    }
+  ]
+}

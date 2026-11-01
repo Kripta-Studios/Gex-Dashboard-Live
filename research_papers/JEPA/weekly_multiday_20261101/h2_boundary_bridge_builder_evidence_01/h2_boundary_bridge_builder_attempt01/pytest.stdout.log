@@ -1,0 +1,313 @@
+FFFFFF.                                                                  [100%]
+================================== FAILURES ===================================
+___________ test_inventory_exact_six_plan_four_present_two_missing ____________
+
+environment = {'h1': WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_inventory...rs/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_inventory_exact_six_plan_0/source')}
+
+    def test_inventory_exact_six_plan_four_present_two_missing(environment: dict[str, Path]) -> None:
+>       receipt = bridge.build_reviewed_inventory(
+            environment["source"], environment["h1"], environment["q3"], environment["output"], _wrapper_sha()
+        )
+
+research_papers\JEPA\weekly_multiday_20261101\test_build_weekly_h2_boundary_bridge.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:310: in build_reviewed_inventory
+    payload, _, pilot, unified = prepare_inventory_payload(source_root, h1_root, q3_root, wrapper_sha256)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:240: in prepare_inventory_payload
+    authorities = _load_authorities(Path(h1_root), Path(q3_root), pilot)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h1_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_inventory_exact_six_plan_0/h1')
+q3_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_inventory_exact_six_plan_0/q3')
+pilot = <module 'boundary_bridge_source_pilot' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py'>
+
+    def _load_authorities(h1_root: Path, q3_root: Path, pilot: Any) -> dict[str, Any]:
+        _, h1 = _manifest_payload(h1_root, H1_MANIFEST_SHA256, pilot, "H1")
+        _, q3 = _manifest_payload(q3_root, Q3_MANIFEST_SHA256, pilot, "Q3")
+        hc, qc = h1["coverage"], q3["coverage"]
+        if hc.get("schema") != "weekly_h2_coverage_v2" or qc.get("schema") != "weekly_h2_q3_partial_coverage_v1":
+            raise BridgeError("authority coverage schema mismatch")
+        hrows, qrows = hc.get("rows"), qc.get("rows")
+        if not isinstance(hrows, list) or len(hrows) != 2625 or not isinstance(qrows, list) or len(qrows) != 165:
+            raise BridgeError("authority coverage row count mismatch")
+        hcal = [_calendar_row(row) for row in hc.get("calendar", [])]
+        qcal = [_calendar_row(row) for row in qc.get("calendar", [])]
+        if len(hcal) != 2625 or len(qcal) != 165:
+            raise BridgeError("authority calendar row count mismatch")
+        calendar = sorted(hcal + qcal, key=lambda row: (row["ticker"], row["date"]))
+        keys = [(row["ticker"], row["date"]) for row in calendar]
+        if len(calendar) != 2790 or len(set(keys)) != 2790:
+            raise BridgeError("unified calendar collision or count mismatch")
+        for ticker in TICKERS:
+            dates = [row["date"] for row in calendar if row["ticker"] == ticker]
+            if len(dates) != 930 or dates[-4:] != list(SEGMENT_DATES):
+>               raise BridgeError("unified calendar boundary mismatch")
+E               build_weekly_h2_boundary_bridge.BridgeError: unified calendar boundary mismatch
+
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:159: BridgeError
+__ test_end_to_end_overlay_preserves_originals_and_missing_exit_lower_bounds __
+
+environment = {'h1': WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_end_to_en...rs/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_end_to_end_overlay_preser0/source')}
+
+    def test_end_to_end_overlay_preserves_originals_and_missing_exit_lower_bounds(environment: dict[str, Path]) -> None:
+        original_pins = {
+            path: _sha(path)
+            for root in (environment["h1"], environment["q3"])
+            for path in root.iterdir()
+        }
+>       bridge.build_reviewed_inventory(
+            environment["source"], environment["h1"], environment["q3"], environment["output"], _wrapper_sha()
+        )
+
+research_papers\JEPA\weekly_multiday_20261101\test_build_weekly_h2_boundary_bridge.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:310: in build_reviewed_inventory
+    payload, _, pilot, unified = prepare_inventory_payload(source_root, h1_root, q3_root, wrapper_sha256)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:240: in prepare_inventory_payload
+    authorities = _load_authorities(Path(h1_root), Path(q3_root), pilot)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h1_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_end_to_end_overlay_preser0/h1')
+q3_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_end_to_end_overlay_preser0/q3')
+pilot = <module 'boundary_bridge_source_pilot' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py'>
+
+    def _load_authorities(h1_root: Path, q3_root: Path, pilot: Any) -> dict[str, Any]:
+        _, h1 = _manifest_payload(h1_root, H1_MANIFEST_SHA256, pilot, "H1")
+        _, q3 = _manifest_payload(q3_root, Q3_MANIFEST_SHA256, pilot, "Q3")
+        hc, qc = h1["coverage"], q3["coverage"]
+        if hc.get("schema") != "weekly_h2_coverage_v2" or qc.get("schema") != "weekly_h2_q3_partial_coverage_v1":
+            raise BridgeError("authority coverage schema mismatch")
+        hrows, qrows = hc.get("rows"), qc.get("rows")
+        if not isinstance(hrows, list) or len(hrows) != 2625 or not isinstance(qrows, list) or len(qrows) != 165:
+            raise BridgeError("authority coverage row count mismatch")
+        hcal = [_calendar_row(row) for row in hc.get("calendar", [])]
+        qcal = [_calendar_row(row) for row in qc.get("calendar", [])]
+        if len(hcal) != 2625 or len(qcal) != 165:
+            raise BridgeError("authority calendar row count mismatch")
+        calendar = sorted(hcal + qcal, key=lambda row: (row["ticker"], row["date"]))
+        keys = [(row["ticker"], row["date"]) for row in calendar]
+        if len(calendar) != 2790 or len(set(keys)) != 2790:
+            raise BridgeError("unified calendar collision or count mismatch")
+        for ticker in TICKERS:
+            dates = [row["date"] for row in calendar if row["ticker"] == ticker]
+            if len(dates) != 930 or dates[-4:] != list(SEGMENT_DATES):
+>               raise BridgeError("unified calendar boundary mismatch")
+E               build_weekly_h2_boundary_bridge.BridgeError: unified calendar boundary mismatch
+
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:159: BridgeError
+____________ test_inventory_tamper_fails_before_candidate_builder _____________
+
+environment = {'h1': WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_inventory...rs/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_inventory_tamper_fails_be0/source')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C3F3772570>
+
+    def test_inventory_tamper_fails_before_candidate_builder(environment: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+>       bridge.build_reviewed_inventory(
+            environment["source"], environment["h1"], environment["q3"], environment["output"], _wrapper_sha()
+        )
+
+research_papers\JEPA\weekly_multiday_20261101\test_build_weekly_h2_boundary_bridge.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:310: in build_reviewed_inventory
+    payload, _, pilot, unified = prepare_inventory_payload(source_root, h1_root, q3_root, wrapper_sha256)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:240: in prepare_inventory_payload
+    authorities = _load_authorities(Path(h1_root), Path(q3_root), pilot)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h1_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_inventory_tamper_fails_be0/h1')
+q3_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_inventory_tamper_fails_be0/q3')
+pilot = <module 'boundary_bridge_source_pilot' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py'>
+
+    def _load_authorities(h1_root: Path, q3_root: Path, pilot: Any) -> dict[str, Any]:
+        _, h1 = _manifest_payload(h1_root, H1_MANIFEST_SHA256, pilot, "H1")
+        _, q3 = _manifest_payload(q3_root, Q3_MANIFEST_SHA256, pilot, "Q3")
+        hc, qc = h1["coverage"], q3["coverage"]
+        if hc.get("schema") != "weekly_h2_coverage_v2" or qc.get("schema") != "weekly_h2_q3_partial_coverage_v1":
+            raise BridgeError("authority coverage schema mismatch")
+        hrows, qrows = hc.get("rows"), qc.get("rows")
+        if not isinstance(hrows, list) or len(hrows) != 2625 or not isinstance(qrows, list) or len(qrows) != 165:
+            raise BridgeError("authority coverage row count mismatch")
+        hcal = [_calendar_row(row) for row in hc.get("calendar", [])]
+        qcal = [_calendar_row(row) for row in qc.get("calendar", [])]
+        if len(hcal) != 2625 or len(qcal) != 165:
+            raise BridgeError("authority calendar row count mismatch")
+        calendar = sorted(hcal + qcal, key=lambda row: (row["ticker"], row["date"]))
+        keys = [(row["ticker"], row["date"]) for row in calendar]
+        if len(calendar) != 2790 or len(set(keys)) != 2790:
+            raise BridgeError("unified calendar collision or count mismatch")
+        for ticker in TICKERS:
+            dates = [row["date"] for row in calendar if row["ticker"] == ticker]
+            if len(dates) != 930 or dates[-4:] != list(SEGMENT_DATES):
+>               raise BridgeError("unified calendar boundary mismatch")
+E               build_weekly_h2_boundary_bridge.BridgeError: unified calendar boundary mismatch
+
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:159: BridgeError
+_______________ test_source_change_between_phases_fails_closed ________________
+
+environment = {'h1': WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_source_ch...rs/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_source_change_between_pha0/source')}
+
+    def test_source_change_between_phases_fails_closed(environment: dict[str, Path]) -> None:
+>       bridge.build_reviewed_inventory(
+            environment["source"], environment["h1"], environment["q3"], environment["output"], _wrapper_sha()
+        )
+
+research_papers\JEPA\weekly_multiday_20261101\test_build_weekly_h2_boundary_bridge.py:193: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:310: in build_reviewed_inventory
+    payload, _, pilot, unified = prepare_inventory_payload(source_root, h1_root, q3_root, wrapper_sha256)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:240: in prepare_inventory_payload
+    authorities = _load_authorities(Path(h1_root), Path(q3_root), pilot)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h1_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_source_change_between_pha0/h1')
+q3_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_source_change_between_pha0/q3')
+pilot = <module 'boundary_bridge_source_pilot' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py'>
+
+    def _load_authorities(h1_root: Path, q3_root: Path, pilot: Any) -> dict[str, Any]:
+        _, h1 = _manifest_payload(h1_root, H1_MANIFEST_SHA256, pilot, "H1")
+        _, q3 = _manifest_payload(q3_root, Q3_MANIFEST_SHA256, pilot, "Q3")
+        hc, qc = h1["coverage"], q3["coverage"]
+        if hc.get("schema") != "weekly_h2_coverage_v2" or qc.get("schema") != "weekly_h2_q3_partial_coverage_v1":
+            raise BridgeError("authority coverage schema mismatch")
+        hrows, qrows = hc.get("rows"), qc.get("rows")
+        if not isinstance(hrows, list) or len(hrows) != 2625 or not isinstance(qrows, list) or len(qrows) != 165:
+            raise BridgeError("authority coverage row count mismatch")
+        hcal = [_calendar_row(row) for row in hc.get("calendar", [])]
+        qcal = [_calendar_row(row) for row in qc.get("calendar", [])]
+        if len(hcal) != 2625 or len(qcal) != 165:
+            raise BridgeError("authority calendar row count mismatch")
+        calendar = sorted(hcal + qcal, key=lambda row: (row["ticker"], row["date"]))
+        keys = [(row["ticker"], row["date"]) for row in calendar]
+        if len(calendar) != 2790 or len(set(keys)) != 2790:
+            raise BridgeError("unified calendar collision or count mismatch")
+        for ticker in TICKERS:
+            dates = [row["date"] for row in calendar if row["ticker"] == ticker]
+            if len(dates) != 930 or dates[-4:] != list(SEGMENT_DATES):
+>               raise BridgeError("unified calendar boundary mismatch")
+E               build_weekly_h2_boundary_bridge.BridgeError: unified calendar boundary mismatch
+
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:159: BridgeError
+_________________________ test_collision_is_rejected __________________________
+
+environment = {'h1': WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_collision.../Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_collision_is_rejected0/source')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C3F44D0270>
+
+    def test_collision_is_rejected(environment: dict[str, Path], monkeypatch: pytest.MonkeyPatch) -> None:
+>       bridge.build_reviewed_inventory(
+            environment["source"], environment["h1"], environment["q3"], environment["output"], _wrapper_sha()
+        )
+
+research_papers\JEPA\weekly_multiday_20261101\test_build_weekly_h2_boundary_bridge.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:310: in build_reviewed_inventory
+    payload, _, pilot, unified = prepare_inventory_payload(source_root, h1_root, q3_root, wrapper_sha256)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:240: in prepare_inventory_payload
+    authorities = _load_authorities(Path(h1_root), Path(q3_root), pilot)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h1_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_collision_is_rejected0/h1')
+q3_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_collision_is_rejected0/q3')
+pilot = <module 'boundary_bridge_source_pilot' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py'>
+
+    def _load_authorities(h1_root: Path, q3_root: Path, pilot: Any) -> dict[str, Any]:
+        _, h1 = _manifest_payload(h1_root, H1_MANIFEST_SHA256, pilot, "H1")
+        _, q3 = _manifest_payload(q3_root, Q3_MANIFEST_SHA256, pilot, "Q3")
+        hc, qc = h1["coverage"], q3["coverage"]
+        if hc.get("schema") != "weekly_h2_coverage_v2" or qc.get("schema") != "weekly_h2_q3_partial_coverage_v1":
+            raise BridgeError("authority coverage schema mismatch")
+        hrows, qrows = hc.get("rows"), qc.get("rows")
+        if not isinstance(hrows, list) or len(hrows) != 2625 or not isinstance(qrows, list) or len(qrows) != 165:
+            raise BridgeError("authority coverage row count mismatch")
+        hcal = [_calendar_row(row) for row in hc.get("calendar", [])]
+        qcal = [_calendar_row(row) for row in qc.get("calendar", [])]
+        if len(hcal) != 2625 or len(qcal) != 165:
+            raise BridgeError("authority calendar row count mismatch")
+        calendar = sorted(hcal + qcal, key=lambda row: (row["ticker"], row["date"]))
+        keys = [(row["ticker"], row["date"]) for row in calendar]
+        if len(calendar) != 2790 or len(set(keys)) != 2790:
+            raise BridgeError("unified calendar collision or count mismatch")
+        for ticker in TICKERS:
+            dates = [row["date"] for row in calendar if row["ticker"] == ticker]
+            if len(dates) != 930 or dates[-4:] != list(SEGMENT_DATES):
+>               raise BridgeError("unified calendar boundary mismatch")
+E               build_weekly_h2_boundary_bridge.BridgeError: unified calendar boundary mismatch
+
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:159: BridgeError
+_______________ test_wrapper_pin_and_occupied_destination_fail ________________
+
+environment = {'h1': WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_wrapper_p...rs/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_wrapper_pin_and_occupied_0/source')}
+
+    def test_wrapper_pin_and_occupied_destination_fail(environment: dict[str, Path]) -> None:
+        with pytest.raises(bridge.BridgeError, match="wrapper SHA-256 mismatch"):
+>           bridge.build_reviewed_inventory(
+                environment["source"], environment["h1"], environment["q3"], environment["output"], "0" * 64
+            )
+
+research_papers\JEPA\weekly_multiday_20261101\test_build_weekly_h2_boundary_bridge.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:310: in build_reviewed_inventory
+    payload, _, pilot, unified = prepare_inventory_payload(source_root, h1_root, q3_root, wrapper_sha256)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:240: in prepare_inventory_payload
+    authorities = _load_authorities(Path(h1_root), Path(q3_root), pilot)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+h1_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_wrapper_pin_and_occupied_0/h1')
+q3_root = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_wrapper_pin_and_occupied_0/q3')
+pilot = <module 'boundary_bridge_source_pilot' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py'>
+
+    def _load_authorities(h1_root: Path, q3_root: Path, pilot: Any) -> dict[str, Any]:
+        _, h1 = _manifest_payload(h1_root, H1_MANIFEST_SHA256, pilot, "H1")
+        _, q3 = _manifest_payload(q3_root, Q3_MANIFEST_SHA256, pilot, "Q3")
+        hc, qc = h1["coverage"], q3["coverage"]
+        if hc.get("schema") != "weekly_h2_coverage_v2" or qc.get("schema") != "weekly_h2_q3_partial_coverage_v1":
+            raise BridgeError("authority coverage schema mismatch")
+        hrows, qrows = hc.get("rows"), qc.get("rows")
+        if not isinstance(hrows, list) or len(hrows) != 2625 or not isinstance(qrows, list) or len(qrows) != 165:
+            raise BridgeError("authority coverage row count mismatch")
+        hcal = [_calendar_row(row) for row in hc.get("calendar", [])]
+        qcal = [_calendar_row(row) for row in qc.get("calendar", [])]
+        if len(hcal) != 2625 or len(qcal) != 165:
+            raise BridgeError("authority calendar row count mismatch")
+        calendar = sorted(hcal + qcal, key=lambda row: (row["ticker"], row["date"]))
+        keys = [(row["ticker"], row["date"]) for row in calendar]
+        if len(calendar) != 2790 or len(set(keys)) != 2790:
+            raise BridgeError("unified calendar collision or count mismatch")
+        for ticker in TICKERS:
+            dates = [row["date"] for row in calendar if row["ticker"] == ticker]
+            if len(dates) != 930 or dates[-4:] != list(SEGMENT_DATES):
+>               raise BridgeError("unified calendar boundary mismatch")
+E               build_weekly_h2_boundary_bridge.BridgeError: unified calendar boundary mismatch
+
+research_papers\JEPA\weekly_multiday_20261101\build_weekly_h2_boundary_bridge.py:159: BridgeError
+
+During handling of the above exception, another exception occurred:
+
+environment = {'h1': WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_wrapper_p...rs/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7487/test_wrapper_pin_and_occupied_0/source')}
+
+    def test_wrapper_pin_and_occupied_destination_fail(environment: dict[str, Path]) -> None:
+>       with pytest.raises(bridge.BridgeError, match="wrapper SHA-256 mismatch"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'wrapper SHA-256 mismatch'
+E         Actual message: 'unified calendar boundary mismatch'
+
+research_papers\JEPA\weekly_multiday_20261101\test_build_weekly_h2_boundary_bridge.py:228: AssertionError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_build_weekly_h2_boundary_bridge.py::test_inventory_exact_six_plan_four_present_two_missing
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_build_weekly_h2_boundary_bridge.py::test_end_to_end_overlay_preserves_originals_and_missing_exit_lower_bounds
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_build_weekly_h2_boundary_bridge.py::test_inventory_tamper_fails_before_candidate_builder
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_build_weekly_h2_boundary_bridge.py::test_source_change_between_phases_fails_closed
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_build_weekly_h2_boundary_bridge.py::test_collision_is_rejected
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_build_weekly_h2_boundary_bridge.py::test_wrapper_pin_and_occupied_destination_fail
+6 failed, 1 passed in 17.89s

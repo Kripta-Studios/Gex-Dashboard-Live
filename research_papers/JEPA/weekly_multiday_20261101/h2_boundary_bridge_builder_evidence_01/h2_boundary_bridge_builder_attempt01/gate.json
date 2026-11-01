@@ -1,0 +1,16 @@
+{
+  "observed_utc": "2026-11-01T17:27:44.9863571Z",
+  "cpu_affinity_mask": 1,
+  "thread_variables": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "ARROW_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1"
+  },
+  "free_physical_bytes": 8685694976,
+  "free_commit_bytes": 2744459264,
+  "minimum_each_bytes": 2000000000,
+  "passed": true
+}
