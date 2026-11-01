@@ -1,0 +1,27 @@
+{
+  "pid": 40076,
+  "creation_time": 1793551966.800439,
+  "utc": "2026-11-01T16:52:46.834609+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_q3.py",
+    "--execute-reviewed-audit",
+    "--producer-root",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_1030_01",
+    "--producer-manifest-sha256",
+    "1429bb4dc227843cbb988d552d3b463443b6ae1046e2a53e11118dee4d9fda66",
+    "--inventory",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_1030_01\\inventory.json",
+    "--inventory-sha256",
+    "25da3398984c633a044eef4f20c5525c6224a1b076a5941d0311fae93eab68cf",
+    "--producer-sha256",
+    "caa049caccd79a1c344bee03cce70df7e6a4446fa1ab087c31de64692f78845a",
+    "--auditor-sha256",
+    "6c1a664772543c8972f61e3e910c561fa4b79f55e2bec9aa29190495aeebcbc6",
+    "--output-dir",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_q3_1030_audit_01"
+  ]
+}
