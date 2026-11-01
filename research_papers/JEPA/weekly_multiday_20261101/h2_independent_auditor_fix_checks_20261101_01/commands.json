@@ -1,0 +1,66 @@
+[
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "py_compile",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_h2_ev_v2_independent.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_h2_ev_v2_independent.py"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T14:27:16.070104+00:00",
+    "name": "compile",
+    "started_at_utc": "2026-11-01T14:27:15.985775+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_h2_ev_v2_independent.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_h2_ev_v2_independent.py"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T14:27:16.137964+00:00",
+    "name": "ruff",
+    "started_at_utc": "2026-11-01T14:27:16.070603+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    }
+  },
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_h2_ev_v2_independent.py"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T14:27:18.296894+00:00",
+    "name": "pytest",
+    "started_at_utc": "2026-11-01T14:27:16.139567+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 100,
+      "sha256": "0cfa5a192ffe9300a882dfd4d2e348833d490a7b87ca97daf14fac3c9b612b29"
+    }
+  }
+]

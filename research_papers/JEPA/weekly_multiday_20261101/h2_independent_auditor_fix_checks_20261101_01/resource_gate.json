@@ -1,0 +1,21 @@
+{
+  "available_ram_bytes": 13063245824,
+  "cpu_affinity": [
+    0
+  ],
+  "free_commit_bytes": 20030304256,
+  "market_data_accessed": false,
+  "minimum_each_bytes": 2000000000,
+  "source_snapshot": {
+    "audit_weekly_h2_ev_v2_independent.py": "d87678f661f8fbb369b2bd595b0cbefeb69b0782a63393c3aa64a84acc631ed0",
+    "run_h2_independent_auditor_checks_20261101.py": "c8b9e423b2aeebc7c7fa0d90863330090758880cdc84ece16c8dc5570df4d6bc",
+    "test_audit_weekly_h2_ev_v2_independent.py": "1a8162be504d87b81b4e424fd9a9cf84b81d97fe9474a6fa6f27f27b6833d38b"
+  },
+  "threads": {
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "utc": "2026-11-01T14:27:15.985100+00:00"
+}

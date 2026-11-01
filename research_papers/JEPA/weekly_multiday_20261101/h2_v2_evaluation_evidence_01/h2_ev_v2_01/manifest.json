@@ -1,0 +1,158 @@
+{
+  "calendar_sha256": "7124d98155eae8ee5ae06457377570278d4059defe2cf02340e34c288fcb60b4",
+  "flags": {
+    "broker_or_api_used": false,
+    "development_seen": true,
+    "production_modified": false,
+    "promotion_approved": false
+  },
+  "implementation_pins": {
+    "ECONOMIC_H2_CONTRACT.md": "245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5",
+    "H2_CLOCK_FILTER_V2_AMENDMENT.md": "9210c6e50094e5745f80c5e03f577f6bd673263f84d3c3ef764ad76b22ca56eb",
+    "evaluate_weekly_h2_ev_v2.py": "8a9e75855d542a12662e5c812583f2ef86042f5c3ae1bbbad73c16042e063476"
+  },
+  "inputs": {
+    "candidates.jsonl": {
+      "bytes": 4047694,
+      "sha256": "c98f232a97a8a6f9221b5d3452424d71bec3684a6b037b258c8a5b0f8fb9d5ad"
+    },
+    "coverage.json": {
+      "bytes": 2640341,
+      "sha256": "83ebf5704cb4f1c9ca7c2aff4cca749592f2e30b55978172ec1413a85cec6209"
+    },
+    "external_manifest_sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+    "input_manifest_schema": "weekly_h2_dataset_manifest_v2",
+    "inventory.json": {
+      "bytes": 5589855,
+      "sha256": "099dcf065a62705cbd88f2c1b90b2e4a9b99ff4d994ad703634101920c934b12"
+    },
+    "manifest.json": {
+      "bytes": 1541,
+      "sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8"
+    }
+  },
+  "outputs": {
+    "calibration_grid.json": {
+      "bytes": 918,
+      "sha256": "0b587bedbabc1cb405c203f11910e5ed10d7ea025e529a98f4ebf2daa1049ed4"
+    },
+    "candidate_scores.jsonl": {
+      "bytes": 1406863,
+      "sha256": "812d92db1206e6b5df9c3c4037c6cf6a68d3a5196ebd70be9ef2fd89adcb4ae9"
+    },
+    "conditional_means.json": {
+      "bytes": 5959,
+      "sha256": "a8dc329233ce431b282c500e27cf91ac91d845cbb6a1fc752cee36026aef3f90"
+    },
+    "ledger_always_abstain_cal_adverse.jsonl": {
+      "bytes": 94525,
+      "sha256": "4e798e1c6f1620c7ad1d9ab6dd3f40b0d1a7b6660eb60c26d3520173ca80995b"
+    },
+    "ledger_always_abstain_cal_base.jsonl": {
+      "bytes": 92275,
+      "sha256": "ea8711224d9021b477eeb412c6134e757ed99333def42c5dd306f91dae460253"
+    },
+    "ledger_always_abstain_eval_adverse.jsonl": {
+      "bytes": 46803,
+      "sha256": "db93e484f86d90c4eb4d09a202bf370a6f1b99dfb763a88f40a255c3d294a4bc"
+    },
+    "ledger_always_abstain_eval_base.jsonl": {
+      "bytes": 45696,
+      "sha256": "d8df5aef227fbdc34915f6357e4f395631000bab021ae2bf499061a6cd09c966"
+    },
+    "ledger_always_abstain_train_adverse.jsonl": {
+      "bytes": 192625,
+      "sha256": "0e0f93565f7c7c8591139a98718126202083315a4bbb8cd13ff6c7f36b26755f"
+    },
+    "ledger_always_abstain_train_base.jsonl": {
+      "bytes": 188107,
+      "sha256": "3aa18ce96de4a55a8a4353e8371442e3180df555785aee5f76d6a83b1939c431"
+    },
+    "ledger_always_call_h2_cal_adverse.jsonl": {
+      "bytes": 283618,
+      "sha256": "e35cb3495ad948dd709b396e25959ebde5f3be1baaf82fb5bce1883bea5a69e2"
+    },
+    "ledger_always_call_h2_cal_base.jsonl": {
+      "bytes": 279964,
+      "sha256": "444dd4a3ea911892c0ec291b58d1b24a599babcb488e12c6d4fd10fa3c38b332"
+    },
+    "ledger_always_call_h2_eval_adverse.jsonl": {
+      "bytes": 135049,
+      "sha256": "44201af7a82c215ffa7b91e4274c265ea68f1977723cf123c5d052efab6c56b8"
+    },
+    "ledger_always_call_h2_eval_base.jsonl": {
+      "bytes": 133328,
+      "sha256": "52b20d9c295ab1acd71bfaa1e154029abeeb53b76807eeba866a044f3f6c453c"
+    },
+    "ledger_always_call_h2_train_adverse.jsonl": {
+      "bytes": 585215,
+      "sha256": "61e025c073a49fdf0991d0fb9f0593bc8f1e1e3f33a3b88b17686f9f4b313bda"
+    },
+    "ledger_always_call_h2_train_base.jsonl": {
+      "bytes": 583582,
+      "sha256": "fe7ec99156da0976073830fbefbe8f3f1f6a5ccf92df1c91bd659e57b814fa20"
+    },
+    "ledger_always_put_h2_cal_adverse.jsonl": {
+      "bytes": 248232,
+      "sha256": "b2d2627431b554c8efa5518466afdd9a2ed8fbbb99b8d2122f4286063a53a23b"
+    },
+    "ledger_always_put_h2_cal_base.jsonl": {
+      "bytes": 227961,
+      "sha256": "6b6eeafcd3c6856c5be4d496c42d0e1a6aa0e6e52da0f50645c35cbf467da9c3"
+    },
+    "ledger_always_put_h2_eval_adverse.jsonl": {
+      "bytes": 138101,
+      "sha256": "5a03da21d4497fcb08ea22e73e868ba12bbd8d3740b5610003fd38d8bed9bd87"
+    },
+    "ledger_always_put_h2_eval_base.jsonl": {
+      "bytes": 136268,
+      "sha256": "7bd32482fd539ddf5908fd5d157f84327426650ce60f2d4741d89889da5864bc"
+    },
+    "ledger_always_put_h2_train_adverse.jsonl": {
+      "bytes": 548474,
+      "sha256": "13ead078251fb372fb55b984e5d2fcbc8d007df43c1bf35c12f99fada73cee53"
+    },
+    "ledger_always_put_h2_train_base.jsonl": {
+      "bytes": 531110,
+      "sha256": "eca42b5bd713ae8902bddddac26b1c226b035fbca315cc4aeb717ee6b9a38591"
+    },
+    "ledger_ev_top1_h2_cal_adverse.jsonl": {
+      "bytes": 214670,
+      "sha256": "bee24336a8f1fbdb77f9939e2dcc4040a68314b4998072a9b52351acf9b8dd85"
+    },
+    "ledger_ev_top1_h2_cal_base.jsonl": {
+      "bytes": 211681,
+      "sha256": "6474df33ebd8f816e32d333ad2ee0d3fb14f840a6e4a9ecb9cfbf8225fc2cf9e"
+    },
+    "ledger_ev_top1_h2_eval_adverse.jsonl": {
+      "bytes": 100101,
+      "sha256": "0ce6b266891e269faac3cc8ce721e81d17519efd8b5374f5983f96f05c36569c"
+    },
+    "ledger_ev_top1_h2_eval_base.jsonl": {
+      "bytes": 98593,
+      "sha256": "528ec44f453982d798c707bf23c3c4d1d1106b676548d30337512df627f50ded"
+    },
+    "ledger_ev_top1_h2_train_adverse.jsonl": {
+      "bytes": 452744,
+      "sha256": "9895e769be77323dffaf42a0fcf1885d9c7304dd471c1aaaf3de948f02ff4b54"
+    },
+    "ledger_ev_top1_h2_train_base.jsonl": {
+      "bytes": 444343,
+      "sha256": "5b029dece3bec696a17e132f64b1b19d7336d567be2d395ab197c332d329d8fb"
+    },
+    "model.json": {
+      "bytes": 3236,
+      "sha256": "68712c7c326d2337a34f8401579ddc52a4dab0e3f505c8c4ff2f1b1d51c03fb4"
+    },
+    "summary.json": {
+      "bytes": 137893,
+      "sha256": "2aeb17692677cf7bc32a5d71c9c104a379ac522d2942572bdebb00fcde262f2b"
+    },
+    "transform.json": {
+      "bytes": 1806,
+      "sha256": "db4be1e1863ab825117fac6278023fe0b5036ba1454d44243266a5eeb3f9736b"
+    }
+  },
+  "schema": "weekly_h2_ev_manifest_v1",
+  "source_pins_retained_in_input_candidates": true
+}

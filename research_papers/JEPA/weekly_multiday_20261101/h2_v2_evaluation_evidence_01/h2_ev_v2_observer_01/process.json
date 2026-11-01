@@ -1,0 +1,22 @@
+{
+  "pid": 46892,
+  "creation_time": 1793543143.8588986,
+  "utc": "2026-11-01T14:25:43.862459+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_h2_ev_v2.py",
+    "--candidates",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\candidates.jsonl",
+    "--coverage",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\coverage.json",
+    "--manifest",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\manifest.json",
+    "--manifest-sha256",
+    "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+    "--output",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01"
+  ]
+}

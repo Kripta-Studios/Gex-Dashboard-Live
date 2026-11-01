@@ -1,0 +1,4515 @@
+{
+  "book_divergences": {
+    "ALWAYS_ABSTAIN": {
+      "CAL": {
+        "adverse_entries": 0,
+        "adverse_only": [],
+        "base_entries": 0,
+        "base_only": []
+      },
+      "EVAL": {
+        "adverse_entries": 0,
+        "adverse_only": [],
+        "base_entries": 0,
+        "base_only": []
+      },
+      "TRAIN": {
+        "adverse_entries": 0,
+        "adverse_only": [],
+        "base_entries": 0,
+        "base_only": []
+      }
+    },
+    "ALWAYS_CALL_H2": {
+      "CAL": {
+        "adverse_entries": 271,
+        "adverse_only": [],
+        "base_entries": 271,
+        "base_only": []
+      },
+      "EVAL": {
+        "adverse_entries": 127,
+        "adverse_only": [],
+        "base_entries": 127,
+        "base_only": []
+      },
+      "TRAIN": {
+        "adverse_entries": 563,
+        "adverse_only": [],
+        "base_entries": 563,
+        "base_only": []
+      }
+    },
+    "ALWAYS_PUT_H2": {
+      "CAL": {
+        "adverse_entries": 213,
+        "adverse_only": [
+          "QQQ:20250916:20250919:PUT",
+          "QQQ:20250919:20250926:PUT",
+          "QQQ:20250923:20250926:PUT",
+          "QQQ:20250926:20251003:PUT",
+          "QQQ:20250930:20251003:PUT",
+          "QQQ:20251003:20251010:PUT",
+          "QQQ:20251007:20251010:PUT",
+          "QQQ:20251010:20251017:PUT",
+          "QQQ:20251014:20251017:PUT",
+          "QQQ:20251017:20251024:PUT",
+          "QQQ:20251021:20251024:PUT",
+          "SPY:20250912:20250919:PUT",
+          "SPY:20250916:20250919:PUT",
+          "SPY:20250919:20250926:PUT",
+          "SPY:20250923:20250926:PUT",
+          "SPY:20250926:20251003:PUT",
+          "SPY:20250930:20251003:PUT",
+          "SPY:20251003:20251010:PUT",
+          "SPY:20251007:20251010:PUT",
+          "SPY:20251010:20251017:PUT",
+          "SPY:20251014:20251017:PUT",
+          "SPY:20251017:20251024:PUT",
+          "SPY:20251021:20251024:PUT",
+          "SPY:20251024:20251031:PUT",
+          "SPY:20251028:20251031:PUT",
+          "SPY:20251111:20251114:PUT"
+        ],
+        "base_entries": 188,
+        "base_only": [
+          "SPXW:20250909:20250912:PUT"
+        ]
+      },
+      "EVAL": {
+        "adverse_entries": 132,
+        "adverse_only": [],
+        "base_entries": 132,
+        "base_only": []
+      },
+      "TRAIN": {
+        "adverse_entries": 505,
+        "adverse_only": [
+          "QQQ:20240927:20241004:PUT",
+          "QQQ:20241004:20241011:PUT",
+          "QQQ:20241008:20241011:PUT",
+          "QQQ:20241011:20241018:PUT",
+          "QQQ:20241015:20241018:PUT",
+          "SPXW:20240923:20240927:PUT",
+          "SPY:20241011:20241018:PUT",
+          "SPY:20241015:20241018:PUT",
+          "SPY:20241018:20241025:PUT",
+          "SPY:20241022:20241025:PUT",
+          "SPY:20241025:20241101:PUT",
+          "SPY:20241029:20241101:PUT",
+          "SPY:20241101:20241108:PUT",
+          "SPY:20241105:20241108:PUT",
+          "SPY:20241108:20241115:PUT",
+          "SPY:20241112:20241115:PUT",
+          "SPY:20241115:20241122:PUT",
+          "SPY:20241119:20241122:PUT",
+          "SPY:20241210:20241213:PUT"
+        ],
+        "base_entries": 487,
+        "base_only": [
+          "SPXW:20240917:20240920:PUT"
+        ]
+      }
+    },
+    "EV_TOP1_H2": {
+      "CAL": {
+        "adverse_entries": 172,
+        "adverse_only": [],
+        "base_entries": 172,
+        "base_only": []
+      },
+      "EVAL": {
+        "adverse_entries": 75,
+        "adverse_only": [],
+        "base_entries": 75,
+        "base_only": []
+      },
+      "TRAIN": {
+        "adverse_entries": 367,
+        "adverse_only": [],
+        "base_entries": 367,
+        "base_only": []
+      }
+    }
+  },
+  "coverage_by_split_ticker_reason": {
+    "CAL": {
+      "QQQ": {
+        "CANDIDATES_BUILT": 145,
+        "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 105
+      },
+      "SPXW": {
+        "CANDIDATES_BUILT": 145,
+        "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 105
+      },
+      "SPY": {
+        "CANDIDATES_BUILT": 145,
+        "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 105
+      }
+    },
+    "EVAL": {
+      "QQQ": {
+        "CANDIDATES_BUILT": 71,
+        "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 50,
+        "NO_OFFICIAL_H2": 2
+      },
+      "SPXW": {
+        "CANDIDATES_BUILT": 71,
+        "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 50,
+        "NO_OFFICIAL_H2": 2
+      },
+      "SPY": {
+        "CANDIDATES_BUILT": 71,
+        "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 50,
+        "NO_OFFICIAL_H2": 2
+      }
+    },
+    "TRAIN": {
+      "QQQ": {
+        "CANDIDATES_BUILT": 293,
+        "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 209
+      },
+      "SPXW": {
+        "CANDIDATES_BUILT": 293,
+        "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 209
+      },
+      "SPY": {
+        "CANDIDATES_BUILT": 293,
+        "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 209
+      }
+    }
+  },
+  "coverage_reason_counts": {
+    "CANDIDATES_BUILT": 1527,
+    "NO_1_TO_8_DTE_SERIES_ALLOWING_H2": 1092,
+    "NO_OFFICIAL_H2": 6
+  },
+  "development_seen": true,
+  "economics": {
+    "ALWAYS_ABSTAIN": {
+      "CAL": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": null,
+            "duration_calendar_days_mean": null,
+            "duration_calendar_days_min": null,
+            "max_reserved": 0.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 0,
+            "net_usd": 0.0,
+            "no_fill": 0,
+            "no_opportunity": 315,
+            "overnight_exposure_sessions": 0,
+            "positive_months": 0,
+            "profit_factor": null,
+            "realized_max_drawdown_usd": 0.0,
+            "trades": 0,
+            "wait": 435
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 105,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 145
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 105,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 145
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 105,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 145
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": null,
+            "duration_calendar_days_mean": null,
+            "duration_calendar_days_min": null,
+            "max_reserved": 0.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 0,
+            "net_usd": 0.0,
+            "no_fill": 0,
+            "no_opportunity": 315,
+            "overnight_exposure_sessions": 0,
+            "positive_months": 0,
+            "profit_factor": null,
+            "realized_max_drawdown_usd": 0.0,
+            "trades": 0,
+            "wait": 435
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 105,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 145
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 105,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 145
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 105,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 145
+            }
+          }
+        }
+      },
+      "EVAL": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": null,
+            "duration_calendar_days_mean": null,
+            "duration_calendar_days_min": null,
+            "max_reserved": 0.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 0,
+            "net_usd": 0.0,
+            "no_fill": 0,
+            "no_opportunity": 156,
+            "overnight_exposure_sessions": 0,
+            "positive_months": 0,
+            "profit_factor": null,
+            "realized_max_drawdown_usd": 0.0,
+            "trades": 0,
+            "wait": 213
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 52,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 71
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 52,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 71
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 52,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 71
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": null,
+            "duration_calendar_days_mean": null,
+            "duration_calendar_days_min": null,
+            "max_reserved": 0.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 0,
+            "net_usd": 0.0,
+            "no_fill": 0,
+            "no_opportunity": 156,
+            "overnight_exposure_sessions": 0,
+            "positive_months": 0,
+            "profit_factor": null,
+            "realized_max_drawdown_usd": 0.0,
+            "trades": 0,
+            "wait": 213
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 52,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 71
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 52,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 71
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 52,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 71
+            }
+          }
+        }
+      },
+      "TRAIN": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": null,
+            "duration_calendar_days_mean": null,
+            "duration_calendar_days_min": null,
+            "max_reserved": 0.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 0,
+            "net_usd": 0.0,
+            "no_fill": 0,
+            "no_opportunity": 627,
+            "overnight_exposure_sessions": 0,
+            "positive_months": 0,
+            "profit_factor": null,
+            "realized_max_drawdown_usd": 0.0,
+            "trades": 0,
+            "wait": 879
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 209,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 293
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 209,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 293
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 209,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 293
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": null,
+            "duration_calendar_days_mean": null,
+            "duration_calendar_days_min": null,
+            "max_reserved": 0.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 0,
+            "net_usd": 0.0,
+            "no_fill": 0,
+            "no_opportunity": 627,
+            "overnight_exposure_sessions": 0,
+            "positive_months": 0,
+            "profit_factor": null,
+            "realized_max_drawdown_usd": 0.0,
+            "trades": 0,
+            "wait": 879
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 209,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 293
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 209,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 293
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": null,
+              "duration_calendar_days_mean": null,
+              "duration_calendar_days_min": null,
+              "max_reserved": 0.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 0,
+              "net_usd": 0.0,
+              "no_fill": 0,
+              "no_opportunity": 209,
+              "overnight_exposure_sessions": 0,
+              "positive_months": 0,
+              "profit_factor": null,
+              "realized_max_drawdown_usd": 0.0,
+              "trades": 0,
+              "wait": 293
+            }
+          }
+        }
+      }
+    },
+    "ALWAYS_CALL_H2": {
+      "CAL": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.1549815498154983,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 7588.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 12,
+            "net_usd": 19709.39999999998,
+            "no_fill": 12,
+            "no_opportunity": 196,
+            "overnight_exposure_sessions": 542,
+            "positive_months": 7,
+            "profit_factor": 1.1592573259792076,
+            "realized_max_drawdown_usd": 31829.499999999956,
+            "trades": 271,
+            "wait": 271
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.182795698924731,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1330.9999999999998,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 4122.200000000003,
+              "no_fill": 0,
+              "no_opportunity": 64,
+              "overnight_exposure_sessions": 186,
+              "positive_months": 7,
+              "profit_factor": 1.336248103496093,
+              "realized_max_drawdown_usd": 2904.7000000000116,
+              "trades": 93,
+              "wait": 93
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.0941176470588236,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4942.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 11618.99999999998,
+              "no_fill": 12,
+              "no_opportunity": 68,
+              "overnight_exposure_sessions": 170,
+              "positive_months": 7,
+              "profit_factor": 1.1154435420570585,
+              "realized_max_drawdown_usd": 27593.300000000003,
+              "trades": 85,
+              "wait": 85
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.182795698924731,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1505.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 3968.200000000002,
+              "no_fill": 0,
+              "no_opportunity": 64,
+              "overnight_exposure_sessions": 186,
+              "positive_months": 7,
+              "profit_factor": 1.365658576141243,
+              "realized_max_drawdown_usd": 2737.100000000006,
+              "trades": 93,
+              "wait": 93
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.1549815498154983,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 7585.000000000001,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 12,
+            "net_usd": 20251.39999999998,
+            "no_fill": 12,
+            "no_opportunity": 196,
+            "overnight_exposure_sessions": 542,
+            "positive_months": 7,
+            "profit_factor": 1.164025963717535,
+            "realized_max_drawdown_usd": 31697.499999999956,
+            "trades": 271,
+            "wait": 271
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.182795698924731,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1330.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 4308.200000000003,
+              "no_fill": 0,
+              "no_opportunity": 64,
+              "overnight_exposure_sessions": 186,
+              "positive_months": 7,
+              "profit_factor": 1.3542403262674934,
+              "realized_max_drawdown_usd": 2872.7000000000116,
+              "trades": 93,
+              "wait": 93
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.0941176470588236,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4941.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 11788.999999999985,
+              "no_fill": 12,
+              "no_opportunity": 68,
+              "overnight_exposure_sessions": 170,
+              "positive_months": 7,
+              "profit_factor": 1.117251448610865,
+              "realized_max_drawdown_usd": 27553.300000000003,
+              "trades": 85,
+              "wait": 85
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.182795698924731,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1504.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 4154.2,
+              "no_fill": 0,
+              "no_opportunity": 64,
+              "overnight_exposure_sessions": 186,
+              "positive_months": 7,
+              "profit_factor": 1.386142663270807,
+              "realized_max_drawdown_usd": 2711.100000000006,
+              "trades": 93,
+              "wait": 93
+            }
+          }
+        }
+      },
+      "EVAL": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.1653543307086616,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6788.0,
+            "missing_exit": 3,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 2,
+            "months_observed": 6,
+            "net_usd": 3049.799999999993,
+            "no_fill": 15,
+            "no_opportunity": 100,
+            "overnight_exposure_sessions": 254,
+            "positive_months": 2,
+            "profit_factor": 1.0417084918587884,
+            "realized_max_drawdown_usd": 34947.69999999995,
+            "trades": 127,
+            "wait": 127
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.2666666666666666,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1167.0,
+              "missing_exit": 2,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -3154.9999999999973,
+              "no_fill": 1,
+              "no_opportunity": 32,
+              "overnight_exposure_sessions": 90,
+              "positive_months": 2,
+              "profit_factor": 0.7297181530026557,
+              "realized_max_drawdown_usd": 5730.099999999991,
+              "trades": 45,
+              "wait": 45
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.9444444444444446,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4952.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 6,
+              "net_usd": 10052.399999999998,
+              "no_fill": 14,
+              "no_opportunity": 37,
+              "overnight_exposure_sessions": 72,
+              "positive_months": 2,
+              "profit_factor": 1.191955454052444,
+              "realized_max_drawdown_usd": 26166.89999999998,
+              "trades": 36,
+              "wait": 36
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.239130434782609,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 971.9999999999999,
+              "missing_exit": 1,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -3847.599999999999,
+              "no_fill": 0,
+              "no_opportunity": 31,
+              "overnight_exposure_sessions": 92,
+              "positive_months": 1,
+              "profit_factor": 0.576274172943923,
+              "realized_max_drawdown_usd": 4727.699999999997,
+              "trades": 46,
+              "wait": 46
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.1653543307086616,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6784.999999999999,
+            "missing_exit": 3,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 2,
+            "months_observed": 6,
+            "net_usd": 3300.799999999987,
+            "no_fill": 15,
+            "no_opportunity": 100,
+            "overnight_exposure_sessions": 254,
+            "positive_months": 2,
+            "profit_factor": 1.045248174061807,
+            "realized_max_drawdown_usd": 34830.69999999995,
+            "trades": 127,
+            "wait": 127
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.2666666666666666,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1166.0,
+              "missing_exit": 2,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -3067.0000000000005,
+              "no_fill": 1,
+              "no_opportunity": 32,
+              "overnight_exposure_sessions": 90,
+              "positive_months": 2,
+              "profit_factor": 0.7359448988377096,
+              "realized_max_drawdown_usd": 5686.099999999991,
+              "trades": 45,
+              "wait": 45
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.9444444444444446,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4951.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 6,
+              "net_usd": 10124.399999999994,
+              "no_fill": 14,
+              "no_opportunity": 37,
+              "overnight_exposure_sessions": 72,
+              "positive_months": 2,
+              "profit_factor": 1.1935076948952992,
+              "realized_max_drawdown_usd": 26134.89999999998,
+              "trades": 36,
+              "wait": 36
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.239130434782609,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 970.9999999999999,
+              "missing_exit": 1,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -3756.599999999998,
+              "no_fill": 0,
+              "no_opportunity": 31,
+              "overnight_exposure_sessions": 92,
+              "positive_months": 1,
+              "profit_factor": 0.5832205383096278,
+              "realized_max_drawdown_usd": 4640.699999999997,
+              "trades": 46,
+              "wait": 46
+            }
+          }
+        }
+      },
+      "TRAIN": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.1740674955595027,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6380.999999999998,
+            "missing_exit": 1,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 0,
+            "months_observed": 24,
+            "net_usd": 37580.19999999998,
+            "no_fill": 7,
+            "no_opportunity": 373,
+            "overnight_exposure_sessions": 1126,
+            "positive_months": 13,
+            "profit_factor": 1.1757570655554461,
+            "realized_max_drawdown_usd": 31942.899999999965,
+            "trades": 563,
+            "wait": 563
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.1746031746031744,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 844.9999999999999,
+              "missing_exit": 1,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 0,
+              "months_observed": 24,
+              "net_usd": 5671.600000000004,
+              "no_fill": 0,
+              "no_opportunity": 124,
+              "overnight_exposure_sessions": 378,
+              "positive_months": 16,
+              "profit_factor": 1.2825261773584542,
+              "realized_max_drawdown_usd": 2105.300000000003,
+              "trades": 189,
+              "wait": 189
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.172972972972973,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4982.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 24,
+              "net_usd": 28473.99999999999,
+              "no_fill": 7,
+              "no_opportunity": 125,
+              "overnight_exposure_sessions": 370,
+              "positive_months": 13,
+              "profit_factor": 1.162311603620859,
+              "realized_max_drawdown_usd": 26966.699999999997,
+              "trades": 185,
+              "wait": 185
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.1746031746031744,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 734.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 24,
+              "net_usd": 3434.6000000000035,
+              "no_fill": 0,
+              "no_opportunity": 124,
+              "overnight_exposure_sessions": 378,
+              "positive_months": 14,
+              "profit_factor": 1.1875150138673551,
+              "realized_max_drawdown_usd": 3096.2999999999884,
+              "trades": 189,
+              "wait": 189
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.1740674955595027,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6378.0,
+            "missing_exit": 1,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 0,
+            "months_observed": 24,
+            "net_usd": 38705.19999999998,
+            "no_fill": 7,
+            "no_opportunity": 373,
+            "overnight_exposure_sessions": 1126,
+            "positive_months": 13,
+            "profit_factor": 1.1815607813851552,
+            "realized_max_drawdown_usd": 31520.899999999965,
+            "trades": 563,
+            "wait": 563
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.1746031746031744,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 844.0,
+              "missing_exit": 1,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 0,
+              "months_observed": 24,
+              "net_usd": 6048.600000000004,
+              "no_fill": 0,
+              "no_opportunity": 124,
+              "overnight_exposure_sessions": 378,
+              "positive_months": 16,
+              "profit_factor": 1.3045067359391054,
+              "realized_max_drawdown_usd": 2055.300000000003,
+              "trades": 189,
+              "wait": 189
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.172972972972973,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4980.999999999999,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 24,
+              "net_usd": 28843.99999999999,
+              "no_fill": 7,
+              "no_opportunity": 125,
+              "overnight_exposure_sessions": 370,
+              "positive_months": 13,
+              "profit_factor": 1.164617790409661,
+              "realized_max_drawdown_usd": 26828.70000000001,
+              "trades": 185,
+              "wait": 185
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.1746031746031744,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 733.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 24,
+              "net_usd": 3812.6000000000054,
+              "no_fill": 0,
+              "no_opportunity": 124,
+              "overnight_exposure_sessions": 378,
+              "positive_months": 14,
+              "profit_factor": 1.210654850045308,
+              "realized_max_drawdown_usd": 2956.2999999999884,
+              "trades": 189,
+              "wait": 189
+            }
+          }
+        }
+      }
+    },
+    "ALWAYS_PUT_H2": {
+      "CAL": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 89,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.15962441314554,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 7671.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 12,
+            "net_usd": -99854.80000000002,
+            "no_fill": 15,
+            "no_opportunity": 220,
+            "overnight_exposure_sessions": 426,
+            "positive_months": 1,
+            "profit_factor": 0.3680491916987742,
+            "realized_max_drawdown_usd": 104979.60000000073,
+            "trades": 213,
+            "wait": 213
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 27,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.1842105263157894,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1323.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 10,
+              "net_usd": -12207.6,
+              "no_fill": 0,
+              "no_opportunity": 71,
+              "overnight_exposure_sessions": 152,
+              "positive_months": 1,
+              "profit_factor": 0.4059735482175705,
+              "realized_max_drawdown_usd": 13559.99999999997,
+              "trades": 76,
+              "wait": 76
+            },
+            "SPXW": {
+              "capital_blocked": 40,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.1403508771929824,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4992.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 9,
+              "net_usd": -76541.20000000001,
+              "no_fill": 15,
+              "no_opportunity": 81,
+              "overnight_exposure_sessions": 114,
+              "positive_months": 1,
+              "profit_factor": 0.3552351156329868,
+              "realized_max_drawdown_usd": 80368.80000000016,
+              "trades": 57,
+              "wait": 57
+            },
+            "SPY": {
+              "capital_blocked": 22,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.15,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1366.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": -11105.999999999996,
+              "no_fill": 0,
+              "no_opportunity": 68,
+              "overnight_exposure_sessions": 160,
+              "positive_months": 1,
+              "profit_factor": 0.40761681245999576,
+              "realized_max_drawdown_usd": 12180.399999999965,
+              "trades": 80,
+              "wait": 80
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 126,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.1861702127659575,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 7667.999999999999,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 10,
+            "net_usd": -99950.80000000002,
+            "no_fill": 15,
+            "no_opportunity": 233,
+            "overnight_exposure_sessions": 376,
+            "positive_months": 1,
+            "profit_factor": 0.35596138505533065,
+            "realized_max_drawdown_usd": 105159.60000000057,
+            "trades": 188,
+            "wait": 188
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 43,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.230769230769231,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1322.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 9,
+              "net_usd": -10624.999999999998,
+              "no_fill": 0,
+              "no_opportunity": 77,
+              "overnight_exposure_sessions": 130,
+              "positive_months": 1,
+              "profit_factor": 0.39255168313208944,
+              "realized_max_drawdown_usd": 12009.39999999998,
+              "trades": 65,
+              "wait": 65
+            },
+            "SPXW": {
+              "capital_blocked": 39,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.1206896551724137,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4991.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 9,
+              "net_usd": -79781.80000000002,
+              "no_fill": 15,
+              "no_opportunity": 80,
+              "overnight_exposure_sessions": 116,
+              "positive_months": 1,
+              "profit_factor": 0.3458921180876671,
+              "realized_max_drawdown_usd": 83637.40000000017,
+              "trades": 58,
+              "wait": 58
+            },
+            "SPY": {
+              "capital_blocked": 44,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.2,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1365.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 10,
+              "net_usd": -9543.999999999996,
+              "no_fill": 0,
+              "no_opportunity": 76,
+              "overnight_exposure_sessions": 130,
+              "positive_months": 1,
+              "profit_factor": 0.3933461308653589,
+              "realized_max_drawdown_usd": 10650.399999999994,
+              "trades": 65,
+              "wait": 65
+            }
+          }
+        }
+      },
+      "EVAL": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.25,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6829.0,
+            "missing_exit": 3,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 2,
+            "months_observed": 6,
+            "net_usd": -25011.2,
+            "no_fill": 7,
+            "no_opportunity": 98,
+            "overnight_exposure_sessions": 264,
+            "positive_months": 2,
+            "profit_factor": 0.7449538777183384,
+            "realized_max_drawdown_usd": 45514.899999999936,
+            "trades": 132,
+            "wait": 132
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.2666666666666666,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1179.0,
+              "missing_exit": 2,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -6358.0,
+              "no_fill": 1,
+              "no_opportunity": 32,
+              "overnight_exposure_sessions": 90,
+              "positive_months": 1,
+              "profit_factor": 0.5188654972530382,
+              "realized_max_drawdown_usd": 7860.700000000012,
+              "trades": 45,
+              "wait": 45
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.2439024390243905,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4982.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 6,
+              "net_usd": -14920.600000000006,
+              "no_fill": 6,
+              "no_opportunity": 35,
+              "overnight_exposure_sessions": 82,
+              "positive_months": 3,
+              "profit_factor": 0.7996196687142598,
+              "realized_max_drawdown_usd": 34636.899999999994,
+              "trades": 41,
+              "wait": 41
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.239130434782609,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 984.0,
+              "missing_exit": 1,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -3732.599999999998,
+              "no_fill": 0,
+              "no_opportunity": 31,
+              "overnight_exposure_sessions": 92,
+              "positive_months": 2,
+              "profit_factor": 0.6407299747819893,
+              "realized_max_drawdown_usd": 5061.300000000003,
+              "trades": 46,
+              "wait": 46
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.25,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6826.000000000001,
+            "missing_exit": 3,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 2,
+            "months_observed": 6,
+            "net_usd": -24750.2,
+            "no_fill": 7,
+            "no_opportunity": 98,
+            "overnight_exposure_sessions": 264,
+            "positive_months": 2,
+            "profit_factor": 0.7471383443467735,
+            "realized_max_drawdown_usd": 45347.899999999936,
+            "trades": 132,
+            "wait": 132
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.2666666666666666,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1178.0,
+              "missing_exit": 2,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -6270.000000000001,
+              "no_fill": 1,
+              "no_opportunity": 32,
+              "overnight_exposure_sessions": 90,
+              "positive_months": 1,
+              "profit_factor": 0.5233606495066363,
+              "realized_max_drawdown_usd": 7804.700000000012,
+              "trades": 45,
+              "wait": 45
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.2439024390243905,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4980.999999999999,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 6,
+              "net_usd": -14838.600000000008,
+              "no_fill": 6,
+              "no_opportunity": 35,
+              "overnight_exposure_sessions": 82,
+              "positive_months": 3,
+              "profit_factor": 0.8005655655521118,
+              "realized_max_drawdown_usd": 34604.899999999994,
+              "trades": 41,
+              "wait": 41
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.239130434782609,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 983.0,
+              "missing_exit": 1,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -3641.5999999999985,
+              "no_fill": 0,
+              "no_opportunity": 31,
+              "overnight_exposure_sessions": 92,
+              "positive_months": 2,
+              "profit_factor": 0.6472138262419591,
+              "realized_max_drawdown_usd": 5002.300000000003,
+              "trades": 46,
+              "wait": 46
+            }
+          }
+        }
+      },
+      "TRAIN": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 82,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.1643564356435645,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6184.999999999997,
+            "missing_exit": 1,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 0,
+            "months_observed": 24,
+            "net_usd": -99923.00000000003,
+            "no_fill": 14,
+            "no_opportunity": 400,
+            "overnight_exposure_sessions": 1010,
+            "positive_months": 6,
+            "profit_factor": 0.6125796180813494,
+            "realized_max_drawdown_usd": 99923.00000000242,
+            "trades": 505,
+            "wait": 505
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 30,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.176470588235294,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 941.0,
+              "missing_exit": 1,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 0,
+              "months_observed": 22,
+              "net_usd": -13593.999999999998,
+              "no_fill": 0,
+              "no_opportunity": 132,
+              "overnight_exposure_sessions": 340,
+              "positive_months": 6,
+              "profit_factor": 0.5217960263409697,
+              "realized_max_drawdown_usd": 13593.999999999913,
+              "trades": 170,
+              "wait": 170
+            },
+            "SPXW": {
+              "capital_blocked": 38,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.155844155844156,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4952.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 21,
+              "net_usd": -74501.4,
+              "no_fill": 14,
+              "no_opportunity": 142,
+              "overnight_exposure_sessions": 308,
+              "positive_months": 6,
+              "profit_factor": 0.6337575766513781,
+              "realized_max_drawdown_usd": 74501.40000000043,
+              "trades": 154,
+              "wait": 154
+            },
+            "SPY": {
+              "capital_blocked": 14,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.160220994475138,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 747.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 24,
+              "net_usd": -11827.6,
+              "no_fill": 0,
+              "no_opportunity": 126,
+              "overnight_exposure_sessions": 362,
+              "positive_months": 6,
+              "profit_factor": 0.5463242119475579,
+              "realized_max_drawdown_usd": 11827.599999999991,
+              "trades": 181,
+              "wait": 181
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 110,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 3.1704312114989732,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6182.0,
+            "missing_exit": 1,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 0,
+            "months_observed": 22,
+            "net_usd": -99868.20000000001,
+            "no_fill": 14,
+            "no_opportunity": 408,
+            "overnight_exposure_sessions": 974,
+            "positive_months": 6,
+            "profit_factor": 0.6112722567868016,
+            "realized_max_drawdown_usd": 99868.20000000231,
+            "trades": 487,
+            "wait": 487
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 38,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.175757575757576,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 940.0,
+              "missing_exit": 1,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 0,
+              "months_observed": 22,
+              "net_usd": -12976.0,
+              "no_fill": 0,
+              "no_opportunity": 134,
+              "overnight_exposure_sessions": 330,
+              "positive_months": 6,
+              "profit_factor": 0.5260220332544346,
+              "realized_max_drawdown_usd": 12975.999999999942,
+              "trades": 165,
+              "wait": 165
+            },
+            "SPXW": {
+              "capital_blocked": 39,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.155844155844156,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4951.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 21,
+              "net_usd": -76223.40000000002,
+              "no_fill": 14,
+              "no_opportunity": 141,
+              "overnight_exposure_sessions": 308,
+              "positive_months": 6,
+              "profit_factor": 0.6285970443061719,
+              "realized_max_drawdown_usd": 76223.40000000045,
+              "trades": 154,
+              "wait": 154
+            },
+            "SPY": {
+              "capital_blocked": 33,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.1785714285714284,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 743.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 22,
+              "net_usd": -10668.799999999996,
+              "no_fill": 0,
+              "no_opportunity": 133,
+              "overnight_exposure_sessions": 336,
+              "positive_months": 6,
+              "profit_factor": 0.5610017035214342,
+              "realized_max_drawdown_usd": 10668.800000000017,
+              "trades": 168,
+              "wait": 168
+            }
+          }
+        }
+      }
+    },
+    "EV_TOP1_H2": {
+      "CAL": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 2.563953488372093,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6465.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 12,
+            "net_usd": 23648.8,
+            "no_fill": 10,
+            "no_opportunity": 269,
+            "overnight_exposure_sessions": 344,
+            "positive_months": 6,
+            "profit_factor": 1.279405857305563,
+            "realized_max_drawdown_usd": 22489.99999999997,
+            "trades": 172,
+            "wait": 299
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.6785714285714284,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 819.9999999999999,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": -1583.5999999999988,
+              "no_fill": 0,
+              "no_opportunity": 94,
+              "overnight_exposure_sessions": 112,
+              "positive_months": 4,
+              "profit_factor": 0.8331682855397061,
+              "realized_max_drawdown_usd": 3410.100000000006,
+              "trades": 56,
+              "wait": 100
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.4909090909090907,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4992.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 24386.999999999985,
+              "no_fill": 10,
+              "no_opportunity": 89,
+              "overnight_exposure_sessions": 110,
+              "positive_months": 6,
+              "profit_factor": 1.3643047928629897,
+              "realized_max_drawdown_usd": 18943.5,
+              "trades": 55,
+              "wait": 96
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.5245901639344264,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 794.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 845.4000000000019,
+              "no_fill": 0,
+              "no_opportunity": 86,
+              "overnight_exposure_sessions": 122,
+              "positive_months": 6,
+              "profit_factor": 1.1030196680558602,
+              "realized_max_drawdown_usd": 2498.100000000006,
+              "trades": 61,
+              "wait": 103
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 2.563953488372093,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6462.0,
+            "missing_exit": 0,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 0,
+            "months_observed": 12,
+            "net_usd": 23992.799999999996,
+            "no_fill": 10,
+            "no_opportunity": 269,
+            "overnight_exposure_sessions": 344,
+            "positive_months": 6,
+            "profit_factor": 1.2841819499784424,
+            "realized_max_drawdown_usd": 22391.99999999997,
+            "trades": 172,
+            "wait": 299
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.6785714285714284,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 819.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": -1471.5999999999983,
+              "no_fill": 0,
+              "no_opportunity": 94,
+              "overnight_exposure_sessions": 112,
+              "positive_months": 4,
+              "profit_factor": 0.8437493363912423,
+              "realized_max_drawdown_usd": 3384.100000000006,
+              "trades": 56,
+              "wait": 100
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.4909090909090907,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4991.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 24497.0,
+              "no_fill": 10,
+              "no_opportunity": 89,
+              "overnight_exposure_sessions": 110,
+              "positive_months": 6,
+              "profit_factor": 1.366298230189062,
+              "realized_max_drawdown_usd": 18909.5,
+              "trades": 55,
+              "wait": 96
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.5245901639344264,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 793.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 12,
+              "net_usd": 967.4000000000015,
+              "no_fill": 0,
+              "no_opportunity": 86,
+              "overnight_exposure_sessions": 122,
+              "positive_months": 6,
+              "profit_factor": 1.1189591992326802,
+              "realized_max_drawdown_usd": 2472.100000000006,
+              "trades": 61,
+              "wait": 103
+            }
+          }
+        }
+      },
+      "EVAL": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 2.4,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6747.0,
+            "missing_exit": 3,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 3,
+            "months_observed": 6,
+            "net_usd": 11485.999999999993,
+            "no_fill": 12,
+            "no_opportunity": 140,
+            "overnight_exposure_sessions": 150,
+            "positive_months": 3,
+            "profit_factor": 1.262502342546588,
+            "realized_max_drawdown_usd": 16666.29999999999,
+            "trades": 75,
+            "wait": 142
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.4166666666666665,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 993.0,
+              "missing_exit": 1,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -1557.3999999999994,
+              "no_fill": 0,
+              "no_opportunity": 48,
+              "overnight_exposure_sessions": 48,
+              "positive_months": 3,
+              "profit_factor": 0.6677050439532306,
+              "realized_max_drawdown_usd": 2302.7999999999884,
+              "trades": 24,
+              "wait": 51
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 4,
+              "duration_calendar_days_mean": 2.48,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4952.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 6,
+              "net_usd": 15604.999999999995,
+              "no_fill": 12,
+              "no_opportunity": 46,
+              "overnight_exposure_sessions": 50,
+              "positive_months": 4,
+              "profit_factor": 1.449898516963812,
+              "realized_max_drawdown_usd": 15567.299999999988,
+              "trades": 25,
+              "wait": 40
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.3076923076923075,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 971.9999999999999,
+              "missing_exit": 2,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 2,
+              "months_observed": 6,
+              "net_usd": -2561.599999999999,
+              "no_fill": 0,
+              "no_opportunity": 46,
+              "overnight_exposure_sessions": 52,
+              "positive_months": 2,
+              "profit_factor": 0.41561345074599637,
+              "realized_max_drawdown_usd": 3008.0,
+              "trades": 26,
+              "wait": 51
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 2.4,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6744.0,
+            "missing_exit": 3,
+            "missing_exit_quote": 0,
+            "missing_exit_source": 3,
+            "months_observed": 6,
+            "net_usd": 11632.999999999996,
+            "no_fill": 12,
+            "no_opportunity": 140,
+            "overnight_exposure_sessions": 150,
+            "positive_months": 3,
+            "profit_factor": 1.2664281722656359,
+            "realized_max_drawdown_usd": 16597.29999999999,
+            "trades": 75,
+            "wait": 142
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.4166666666666665,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 992.0,
+              "missing_exit": 1,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 1,
+              "months_observed": 6,
+              "net_usd": -1510.3999999999996,
+              "no_fill": 0,
+              "no_opportunity": 48,
+              "overnight_exposure_sessions": 48,
+              "positive_months": 3,
+              "profit_factor": 0.6760049766184737,
+              "realized_max_drawdown_usd": 2277.7999999999884,
+              "trades": 24,
+              "wait": 51
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 4,
+              "duration_calendar_days_mean": 2.48,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4951.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 6,
+              "net_usd": 15654.999999999993,
+              "no_fill": 12,
+              "no_opportunity": 46,
+              "overnight_exposure_sessions": 50,
+              "positive_months": 4,
+              "profit_factor": 1.4517568160306578,
+              "realized_max_drawdown_usd": 15547.299999999988,
+              "trades": 25,
+              "wait": 40
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.3076923076923075,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 970.9999999999999,
+              "missing_exit": 2,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 2,
+              "months_observed": 6,
+              "net_usd": -2511.599999999999,
+              "no_fill": 0,
+              "no_opportunity": 46,
+              "overnight_exposure_sessions": 52,
+              "positive_months": 2,
+              "profit_factor": 0.4222753829875329,
+              "realized_max_drawdown_usd": 2980.0,
+              "trades": 26,
+              "wait": 51
+            }
+          }
+        }
+      },
+      "TRAIN": {
+        "adverse": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 2.7029972752043596,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6046.0,
+            "missing_exit": 1,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 0,
+            "months_observed": 25,
+            "net_usd": 15998.799999999988,
+            "no_fill": 6,
+            "no_opportunity": 529,
+            "overnight_exposure_sessions": 734,
+            "positive_months": 11,
+            "profit_factor": 1.1245859154403115,
+            "realized_max_drawdown_usd": 25779.399999999936,
+            "trades": 367,
+            "wait": 604
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.0,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1055.0,
+              "missing_exit": 1,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 0,
+              "months_observed": 25,
+              "net_usd": 4637.600000000002,
+              "no_fill": 0,
+              "no_opportunity": 176,
+              "overnight_exposure_sessions": 258,
+              "positive_months": 12,
+              "profit_factor": 1.3820917165125974,
+              "realized_max_drawdown_usd": 1677.5,
+              "trades": 129,
+              "wait": 197
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 4,
+              "duration_calendar_days_mean": 2.1523809523809523,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4802.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 25,
+              "net_usd": 11541.99999999999,
+              "no_fill": 6,
+              "no_opportunity": 184,
+              "overnight_exposure_sessions": 210,
+              "positive_months": 11,
+              "profit_factor": 1.112017578083298,
+              "realized_max_drawdown_usd": 23818.099999999977,
+              "trades": 105,
+              "wait": 207
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.8496240601503757,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 715.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 25,
+              "net_usd": -180.79999999999814,
+              "no_fill": 0,
+              "no_opportunity": 169,
+              "overnight_exposure_sessions": 266,
+              "positive_months": 9,
+              "profit_factor": 0.9863454421871461,
+              "realized_max_drawdown_usd": 3080.899999999994,
+              "trades": 133,
+              "wait": 200
+            }
+          }
+        },
+        "base": {
+          "pooled": {
+            "capital_blocked": 0,
+            "duration_calendar_days_max": 5,
+            "duration_calendar_days_mean": 2.7029972752043596,
+            "duration_calendar_days_min": 2,
+            "max_reserved": 6043.0,
+            "missing_exit": 1,
+            "missing_exit_quote": 1,
+            "missing_exit_source": 0,
+            "months_observed": 25,
+            "net_usd": 16731.799999999974,
+            "no_fill": 6,
+            "no_opportunity": 529,
+            "overnight_exposure_sessions": 734,
+            "positive_months": 11,
+            "profit_factor": 1.1307261749245257,
+            "realized_max_drawdown_usd": 25633.39999999995,
+            "trades": 367,
+            "wait": 604
+          },
+          "tickers": {
+            "QQQ": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 3.0,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 1054.0,
+              "missing_exit": 1,
+              "missing_exit_quote": 1,
+              "missing_exit_source": 0,
+              "months_observed": 25,
+              "net_usd": 4894.600000000003,
+              "no_fill": 0,
+              "no_opportunity": 176,
+              "overnight_exposure_sessions": 258,
+              "positive_months": 14,
+              "profit_factor": 1.4078697376754108,
+              "realized_max_drawdown_usd": 1593.5,
+              "trades": 129,
+              "wait": 197
+            },
+            "SPXW": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 4,
+              "duration_calendar_days_mean": 2.1523809523809523,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 4801.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 25,
+              "net_usd": 11751.999999999973,
+              "no_fill": 6,
+              "no_opportunity": 184,
+              "overnight_exposure_sessions": 210,
+              "positive_months": 11,
+              "profit_factor": 1.1141975368625214,
+              "realized_max_drawdown_usd": 23772.09999999999,
+              "trades": 105,
+              "wait": 207
+            },
+            "SPY": {
+              "capital_blocked": 0,
+              "duration_calendar_days_max": 5,
+              "duration_calendar_days_mean": 2.8496240601503757,
+              "duration_calendar_days_min": 2,
+              "max_reserved": 714.0,
+              "missing_exit": 0,
+              "missing_exit_quote": 0,
+              "missing_exit_source": 0,
+              "months_observed": 25,
+              "net_usd": 85.20000000000141,
+              "no_fill": 0,
+              "no_opportunity": 169,
+              "overnight_exposure_sessions": 266,
+              "positive_months": 9,
+              "profit_factor": 1.0065130643509101,
+              "realized_max_drawdown_usd": 2978.899999999994,
+              "trades": 133,
+              "wait": 200
+            }
+          }
+        }
+      }
+    }
+  },
+  "eligible_label_counts": {
+    "CAL": 870,
+    "EVAL": 426,
+    "TRAIN": 1752
+  },
+  "ev_metrics_conservative": {
+    "CAL": {
+      "adverse": {
+        "bias": 48.95995235012569,
+        "mae": 929.8735259749219,
+        "n": 870
+      },
+      "base": {
+        "bias": 50.65040665228143,
+        "mae": 930.2692709202611,
+        "n": 870
+      }
+    },
+    "EVAL": {
+      "adverse": {
+        "bias": 13.964767296914784,
+        "mae": 1043.777142496737,
+        "n": 426
+      },
+      "base": {
+        "bias": 16.14457394095008,
+        "mae": 1044.4165567790774,
+        "n": 426
+      }
+    },
+    "TRAIN": {
+      "adverse": {
+        "bias": 7.639043685899831,
+        "mae": 809.2761787456169,
+        "n": 1752
+      },
+      "base": {
+        "bias": 8.449780600326164,
+        "mae": 809.4213142096695,
+        "n": 1752
+      }
+    }
+  },
+  "ev_metrics_observed_only": {
+    "CAL": {
+      "adverse": {
+        "bias": 48.95995235012569,
+        "mae": 929.8735259749219,
+        "n": 870
+      },
+      "base": {
+        "bias": 50.65040665228143,
+        "mae": 930.2692709202611,
+        "n": 870
+      }
+    },
+    "EVAL": {
+      "adverse": {
+        "bias": -6.859684754707964,
+        "mae": 1057.9463148451082,
+        "n": 412
+      },
+      "base": {
+        "bias": -4.697932873261002,
+        "mae": 1058.515330935094,
+        "n": 412
+      }
+    },
+    "TRAIN": {
+      "adverse": {
+        "bias": 7.040689487489018,
+        "mae": 810.5122344672515,
+        "n": 1748
+      },
+      "base": {
+        "bias": 7.852180771203482,
+        "mae": 810.6566011851451,
+        "n": 1748
+      }
+    }
+  },
+  "evaluation_primary": "EVAL_20260101_20260630",
+  "label_support": {
+    "CAL": {
+      "conservative_all": {
+        "0": 35,
+        "1": 436,
+        "2": 111,
+        "3": 92,
+        "4": 196
+      },
+      "lower_bound": 0,
+      "lower_bound_by_scenario": {
+        "0": 0,
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "lower_bound_proportion": 0.0,
+      "observed_only": {
+        "0": 35,
+        "1": 436,
+        "2": 111,
+        "3": 92,
+        "4": 196
+      }
+    },
+    "EVAL": {
+      "conservative_all": {
+        "0": 32,
+        "1": 211,
+        "2": 62,
+        "3": 15,
+        "4": 106
+      },
+      "lower_bound": 14,
+      "lower_bound_by_scenario": {
+        "0": 0,
+        "1": 14,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "lower_bound_proportion": 0.03286384976525822,
+      "observed_only": {
+        "0": 32,
+        "1": 197,
+        "2": 62,
+        "3": 15,
+        "4": 106
+      }
+    },
+    "TRAIN": {
+      "conservative_all": {
+        "0": 23,
+        "1": 880,
+        "2": 205,
+        "3": 158,
+        "4": 486
+      },
+      "lower_bound": 4,
+      "lower_bound_by_scenario": {
+        "0": 0,
+        "1": 4,
+        "2": 0,
+        "3": 0,
+        "4": 0
+      },
+      "lower_bound_proportion": 0.00228310502283105,
+      "observed_only": {
+        "0": 23,
+        "1": 876,
+        "2": 205,
+        "3": 158,
+        "4": 486
+      }
+    }
+  },
+  "probability_metrics_conservative": {
+    "CAL": {
+      "brier": 0.6543959323645175,
+      "log_loss": 1.2350865613878421,
+      "n": 870,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 755,
+          "observed": 0.003973509933774834,
+          "predicted": 0.007939235804113595
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 37,
+          "observed": 0.2702702702702703,
+          "predicted": 0.14986129344190044
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 31,
+          "observed": 0.1935483870967742,
+          "predicted": 0.24200133300322801
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 23,
+          "observed": 0.43478260869565216,
+          "predicted": 0.34015534782377593
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 17,
+          "observed": 0.23529411764705882,
+          "predicted": 0.44884011735785423
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 3,
+          "observed": 0.0,
+          "predicted": 0.5174922890223658
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 0,
+          "n": 4,
+          "observed": 0.5,
+          "predicted": 0.6781214389305569
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 12,
+          "observed": 0.4166666666666667,
+          "predicted": 0.17415381237101527
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 19,
+          "observed": 0.2631578947368421,
+          "predicted": 0.25624435440622517
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 47,
+          "observed": 0.48936170212765956,
+          "predicted": 0.3573418985104267
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 396,
+          "observed": 0.43686868686868685,
+          "predicted": 0.45452588451474313
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 369,
+          "observed": 0.5663956639566395,
+          "predicted": 0.543177508969549
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 1,
+          "n": 24,
+          "observed": 0.75,
+          "predicted": 0.6089247960583433
+        },
+        {
+          "bin_high": 0.9,
+          "bin_low": 0.8,
+          "class": 1,
+          "n": 3,
+          "observed": 1.0,
+          "predicted": 0.8433897837620279
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 287,
+          "observed": 0.10104529616724739,
+          "predicted": 0.08438699045019471
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 574,
+          "observed": 0.14111498257839722,
+          "predicted": 0.13633542676831098
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 8,
+          "observed": 0.125,
+          "predicted": 0.22608271442984634
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 2,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.35311097125355045
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 606,
+          "observed": 0.08745874587458746,
+          "predicted": 0.07524952123058994
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 256,
+          "observed": 0.1484375,
+          "predicted": 0.12031390477596532
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 3,
+          "n": 5,
+          "observed": 0.2,
+          "predicted": 0.23417534175898308
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 3,
+          "n": 3,
+          "observed": 0.0,
+          "predicted": 0.3182383069067852
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 4,
+          "n": 12,
+          "observed": 0.0,
+          "predicted": 0.08975139030857893
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 68,
+          "observed": 0.14705882352941177,
+          "predicted": 0.15598527032668097
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 564,
+          "observed": 0.21453900709219859,
+          "predicted": 0.2504457061129395
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 226,
+          "observed": 0.28761061946902655,
+          "predicted": 0.3266263211537688
+        }
+      ]
+    },
+    "EVAL": {
+      "brier": 0.6422386255792182,
+      "log_loss": 1.2048750302676239,
+      "n": 426,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 337,
+          "observed": 0.01483679525222552,
+          "predicted": 0.008363238005755315
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 26,
+          "observed": 0.2692307692307692,
+          "predicted": 0.14558799006227524
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 25,
+          "observed": 0.2,
+          "predicted": 0.2576594045143883
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 15,
+          "observed": 0.6,
+          "predicted": 0.33538363771805063
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 14,
+          "observed": 0.2857142857142857,
+          "predicted": 0.46203961418710143
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 9,
+          "observed": 0.2222222222222222,
+          "predicted": 0.5440994551687375
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 5,
+          "observed": 0.0,
+          "predicted": 0.18570377680915046
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 20,
+          "observed": 0.35,
+          "predicted": 0.24692225957498465
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 40,
+          "observed": 0.375,
+          "predicted": 0.3541124508601823
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 182,
+          "observed": 0.4725274725274725,
+          "predicted": 0.4572591356188215
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 168,
+          "observed": 0.5773809523809523,
+          "predicted": 0.5468824824898326
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 1,
+          "n": 10,
+          "observed": 0.6,
+          "predicted": 0.6053176003150067
+        },
+        {
+          "bin_high": 0.8,
+          "bin_low": 0.7,
+          "class": 1,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.7822760635713775
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 158,
+          "observed": 0.056962025316455694,
+          "predicted": 0.08200987200842187
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 262,
+          "observed": 0.1984732824427481,
+          "predicted": 0.13764109576026945
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 6,
+          "observed": 0.16666666666666666,
+          "predicted": 0.20821740985395154
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 299,
+          "observed": 0.030100334448160536,
+          "predicted": 0.07233234483845764
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 127,
+          "observed": 0.047244094488188976,
+          "predicted": 0.11823712889232163
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 4,
+          "n": 5,
+          "observed": 0.0,
+          "predicted": 0.09335317004749413
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 49,
+          "observed": 0.16326530612244897,
+          "predicted": 0.1476532884890241
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 279,
+          "observed": 0.25089605734767023,
+          "predicted": 0.249694843929581
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 93,
+          "observed": 0.3010752688172043,
+          "predicted": 0.3259711990845141
+        }
+      ]
+    },
+    "TRAIN": {
+      "brier": 0.6317662411030984,
+      "log_loss": 1.1626714437991947,
+      "n": 1752,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 1697,
+          "observed": 0.0011785503830288745,
+          "predicted": 0.005769758255480703
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 21,
+          "observed": 0.23809523809523808,
+          "predicted": 0.14469615305023906
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 18,
+          "observed": 0.2222222222222222,
+          "predicted": 0.24547194585003293
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 14,
+          "observed": 0.7142857142857143,
+          "predicted": 0.34495295881479693
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 1,
+          "observed": 1.0,
+          "predicted": 0.428220426179011
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 1,
+          "observed": 1.0,
+          "predicted": 0.5423729157226118
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.16876410723460658
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 5,
+          "observed": 0.4,
+          "predicted": 0.24462233576765685
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 22,
+          "observed": 0.18181818181818182,
+          "predicted": 0.35095535938916056
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 809,
+          "observed": 0.44252163164400493,
+          "predicted": 0.45793282691319304
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 859,
+          "observed": 0.5564610011641443,
+          "predicted": 0.5428068037128602
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 1,
+          "n": 55,
+          "observed": 0.6727272727272727,
+          "predicted": 0.6078792375528089
+        },
+        {
+          "bin_high": 0.8,
+          "bin_low": 0.7,
+          "class": 1,
+          "n": 1,
+          "observed": 1.0,
+          "predicted": 0.7002863509435242
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 672,
+          "observed": 0.07142857142857142,
+          "predicted": 0.08871639554585264
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 1078,
+          "observed": 0.14471243042671614,
+          "predicted": 0.13445410655515314
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 2,
+          "observed": 0.5,
+          "predicted": 0.21574264834181067
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 1227,
+          "observed": 0.07416462917685411,
+          "predicted": 0.07906835638800457
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 525,
+          "observed": 0.12761904761904763,
+          "predicted": 0.1161471061541597
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 4,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.08539650221138587
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 34,
+          "observed": 0.0,
+          "predicted": 0.16232028870578738
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 1168,
+          "observed": 0.2508561643835616,
+          "predicted": 0.2555329909634276
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 549,
+          "observed": 0.35154826958105645,
+          "predicted": 0.3313571548492231
+        }
+      ]
+    }
+  },
+  "probability_metrics_observed_only": {
+    "CAL": {
+      "brier": 0.6543959323645175,
+      "log_loss": 1.2350865613878421,
+      "n": 870,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 755,
+          "observed": 0.003973509933774834,
+          "predicted": 0.007939235804113595
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 37,
+          "observed": 0.2702702702702703,
+          "predicted": 0.14986129344190044
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 31,
+          "observed": 0.1935483870967742,
+          "predicted": 0.24200133300322801
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 23,
+          "observed": 0.43478260869565216,
+          "predicted": 0.34015534782377593
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 17,
+          "observed": 0.23529411764705882,
+          "predicted": 0.44884011735785423
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 3,
+          "observed": 0.0,
+          "predicted": 0.5174922890223658
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 0,
+          "n": 4,
+          "observed": 0.5,
+          "predicted": 0.6781214389305569
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 12,
+          "observed": 0.4166666666666667,
+          "predicted": 0.17415381237101527
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 19,
+          "observed": 0.2631578947368421,
+          "predicted": 0.25624435440622517
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 47,
+          "observed": 0.48936170212765956,
+          "predicted": 0.3573418985104267
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 396,
+          "observed": 0.43686868686868685,
+          "predicted": 0.45452588451474313
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 369,
+          "observed": 0.5663956639566395,
+          "predicted": 0.543177508969549
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 1,
+          "n": 24,
+          "observed": 0.75,
+          "predicted": 0.6089247960583433
+        },
+        {
+          "bin_high": 0.9,
+          "bin_low": 0.8,
+          "class": 1,
+          "n": 3,
+          "observed": 1.0,
+          "predicted": 0.8433897837620279
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 287,
+          "observed": 0.10104529616724739,
+          "predicted": 0.08438699045019471
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 574,
+          "observed": 0.14111498257839722,
+          "predicted": 0.13633542676831098
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 8,
+          "observed": 0.125,
+          "predicted": 0.22608271442984634
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 2,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.35311097125355045
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 606,
+          "observed": 0.08745874587458746,
+          "predicted": 0.07524952123058994
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 256,
+          "observed": 0.1484375,
+          "predicted": 0.12031390477596532
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 3,
+          "n": 5,
+          "observed": 0.2,
+          "predicted": 0.23417534175898308
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 3,
+          "n": 3,
+          "observed": 0.0,
+          "predicted": 0.3182383069067852
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 4,
+          "n": 12,
+          "observed": 0.0,
+          "predicted": 0.08975139030857893
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 68,
+          "observed": 0.14705882352941177,
+          "predicted": 0.15598527032668097
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 564,
+          "observed": 0.21453900709219859,
+          "predicted": 0.2504457061129395
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 226,
+          "observed": 0.28761061946902655,
+          "predicted": 0.3266263211537688
+        }
+      ]
+    },
+    "EVAL": {
+      "brier": 0.6528155647907442,
+      "log_loss": 1.2234079628856251,
+      "n": 412,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 323,
+          "observed": 0.015479876160990712,
+          "predicted": 0.008554970444336426
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 26,
+          "observed": 0.2692307692307692,
+          "predicted": 0.14558799006227524
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 25,
+          "observed": 0.2,
+          "predicted": 0.2576594045143883
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 15,
+          "observed": 0.6,
+          "predicted": 0.33538363771805063
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 14,
+          "observed": 0.2857142857142857,
+          "predicted": 0.46203961418710143
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 9,
+          "observed": 0.2222222222222222,
+          "predicted": 0.5440994551687375
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 5,
+          "observed": 0.0,
+          "predicted": 0.18570377680915046
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 20,
+          "observed": 0.35,
+          "predicted": 0.24692225957498465
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 40,
+          "observed": 0.375,
+          "predicted": 0.3541124508601823
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 175,
+          "observed": 0.4514285714285714,
+          "predicted": 0.4566955339324844
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 161,
+          "observed": 0.5590062111801242,
+          "predicted": 0.545947601581991
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 1,
+          "n": 10,
+          "observed": 0.6,
+          "predicted": 0.6053176003150067
+        },
+        {
+          "bin_high": 0.8,
+          "bin_low": 0.7,
+          "class": 1,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.7822760635713775
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 151,
+          "observed": 0.059602649006622516,
+          "predicted": 0.0814004707819289
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 255,
+          "observed": 0.20392156862745098,
+          "predicted": 0.13799992638942532
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 6,
+          "observed": 0.16666666666666666,
+          "predicted": 0.20821740985395154
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 291,
+          "observed": 0.030927835051546393,
+          "predicted": 0.07210836967098715
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 121,
+          "observed": 0.049586776859504134,
+          "predicted": 0.11848730696187883
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 4,
+          "n": 5,
+          "observed": 0.0,
+          "predicted": 0.09335317004749413
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 48,
+          "observed": 0.16666666666666666,
+          "predicted": 0.1466117431760369
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 270,
+          "observed": 0.25925925925925924,
+          "predicted": 0.24945317861207247
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 89,
+          "observed": 0.3146067415730337,
+          "predicted": 0.32606546876901493
+        }
+      ]
+    },
+    "TRAIN": {
+      "brier": 0.6324542480609404,
+      "log_loss": 1.1638290977785937,
+      "n": 1748,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 1693,
+          "observed": 0.0011813349084465446,
+          "predicted": 0.0057740851207078656
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 21,
+          "observed": 0.23809523809523808,
+          "predicted": 0.14469615305023906
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 18,
+          "observed": 0.2222222222222222,
+          "predicted": 0.24547194585003293
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 14,
+          "observed": 0.7142857142857143,
+          "predicted": 0.34495295881479693
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 1,
+          "observed": 1.0,
+          "predicted": 0.428220426179011
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 1,
+          "observed": 1.0,
+          "predicted": 0.5423729157226118
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.16876410723460658
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 5,
+          "observed": 0.4,
+          "predicted": 0.24462233576765685
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 22,
+          "observed": 0.18181818181818182,
+          "predicted": 0.35095535938916056
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 808,
+          "observed": 0.44183168316831684,
+          "predicted": 0.4579450958145136
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 856,
+          "observed": 0.5549065420560748,
+          "predicted": 0.5427959584814117
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 1,
+          "n": 55,
+          "observed": 0.6727272727272727,
+          "predicted": 0.6078792375528089
+        },
+        {
+          "bin_high": 0.8,
+          "bin_low": 0.7,
+          "class": 1,
+          "n": 1,
+          "observed": 1.0,
+          "predicted": 0.7002863509435242
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 670,
+          "observed": 0.07164179104477612,
+          "predicted": 0.08871475647743433
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 1076,
+          "observed": 0.1449814126394052,
+          "predicted": 0.13442121189378667
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 2,
+          "observed": 0.5,
+          "predicted": 0.21574264834181067
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 1224,
+          "observed": 0.07434640522875817,
+          "predicted": 0.07908747613182389
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 524,
+          "observed": 0.12786259541984732,
+          "predicted": 0.1161734535859768
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 4,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.08539650221138587
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 34,
+          "observed": 0.0,
+          "predicted": 0.16232028870578738
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 1165,
+          "observed": 0.2515021459227468,
+          "predicted": 0.2555265855731231
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 548,
+          "observed": 0.3521897810218978,
+          "predicted": 0.3313678718781011
+        }
+      ]
+    }
+  },
+  "promotion_approved": false,
+  "schema": "weekly_h2_ev_evaluation_v1",
+  "selected_top1_ev_metrics": {
+    "CAL": {
+      "adverse": {
+        "bias": -52.10554621728378,
+        "mae": 1092.5653465424907,
+        "n": 182
+      },
+      "base": {
+        "bias": -50.46220055386656,
+        "mae": 1093.1472127299548,
+        "n": 182
+      }
+    },
+    "EVAL": {
+      "adverse": {
+        "bias": -26.285148488168424,
+        "mae": 1184.770219194871,
+        "n": 87
+      },
+      "base": {
+        "bias": -23.70283499573931,
+        "mae": 1186.146012216317,
+        "n": 87
+      }
+    },
+    "TRAIN": {
+      "adverse": {
+        "bias": 6.119861805831118,
+        "mae": 746.9215243729561,
+        "n": 370
+      },
+      "base": {
+        "bias": 6.7841087291664035,
+        "mae": 747.0772870582018,
+        "n": 370
+      }
+    }
+  },
+  "selected_top1_ev_metrics_observed_only": {
+    "CAL": {
+      "adverse": {
+        "bias": -52.10554621728378,
+        "mae": 1092.5653465424907,
+        "n": 182
+      },
+      "base": {
+        "bias": -50.46220055386656,
+        "mae": 1093.1472127299548,
+        "n": 182
+      }
+    },
+    "EVAL": {
+      "adverse": {
+        "bias": -48.43605392218889,
+        "mae": 1205.871291178102,
+        "n": 84
+      },
+      "base": {
+        "bias": -45.84194455642559,
+        "mae": 1207.2157900560615,
+        "n": 84
+      }
+    },
+    "TRAIN": {
+      "adverse": {
+        "bias": 5.248392895156856,
+        "mae": 748.0576480437646,
+        "n": 369
+      },
+      "base": {
+        "bias": 5.912609118180774,
+        "mae": 748.2120020226336,
+        "n": 369
+      }
+    }
+  },
+  "selected_top1_probability_metrics": {
+    "CAL": {
+      "brier": 0.6717884410707051,
+      "log_loss": 1.25403085264506,
+      "n": 182,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 152,
+          "observed": 0.006578947368421052,
+          "predicted": 0.007412359759455715
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 14,
+          "observed": 0.35714285714285715,
+          "predicted": 0.14324433778126175
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 4,
+          "observed": 0.25,
+          "predicted": 0.24846806043037825
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 5,
+          "observed": 0.4,
+          "predicted": 0.37672322736705904
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 3,
+          "observed": 0.3333333333333333,
+          "predicted": 0.4189772103749179
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 2,
+          "observed": 0.0,
+          "predicted": 0.512224965146699
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 0,
+          "n": 2,
+          "observed": 0.0,
+          "predicted": 0.6661033095860622
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 7,
+          "observed": 0.5714285714285714,
+          "predicted": 0.17734817133983619
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 10,
+          "observed": 0.3,
+          "predicted": 0.25411491605950703
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 13,
+          "observed": 0.46153846153846156,
+          "predicted": 0.34816150828718795
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 146,
+          "observed": 0.5068493150684932,
+          "predicted": 0.4516014050423664
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 6,
+          "observed": 0.3333333333333333,
+          "predicted": 0.5057803754721523
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 42,
+          "observed": 0.09523809523809523,
+          "predicted": 0.0815728789889067
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 140,
+          "observed": 0.08571428571428572,
+          "predicted": 0.12733984331409673
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 84,
+          "observed": 0.09523809523809523,
+          "predicted": 0.08302842085577208
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 98,
+          "observed": 0.08163265306122448,
+          "predicted": 0.11580836184968347
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 4,
+          "observed": 0.0,
+          "predicted": 0.14996709383275703
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 63,
+          "observed": 0.2857142857142857,
+          "predicted": 0.2719371427787647
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 115,
+          "observed": 0.28695652173913044,
+          "predicted": 0.3286130131017177
+        }
+      ]
+    },
+    "EVAL": {
+      "brier": 0.6857146707992553,
+      "log_loss": 1.2948056077836214,
+      "n": 87,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 61,
+          "observed": 0.01639344262295082,
+          "predicted": 0.00939551468960572
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 15,
+          "observed": 0.4,
+          "predicted": 0.1412749501997423
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 4,
+          "observed": 0.0,
+          "predicted": 0.25693995551169946
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 4,
+          "observed": 0.75,
+          "predicted": 0.35846352213907434
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 3,
+          "observed": 0.6666666666666666,
+          "predicted": 0.46744955284727047
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 4,
+          "observed": 0.0,
+          "predicted": 0.18649175357940262
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 6,
+          "observed": 0.3333333333333333,
+          "predicted": 0.24662452788142064
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 15,
+          "observed": 0.26666666666666666,
+          "predicted": 0.3415574971791144
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 62,
+          "observed": 0.45161290322580644,
+          "predicted": 0.45047399226223633
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 20,
+          "observed": 0.05,
+          "predicted": 0.0851305772296765
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 65,
+          "observed": 0.2,
+          "predicted": 0.12854506445896405
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 2,
+          "observed": 0.0,
+          "predicted": 0.20992730936685222
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 40,
+          "observed": 0.025,
+          "predicted": 0.08416616339662458
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 47,
+          "observed": 0.0425531914893617,
+          "predicted": 0.11533642632722775
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 3,
+          "observed": 0.0,
+          "predicted": 0.18909458156332537
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 36,
+          "observed": 0.25,
+          "predicted": 0.26312391482995445
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 48,
+          "observed": 0.3125,
+          "predicted": 0.3304213336930953
+        }
+      ]
+    },
+    "TRAIN": {
+      "brier": 0.6586609102477957,
+      "log_loss": 1.2063187796716888,
+      "n": 370,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 356,
+          "observed": 0.0,
+          "predicted": 0.004907897784122107
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 7,
+          "observed": 0.2857142857142857,
+          "predicted": 0.12634059064863185
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 4,
+          "observed": 0.25,
+          "predicted": 0.23526540500188808
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 2,
+          "observed": 1.0,
+          "predicted": 0.3252803244697393
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 1,
+          "observed": 1.0,
+          "predicted": 0.428220426179011
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 4,
+          "observed": 0.5,
+          "predicted": 0.24907064643332913
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 9,
+          "observed": 0.1111111111111111,
+          "predicted": 0.355884549065985
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 341,
+          "observed": 0.44281524926686217,
+          "predicted": 0.45113748473773263
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 16,
+          "observed": 0.6875,
+          "predicted": 0.5089605178896771
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 136,
+          "observed": 0.058823529411764705,
+          "predicted": 0.08925788492164838
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 234,
+          "observed": 0.14957264957264957,
+          "predicted": 0.13041458584091387
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 171,
+          "observed": 0.07602339181286549,
+          "predicted": 0.08902304232352622
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 199,
+          "observed": 0.1306532663316583,
+          "predicted": 0.11526787121147551
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 102,
+          "observed": 0.23529411764705882,
+          "predicted": 0.28588666108839916
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 268,
+          "observed": 0.34701492537313433,
+          "predicted": 0.33279961184520834
+        }
+      ]
+    }
+  },
+  "selected_top1_probability_metrics_observed_only": {
+    "CAL": {
+      "brier": 0.6717884410707051,
+      "log_loss": 1.25403085264506,
+      "n": 182,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 152,
+          "observed": 0.006578947368421052,
+          "predicted": 0.007412359759455715
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 14,
+          "observed": 0.35714285714285715,
+          "predicted": 0.14324433778126175
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 4,
+          "observed": 0.25,
+          "predicted": 0.24846806043037825
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 5,
+          "observed": 0.4,
+          "predicted": 0.37672322736705904
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 3,
+          "observed": 0.3333333333333333,
+          "predicted": 0.4189772103749179
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 2,
+          "observed": 0.0,
+          "predicted": 0.512224965146699
+        },
+        {
+          "bin_high": 0.7,
+          "bin_low": 0.6,
+          "class": 0,
+          "n": 2,
+          "observed": 0.0,
+          "predicted": 0.6661033095860622
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 7,
+          "observed": 0.5714285714285714,
+          "predicted": 0.17734817133983619
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 10,
+          "observed": 0.3,
+          "predicted": 0.25411491605950703
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 13,
+          "observed": 0.46153846153846156,
+          "predicted": 0.34816150828718795
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 146,
+          "observed": 0.5068493150684932,
+          "predicted": 0.4516014050423664
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 6,
+          "observed": 0.3333333333333333,
+          "predicted": 0.5057803754721523
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 42,
+          "observed": 0.09523809523809523,
+          "predicted": 0.0815728789889067
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 140,
+          "observed": 0.08571428571428572,
+          "predicted": 0.12733984331409673
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 84,
+          "observed": 0.09523809523809523,
+          "predicted": 0.08302842085577208
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 98,
+          "observed": 0.08163265306122448,
+          "predicted": 0.11580836184968347
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 4,
+          "observed": 0.0,
+          "predicted": 0.14996709383275703
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 63,
+          "observed": 0.2857142857142857,
+          "predicted": 0.2719371427787647
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 115,
+          "observed": 0.28695652173913044,
+          "predicted": 0.3286130131017177
+        }
+      ]
+    },
+    "EVAL": {
+      "brier": 0.6949722671916366,
+      "log_loss": 1.3130712490677692,
+      "n": 84,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 58,
+          "observed": 0.017241379310344827,
+          "predicted": 0.009677748817383746
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 15,
+          "observed": 0.4,
+          "predicted": 0.1412749501997423
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 4,
+          "observed": 0.0,
+          "predicted": 0.25693995551169946
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 4,
+          "observed": 0.75,
+          "predicted": 0.35846352213907434
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 3,
+          "observed": 0.6666666666666666,
+          "predicted": 0.46744955284727047
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 1,
+          "n": 4,
+          "observed": 0.0,
+          "predicted": 0.18649175357940262
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 6,
+          "observed": 0.3333333333333333,
+          "predicted": 0.24662452788142064
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 15,
+          "observed": 0.26666666666666666,
+          "predicted": 0.3415574971791144
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 59,
+          "observed": 0.423728813559322,
+          "predicted": 0.4501248934905991
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 19,
+          "observed": 0.05263157894736842,
+          "predicted": 0.08481793775405451
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 63,
+          "observed": 0.20634920634920634,
+          "predicted": 0.12916686231257338
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 2,
+          "observed": 0.0,
+          "predicted": 0.20992730936685222
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 39,
+          "observed": 0.02564102564102564,
+          "predicted": 0.08386365432179813
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 45,
+          "observed": 0.044444444444444446,
+          "predicted": 0.11560646698753119
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 3,
+          "observed": 0.0,
+          "predicted": 0.18909458156332537
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 36,
+          "observed": 0.25,
+          "predicted": 0.26312391482995445
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 45,
+          "observed": 0.3333333333333333,
+          "predicted": 0.330389609286717
+        }
+      ]
+    },
+    "TRAIN": {
+      "brier": 0.6592940401919066,
+      "log_loss": 1.2074120056362303,
+      "n": 369,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 355,
+          "observed": 0.0,
+          "predicted": 0.004910628564207319
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 7,
+          "observed": 0.2857142857142857,
+          "predicted": 0.12634059064863185
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 4,
+          "observed": 0.25,
+          "predicted": 0.23526540500188808
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 0,
+          "n": 2,
+          "observed": 1.0,
+          "predicted": 0.3252803244697393
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 0,
+          "n": 1,
+          "observed": 1.0,
+          "predicted": 0.428220426179011
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 4,
+          "observed": 0.5,
+          "predicted": 0.24907064643332913
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 9,
+          "observed": 0.1111111111111111,
+          "predicted": 0.355884549065985
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 340,
+          "observed": 0.4411764705882353,
+          "predicted": 0.4511466551203548
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 1,
+          "n": 16,
+          "observed": 0.6875,
+          "predicted": 0.5089605178896771
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 136,
+          "observed": 0.058823529411764705,
+          "predicted": 0.08925788492164838
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 233,
+          "observed": 0.15021459227467812,
+          "predicted": 0.13032942628355296
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 171,
+          "observed": 0.07602339181286549,
+          "predicted": 0.08902304232352622
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 198,
+          "observed": 0.13131313131313133,
+          "predicted": 0.11533315817778603
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 101,
+          "observed": 0.2376237623762376,
+          "predicted": 0.28579203238717626
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 268,
+          "observed": 0.34701492537313433,
+          "predicted": 0.33279961184520834
+        }
+      ]
+    }
+  },
+  "split_counts": {
+    "CAL": 870,
+    "EVAL": 426,
+    "TRAIN": 1758
+  },
+  "status": "COMPLETE_SEEN_DEVELOPMENT_WEEKLY_H2_EVALUATION",
+  "technical_ready": false,
+  "train_cal_descriptive_only": true,
+  "unseen_classes_with_zero_train_support": {
+    "CAL": [],
+    "EVAL": []
+  }
+}

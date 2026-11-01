@@ -1,0 +1,35 @@
+{
+  "utc": "2026-11-01T14:25:43.858051+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_h2_ev_v2.py",
+    "--candidates",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\candidates.jsonl",
+    "--coverage",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\coverage.json",
+    "--manifest",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\manifest.json",
+    "--manifest-sha256",
+    "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+    "--output",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01"
+  ],
+  "publication_commit": "1b7f50c8d33ad7b579d34b277ca94801bb4d190c",
+  "pins": {
+    "evaluate_weekly_h2_ev_v2.py": "8a9e75855d542a12662e5c812583f2ef86042f5c3ae1bbbad73c16042e063476",
+    "ECONOMIC_H2_CONTRACT.md": "245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5",
+    "H2_CLOCK_FILTER_V2_AMENDMENT.md": "9210c6e50094e5745f80c5e03f577f6bd673263f84d3c3ef764ad76b22ca56eb"
+  },
+  "dataset_manifest_sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+  "resources": {
+    "available_ram_bytes": 13207859200,
+    "free_commit_bytes": 20025470976
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1
+}
