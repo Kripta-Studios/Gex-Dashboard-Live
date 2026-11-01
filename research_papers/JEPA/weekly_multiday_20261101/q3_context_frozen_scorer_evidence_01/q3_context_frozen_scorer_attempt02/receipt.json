@@ -1,0 +1,24 @@
+{
+  "started_utc": "2026-11-01T16:19:43.086452+00:00",
+  "ended_utc": "2026-11-01T16:20:02.452412+00:00",
+  "resources": {
+    "available_ram_bytes": 7521005568,
+    "free_commit_bytes": 6426431488
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1,
+  "pytest_exit_code": 0,
+  "ruff_exit_code": 0,
+  "code_sha256": "c23ba4cc3feac6bf5565e7c413535b57266b14487857163adb27f9f74f8e90c3",
+  "tests_sha256": "a64ac7d7c61813504f73127a495598d960458b7d5e79d1f7e025b8807a1199f4",
+  "contract_sha256": "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a",
+  "files": {
+    "pretest_pins.json": "abcada9671759bf838dc8db22b178a1aba9440a047ed13c5f5968e0124ac8a04",
+    "ruff_stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ruff_stdout.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.log": "452d000f52bc9e4023ca63be4e4b68e1cf66fb35bbfec5e04b31f6627db9c011"
+  }
+}

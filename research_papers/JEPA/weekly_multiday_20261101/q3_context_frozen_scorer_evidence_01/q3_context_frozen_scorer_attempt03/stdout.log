@@ -1,0 +1,34 @@
+....F...                                                                 [100%]
+================================== FAILURES ===================================
+______________ test_replay_produces_six_books_and_base_identity _______________
+
+    def test_replay_produces_six_books_and_base_identity() -> None:
+        replay = scorer.import_replay()
+        row = candidate()
+        for model_name in scorer.MODELS:
+            row[f"_ev_{model_name}_base"] = 1.0
+            row[f"_ev_{model_name}_adverse"] = 1.0
+        coverage = {"rows": []}
+        for day in ("20260701", "20260702"):
+            for ticker in scorer.TICKERS:
+                coverage["rows"].append({"ticker": ticker, "entry_date": day, "status": "NO_SERIES", "reason": "NO_SERIES"})
+        books = {
+            model_name: replay.replay_pair(scorer.prepare_rows([row], model_name), coverage, ["20260701", "20260702"], "20260701", "EV_TOP1_H2")
+            for model_name in scorer.MODELS
+        }
+        assert set(books) == set(scorer.MODELS)
+        assert sum(len(value) for model_books in books.values() for value in model_books.values()) > 0
+        for cost in scorer.COSTS:
+            assert books["BASE18_FROZEN"][cost] == books["CATEGORY30"][cost] == books["CONTEXT182"][cost]
+            metrics = scorer.extended_book_metrics(replay, books["BASE18_FROZEN"][cost])
+>           assert metrics["right_net_usd"]["CALL"] == pytest.approx(45.4 if cost == "base" else 43.4)
+E           assert 2133.7999999999997 == 45.4 ± 4.5e-05
+E             
+E             comparison failed
+E             Obtained: 2133.7999999999997
+E             Expected: 45.4 ± 4.5e-05
+
+research_papers\JEPA\weekly_multiday_20261101\test_score_weekly_context_q3_frozen.py:141: AssertionError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_score_weekly_context_q3_frozen.py::test_replay_produces_six_books_and_base_identity
+1 failed, 7 passed in 4.07s

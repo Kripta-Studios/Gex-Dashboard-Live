@@ -1,0 +1,35 @@
+F401 [*] `collections.defaultdict` imported but unused
+  --> research_papers\JEPA\weekly_multiday_20261101\score_weekly_context_q3_frozen.py:11:25
+   |
+10 | import argparse
+11 | from collections import defaultdict
+   |                         ^^^^^^^^^^^
+12 | import hashlib
+13 | import importlib.util
+   |
+help: Remove unused import: `collections.defaultdict`
+
+F401 [*] `copy` imported but unused
+ --> research_papers\JEPA\weekly_multiday_20261101\test_score_weekly_context_q3_frozen.py:4:8
+  |
+3 | import ast
+4 | import copy
+  |        ^^^^
+5 | import json
+6 | from pathlib import Path
+  |
+help: Remove unused import: `copy`
+
+F401 [*] `json` imported but unused
+ --> research_papers\JEPA\weekly_multiday_20261101\test_score_weekly_context_q3_frozen.py:5:8
+  |
+3 | import ast
+4 | import copy
+5 | import json
+  |        ^^^^
+6 | from pathlib import Path
+  |
+help: Remove unused import: `json`
+
+Found 3 errors.
+[*] 3 fixable with the `--fix` option.

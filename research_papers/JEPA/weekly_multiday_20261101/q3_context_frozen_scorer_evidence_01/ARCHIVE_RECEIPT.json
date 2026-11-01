@@ -1,0 +1,277 @@
+{
+  "utc": "2026-11-01T16:23:25.5457555Z",
+  "count": 45,
+  "bytes": 241320,
+  "files": [
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt01\\pretest_pins.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt01\\pretest_pins.json",
+      "bytes": 897,
+      "sha256": "a5825f875d0ddb5c738103f0e145fc3058803135f05e4216779bac14e7add1e7"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt01\\receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt01\\receipt.json",
+      "bytes": 1047,
+      "sha256": "ccabe63e172801065e3f28466df6df6c0e357d9e436235e53749edd5df896fa4"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt01\\ruff_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt01\\ruff_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt01\\ruff_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt01\\ruff_stdout.log",
+      "bytes": 949,
+      "sha256": "6e01258a1413ef24d1005397e2612ebb688145a8101351e92c05b01f501ac2b4"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt01\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt01\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt01\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt01\\stdout.log",
+      "bytes": 100,
+      "sha256": "e97954190fb8345c57bb61e0459a6e00dac3599a5cde87f02f31d70f17a2a0ba"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt01\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt01\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "bytes": 6687,
+      "sha256": "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt01\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt01\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "bytes": 28583,
+      "sha256": "b96088209e16e9e0cfc23505099dc69b723558e0936a698141bba01989a5cbcb"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt01\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt01\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "bytes": 8555,
+      "sha256": "48711ec1fcd02f60f755d2cfe102a645d2ecb463ba97af8e405c553eb7ccd4fe"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt02\\pretest_pins.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt02\\pretest_pins.json",
+      "bytes": 897,
+      "sha256": "abcada9671759bf838dc8db22b178a1aba9440a047ed13c5f5968e0124ac8a04"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt02\\receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt02\\receipt.json",
+      "bytes": 1047,
+      "sha256": "31e9a7bc6299e956008ac85d848fe0848f8b1881cfbd9e0cbb4be50374b999f9"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt02\\ruff_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt02\\ruff_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt02\\ruff_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt02\\ruff_stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt02\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt02\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt02\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt02\\stdout.log",
+      "bytes": 100,
+      "sha256": "452d000f52bc9e4023ca63be4e4b68e1cf66fb35bbfec5e04b31f6627db9c011"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt02\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt02\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "bytes": 6687,
+      "sha256": "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt02\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt02\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "bytes": 28547,
+      "sha256": "c23ba4cc3feac6bf5565e7c413535b57266b14487857163adb27f9f74f8e90c3"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt02\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt02\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "bytes": 8531,
+      "sha256": "a64ac7d7c61813504f73127a495598d960458b7d5e79d1f7e025b8807a1199f4"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt03\\pretest_pins.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt03\\pretest_pins.json",
+      "bytes": 897,
+      "sha256": "490e342eebe4d6bbf5c621bc97198b651cf9438dfb1ee2e1e7a476293eb95add"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt03\\receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt03\\receipt.json",
+      "bytes": 1047,
+      "sha256": "db246c802f1a232c9b0855b4cf5ee949100e4f4e9965a921b23d7c6805b44125"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt03\\ruff_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt03\\ruff_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt03\\ruff_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt03\\ruff_stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt03\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt03\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt03\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt03\\stdout.log",
+      "bytes": 2036,
+      "sha256": "693c7ae744952d78cdad9827476a457304834b5c632f6e6421bf6536d607cc9d"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt03\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt03\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "bytes": 6687,
+      "sha256": "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt03\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt03\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "bytes": 30278,
+      "sha256": "5c17736c140732ef83a52dabef1f43f7c726cb9dc27f335c4c8b9034d84bec03"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt03\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt03\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "bytes": 8907,
+      "sha256": "95ae78c9eb32acab73380c68a570c818f18a17516d5724e9cff354f8f67bc506"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt04\\pretest_pins.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt04\\pretest_pins.json",
+      "bytes": 897,
+      "sha256": "7b2105a70c12348de9caa6904ce0ef47313f6a2d4c3eaaf2ec8d913fb5341096"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt04\\receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt04\\receipt.json",
+      "bytes": 1047,
+      "sha256": "83ade74fdea142f2d3e761dd0bd0f07f4bec124ab2a20331931fe9eb168528b5"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt04\\ruff_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt04\\ruff_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt04\\ruff_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt04\\ruff_stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt04\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt04\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt04\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt04\\stdout.log",
+      "bytes": 100,
+      "sha256": "7f1b4fbcc997487f02bd299f3964d31584129b69f4933cf4a7b08da9bb8a921d"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt04\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt04\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "bytes": 6687,
+      "sha256": "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt04\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt04\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "bytes": 30278,
+      "sha256": "5c17736c140732ef83a52dabef1f43f7c726cb9dc27f335c4c8b9034d84bec03"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt04\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt04\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "bytes": 8999,
+      "sha256": "c06d597ee9648250a007bafe642b04ed7728f30e25440e24aedc6f3206aefcd3"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt05\\pretest_pins.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt05\\pretest_pins.json",
+      "bytes": 898,
+      "sha256": "14f734253d0ce130568afae641888355edb1fa1a3513af57c2a8167da3567a06"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt05\\receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt05\\receipt.json",
+      "bytes": 1047,
+      "sha256": "53124dd734220afecf908955cc257e76b766656890bbc47d1034e5de6bcadffa"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt05\\ruff_stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt05\\ruff_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt05\\ruff_stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt05\\ruff_stdout.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt05\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt05\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt05\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt05\\stdout.log",
+      "bytes": 101,
+      "sha256": "89ed888c8539cdfe7171d05d2d96125b565f797db0f6c77dbcb1c6fbb6045731"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt05\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt05\\pretest_snapshot\\Q3_FROZEN_CONTEXT_COMPARISON_CONTRACT_20261101.md",
+      "bytes": 6687,
+      "sha256": "e9867bfc5acc5922288e81542e250de7707cfd20f472087b24700ef69764802a"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt05\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt05\\pretest_snapshot\\score_weekly_context_q3_frozen.py",
+      "bytes": 31619,
+      "sha256": "e7638731fbba44ca45ff0f69418428083226b0f44110819f0ab52e13d3ff1e75"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\q3_context_frozen_scorer_attempt05\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\q3_context_frozen_scorer_evidence_01\\q3_context_frozen_scorer_attempt05\\pretest_snapshot\\test_score_weekly_context_q3_frozen.py",
+      "bytes": 10405,
+      "sha256": "0c5a3343ab555c2648ea66331b1dcb91112fd09e1214326ed09d60801674bcc6"
+    }
+  ]
+}
