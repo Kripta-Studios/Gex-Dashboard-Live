@@ -1,0 +1,18 @@
+{
+  "pid": 28224,
+  "creation_time": 1793539838.2187083,
+  "utc": "2026-11-01T13:30:38.229271+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\report_oof_h1_audit_20261024.py",
+    "--audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_20261029_01\\audit.json",
+    "--audit-sha256",
+    "eed09d14bc2074767e24959a2bfa0962fad45181f0f44a92b1b34edf02e8b4d1",
+    "--out",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_20261101_01"
+  ]
+}

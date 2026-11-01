@@ -1,0 +1,3587 @@
+{
+  "development_seen": true,
+  "metric_scope": "Audited aggregates only; no WR, drawdown, holding-time or portfolio inference",
+  "missing_scope": "Missing days have null economics; monthly totals cover available days only",
+  "monthly": [
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 0,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -4970.799999999999,
+        "net_adverse_gross_gains": 18124.8,
+        "net_adverse_gross_losses": 23095.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.784772857167599,
+        "net_base": -4794.799999999998,
+        "net_base_gross_gains": 18168.8,
+        "net_base_gross_losses": 22963.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7911999860649027,
+        "trades": 88
+      },
+      "policy": "static__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 4,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": 37.8,
+        "net_adverse_gross_gains": 1158.2,
+        "net_adverse_gross_losses": 1120.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.0337379507318813,
+        "net_base": 130.80000000000004,
+        "net_base_gross_gains": 1184.2,
+        "net_base_gross_losses": 1053.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.12416935636985,
+        "trades": 47
+      },
+      "policy": "static__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 0,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": 312.6000000000001,
+        "net_adverse_gross_gains": 2729.8,
+        "net_adverse_gross_losses": 2417.2000000000003,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.1293231838490816,
+        "net_base": 460.6000000000004,
+        "net_base_gross_gains": 2774.2000000000003,
+        "net_base_gross_losses": 2313.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.1990836791147996,
+        "trades": 74
+      },
+      "policy": "static__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 3,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": 5571.6,
+        "net_adverse_gross_gains": 16217.6,
+        "net_adverse_gross_losses": 10645.999999999998,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.5233514935186927,
+        "net_base": 5669.600000000001,
+        "net_base_gross_gains": 16245.6,
+        "net_base_gross_losses": 10575.999999999998,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.536081694402421,
+        "trades": 49
+      },
+      "policy": "static__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 10,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": 66.80000000000003,
+        "net_adverse_gross_gains": 526.6,
+        "net_adverse_gross_losses": 459.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.1452805567638105,
+        "net_base": 99.79999999999997,
+        "net_base_gross_gains": 534.5999999999999,
+        "net_base_gross_losses": 434.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.2295308187672491,
+        "trades": 17
+      },
+      "policy": "static__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 5,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": 914.8000000000003,
+        "net_adverse_gross_gains": 2298.8,
+        "net_adverse_gross_losses": 1384.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.6609826589595378,
+        "net_base": 988.8000000000003,
+        "net_base_gross_gains": 2322.8,
+        "net_base_gross_losses": 1334.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.7412293853073464,
+        "trades": 37
+      },
+      "policy": "static__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 0,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -12370.399999999996,
+        "net_adverse_gross_gains": 21214.0,
+        "net_adverse_gross_losses": 33584.399999999994,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6316623194102025,
+        "net_base": -12082.399999999998,
+        "net_base_gross_gains": 21284.0,
+        "net_base_gross_losses": 33366.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6378872158818452,
+        "trades": 144
+      },
+      "policy": "expanding__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 9,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -86.20000000000007,
+        "net_adverse_gross_gains": 475.59999999999997,
+        "net_adverse_gross_losses": 561.8000000000001,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8465646137415449,
+        "net_base": -22.19999999999993,
+        "net_base_gross_gains": 503.60000000000014,
+        "net_base_gross_losses": 525.8000000000001,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9577786230505897,
+        "trades": 32
+      },
+      "policy": "expanding__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 5,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -1022.4000000000001,
+        "net_adverse_gross_gains": 1167.2,
+        "net_adverse_gross_losses": 2189.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5330654000730728,
+        "net_base": -914.3999999999997,
+        "net_base_gross_gains": 1193.2000000000003,
+        "net_base_gross_losses": 2107.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.5661415828430444,
+        "trades": 54
+      },
+      "policy": "expanding__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 4,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -4061.999999999997,
+        "net_adverse_gross_gains": 14889.800000000001,
+        "net_adverse_gross_losses": 18951.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7856667968214102,
+        "net_base": -3921.999999999998,
+        "net_base_gross_gains": 14933.800000000001,
+        "net_base_gross_losses": 18855.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7920003394181102,
+        "trades": 70
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 18,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -75.80000000000001,
+        "net_adverse_gross_gains": 100.60000000000001,
+        "net_adverse_gross_losses": 176.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5702947845804989,
+        "net_base": -59.79999999999994,
+        "net_base_gross_gains": 108.60000000000005,
+        "net_base_gross_losses": 168.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6448931116389551,
+        "trades": 8
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 11,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": 54.40000000000008,
+        "net_adverse_gross_gains": 572.0000000000001,
+        "net_adverse_gross_losses": 517.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.1051004636785164,
+        "net_base": 86.4000000000002,
+        "net_base_gross_gains": 582.0000000000001,
+        "net_base_gross_losses": 495.59999999999997,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.1743341404358356,
+        "trades": 16
+      },
+      "policy": "expanding__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 0,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -5167.799999999997,
+        "net_adverse_gross_gains": 20600.2,
+        "net_adverse_gross_losses": 25768.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.799448928904067,
+        "net_base": -4951.799999999997,
+        "net_base_gross_gains": 20656.2,
+        "net_base_gross_losses": 25608.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.806630740393627,
+        "trades": 108
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 7,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -708.8000000000003,
+        "net_adverse_gross_gains": 1249.0,
+        "net_adverse_gross_losses": 1957.8000000000002,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6379609766063948,
+        "net_base": -562.8000000000001,
+        "net_base_gross_gains": 1279.0,
+        "net_base_gross_losses": 1841.8000000000002,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6944293625800846,
+        "trades": 73
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 4,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -2137.6000000000004,
+        "net_adverse_gross_gains": 661.0,
+        "net_adverse_gross_losses": 2798.6000000000004,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.2361895233330951,
+        "net_base": -1985.6000000000001,
+        "net_base_gross_gains": 692.4000000000001,
+        "net_base_gross_losses": 2678.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.25855115758028385,
+        "trades": 76
+      },
+      "policy": "rolling12__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 3,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -5439.799999999998,
+        "net_adverse_gross_gains": 9053.800000000001,
+        "net_adverse_gross_losses": 14493.599999999999,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6246757189380142,
+        "net_base": -5333.799999999999,
+        "net_base_gross_gains": 9067.800000000001,
+        "net_base_gross_losses": 14401.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.629638373514054,
+        "trades": 53
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 15,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -237.20000000000002,
+        "net_adverse_gross_gains": 382.6000000000001,
+        "net_adverse_gross_losses": 619.8000000000001,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.61729590190384,
+        "net_base": -193.19999999999993,
+        "net_base_gross_gains": 390.60000000000014,
+        "net_base_gross_losses": 583.8000000000001,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.669064748201439,
+        "trades": 22
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 8,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202601",
+      "observed": {
+        "net_adverse": -355.2,
+        "net_adverse_gross_gains": 529.0,
+        "net_adverse_gross_losses": 884.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5982809319158561,
+        "net_base": -311.2,
+        "net_base_gross_gains": 540.4000000000001,
+        "net_base_gross_losses": 851.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6345702207609207,
+        "trades": 22
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -492.5999999999963,
+        "net_adverse_gross_gains": 26235.2,
+        "net_adverse_gross_losses": 26727.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9815697513450415,
+        "net_base": -320.599999999998,
+        "net_base_gross_gains": 26291.2,
+        "net_base_gross_losses": 26611.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9879527127063935,
+        "trades": 86
+      },
+      "policy": "static__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -27.800000000000065,
+        "net_adverse_gross_gains": 2617.2000000000003,
+        "net_adverse_gross_losses": 2645.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9894896030245748,
+        "net_base": 147.2000000000001,
+        "net_base_gross_gains": 2674.6000000000004,
+        "net_base_gross_losses": 2527.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.0582416712827412,
+        "trades": 88
+      },
+      "policy": "static__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -200.9999999999998,
+        "net_adverse_gross_gains": 2371.2000000000003,
+        "net_adverse_gross_losses": 2572.2000000000003,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9218567763004432,
+        "net_base": -70.99999999999959,
+        "net_base_gross_gains": 2408.6000000000004,
+        "net_base_gross_losses": 2479.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9713663494111955,
+        "trades": 65
+      },
+      "policy": "static__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -10203.799999999996,
+        "net_adverse_gross_gains": 14209.400000000001,
+        "net_adverse_gross_losses": 24413.199999999997,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5820375862238463,
+        "net_base": -10067.8,
+        "net_base_gross_gains": 14241.4,
+        "net_base_gross_losses": 24309.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.5858440425847005,
+        "trades": 68
+      },
+      "policy": "static__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 3,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -211.20000000000013,
+        "net_adverse_gross_gains": 1678.2,
+        "net_adverse_gross_losses": 1889.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8882184820577961,
+        "net_base": -118.19999999999983,
+        "net_base_gross_gains": 1704.2,
+        "net_base_gross_losses": 1822.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9351404741000878,
+        "trades": 47
+      },
+      "policy": "static__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": 116.60000000000014,
+        "net_adverse_gross_gains": 2483.2000000000003,
+        "net_adverse_gross_losses": 2366.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.0492689934927746,
+        "net_base": 234.60000000000042,
+        "net_base_gross_gains": 2520.6000000000004,
+        "net_base_gross_losses": 2286.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.1026246719160107,
+        "trades": 59
+      },
+      "policy": "static__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -8022.399999999998,
+        "net_adverse_gross_gains": 16724.8,
+        "net_adverse_gross_losses": 24747.199999999997,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.675825952026896,
+        "net_base": -7855.399999999999,
+        "net_base_gross_gains": 16768.800000000003,
+        "net_base_gross_losses": 24624.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6809886209501224,
+        "trades": 84
+      },
+      "policy": "expanding__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 2,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -1174.4,
+        "net_adverse_gross_gains": 1532.4,
+        "net_adverse_gross_losses": 2706.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5661297473030885,
+        "net_base": -1037.3999999999996,
+        "net_base_gross_gains": 1575.8000000000004,
+        "net_base_gross_losses": 2613.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6030154599724478,
+        "trades": 69
+      },
+      "policy": "expanding__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -1077.5999999999997,
+        "net_adverse_gross_gains": 2068.6000000000004,
+        "net_adverse_gross_losses": 3146.2000000000003,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6574915771406777,
+        "net_base": -937.5999999999996,
+        "net_base_gross_gains": 2116.6000000000004,
+        "net_base_gross_losses": 3054.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.693012900268483,
+        "trades": 71
+      },
+      "policy": "expanding__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -7099.199999999999,
+        "net_adverse_gross_gains": 12488.0,
+        "net_adverse_gross_losses": 19587.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6375592223492893,
+        "net_base": -6975.2,
+        "net_base_gross_gains": 12528.0,
+        "net_base_gross_losses": 19503.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6423561261741663,
+        "trades": 62
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 6,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -608.0,
+        "net_adverse_gross_gains": 974.0,
+        "net_adverse_gross_losses": 1582.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6156763590391909,
+        "net_base": -538.9999999999999,
+        "net_base_gross_gains": 994.0000000000002,
+        "net_base_gross_losses": 1533.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6484018264840185,
+        "trades": 35
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 4,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": 23.400000000000365,
+        "net_adverse_gross_gains": 1770.6000000000004,
+        "net_adverse_gross_losses": 1747.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.0133928571428574,
+        "net_base": 114.40000000000049,
+        "net_base_gross_gains": 1808.6000000000004,
+        "net_base_gross_losses": 1694.1999999999998,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.0675244953370326,
+        "trades": 46
+      },
+      "policy": "expanding__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -4589.199999999996,
+        "net_adverse_gross_gains": 19965.000000000004,
+        "net_adverse_gross_losses": 24554.199999999997,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8130991846608729,
+        "net_base": -4415.2,
+        "net_base_gross_gains": 20015.0,
+        "net_base_gross_losses": 24430.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.819272867188971,
+        "trades": 87
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 1,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -875.2000000000002,
+        "net_adverse_gross_gains": 1404.2,
+        "net_adverse_gross_losses": 2279.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6160393085899798,
+        "net_base": -741.1999999999999,
+        "net_base_gross_gains": 1450.2000000000003,
+        "net_base_gross_losses": 2191.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6617687323172402,
+        "trades": 67
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 2,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -715.7999999999998,
+        "net_adverse_gross_gains": 3067.2000000000003,
+        "net_adverse_gross_losses": 3783.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8107850911974624,
+        "net_base": -500.79999999999956,
+        "net_base_gross_gains": 3143.2000000000003,
+        "net_base_gross_losses": 3644.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.8625686059275522,
+        "trades": 108
+      },
+      "policy": "rolling12__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 0,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": 4403.800000000001,
+        "net_adverse_gross_gains": 20374.2,
+        "net_adverse_gross_losses": 15970.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.2757476331212745,
+        "net_base": 4506.800000000001,
+        "net_base_gross_gains": 20400.2,
+        "net_base_gross_losses": 15893.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.283564246794267,
+        "trades": 52
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 6,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -297.6000000000001,
+        "net_adverse_gross_gains": 834.1999999999999,
+        "net_adverse_gross_losses": 1131.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7370560169641279,
+        "net_base": -246.59999999999997,
+        "net_base_gross_gains": 850.2,
+        "net_base_gross_losses": 1096.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.775164113785558,
+        "trades": 26
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 19,
+        "available_days_without_fill": 3,
+        "expected_days": 19,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202602",
+      "observed": {
+        "net_adverse": -392.79999999999984,
+        "net_adverse_gross_gains": 1762.6000000000001,
+        "net_adverse_gross_losses": 2155.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8177600445392966,
+        "net_base": -287.7999999999997,
+        "net_base_gross_gains": 1800.6000000000001,
+        "net_base_gross_losses": 2088.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.8621911511204751,
+        "trades": 53
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 0,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -9385.199999999997,
+        "net_adverse_gross_gains": 31002.2,
+        "net_adverse_gross_losses": 40387.399999999994,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7676205945418622,
+        "net_base": -9152.199999999999,
+        "net_base_gross_gains": 31068.2,
+        "net_base_gross_losses": 40220.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7724488070730277,
+        "trades": 117
+      },
+      "policy": "static__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 0,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -1992.4,
+        "net_adverse_gross_gains": 2971.6,
+        "net_adverse_gross_losses": 4964.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5986301369863013,
+        "net_base": -1744.3999999999999,
+        "net_base_gross_gains": 3021.0,
+        "net_base_gross_losses": 4765.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6339446846015026,
+        "trades": 124
+      },
+      "policy": "static__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 1,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -366.40000000000015,
+        "net_adverse_gross_gains": 3200.0,
+        "net_adverse_gross_losses": 3566.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8972633467922835,
+        "net_base": -169.3999999999995,
+        "net_base_gross_gains": 3260.0000000000005,
+        "net_base_gross_losses": 3429.3999999999996,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9506036041290024,
+        "trades": 99
+      },
+      "policy": "static__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 2,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -9344.799999999997,
+        "net_adverse_gross_gains": 24178.0,
+        "net_adverse_gross_losses": 33522.799999999996,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7212404691732195,
+        "net_base": -9188.8,
+        "net_base_gross_gains": 24218.0,
+        "net_base_gross_losses": 33406.799999999996,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7249422273309627,
+        "trades": 78
+      },
+      "policy": "static__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 1,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -1368.2,
+        "net_adverse_gross_gains": 2026.0,
+        "net_adverse_gross_losses": 3394.2000000000003,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5969005951328736,
+        "net_base": -1224.1999999999998,
+        "net_base_gross_gains": 2046.4,
+        "net_base_gross_losses": 3270.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6256955910230539,
+        "trades": 72
+      },
+      "policy": "static__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 4,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -844.3999999999999,
+        "net_adverse_gross_gains": 1560.2000000000003,
+        "net_adverse_gross_losses": 2404.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6488397238625968,
+        "net_base": -747.3999999999997,
+        "net_base_gross_gains": 1576.2,
+        "net_base_gross_losses": 2323.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6783439490445861,
+        "trades": 49
+      },
+      "policy": "static__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 0,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": 7229.400000000005,
+        "net_adverse_gross_gains": 55977.200000000004,
+        "net_adverse_gross_losses": 48747.799999999996,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.1483020772219465,
+        "net_base": 7561.400000000001,
+        "net_base_gross_gains": 56093.600000000006,
+        "net_base_gross_losses": 48532.200000000004,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.1558017151499418,
+        "trades": 166
+      },
+      "policy": "expanding__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 1,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -2360.6,
+        "net_adverse_gross_gains": 1610.6000000000001,
+        "net_adverse_gross_losses": 3971.2000000000003,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.40557010475423044,
+        "net_base": -2158.6,
+        "net_base_gross_gains": 1648.6000000000001,
+        "net_base_gross_losses": 3807.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.4330216432023535,
+        "trades": 101
+      },
+      "policy": "expanding__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 0,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -137.59999999999982,
+        "net_adverse_gross_gains": 3004.4,
+        "net_adverse_gross_losses": 3142.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9562062380649268,
+        "net_base": 34.40000000000032,
+        "net_base_gross_gains": 3056.4000000000005,
+        "net_base_gross_losses": 3022.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.011383189940437,
+        "trades": 86
+      },
+      "policy": "expanding__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 0,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": 13032.800000000001,
+        "net_adverse_gross_gains": 49262.8,
+        "net_adverse_gross_losses": 36230.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.3597239856472538,
+        "net_base": 13266.8,
+        "net_base_gross_gains": 49346.8,
+        "net_base_gross_losses": 36080.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.3677050997782705,
+        "trades": 117
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 4,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -1013.8,
+        "net_adverse_gross_gains": 1146.2,
+        "net_adverse_gross_losses": 2160.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5306481481481482,
+        "net_base": -917.7999999999998,
+        "net_base_gross_gains": 1162.2,
+        "net_base_gross_losses": 2080.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.55875,
+        "trades": 48
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 3,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": 677.4000000000001,
+        "net_adverse_gross_gains": 2116.6,
+        "net_adverse_gross_losses": 1439.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.4706781545302945,
+        "net_base": 769.4000000000002,
+        "net_base_gross_gains": 2144.6,
+        "net_base_gross_losses": 1375.1999999999998,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.5594822571262363,
+        "trades": 46
+      },
+      "policy": "expanding__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 0,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -2738.799999999994,
+        "net_adverse_gross_gains": 45629.8,
+        "net_adverse_gross_losses": 48368.59999999999,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9433764880521663,
+        "net_base": -2452.8,
+        "net_base_gross_gains": 45723.799999999996,
+        "net_base_gross_losses": 48176.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9490873162489672,
+        "trades": 143
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 0,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -998.4000000000002,
+        "net_adverse_gross_gains": 3333.0,
+        "net_adverse_gross_losses": 4331.400000000001,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7694971602715056,
+        "net_base": -751.3999999999995,
+        "net_base_gross_gains": 3404.4000000000005,
+        "net_base_gross_losses": 4155.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.819192453919823,
+        "trades": 124
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 1,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -4690.2,
+        "net_adverse_gross_gains": 3228.2000000000003,
+        "net_adverse_gross_losses": 7918.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4076833703778542,
+        "net_base": -4447.199999999999,
+        "net_base_gross_gains": 3294.6000000000004,
+        "net_base_gross_losses": 7741.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.42555994729907776,
+        "trades": 122
+      },
+      "policy": "rolling12__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 0,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -2546.1999999999925,
+        "net_adverse_gross_gains": 35145.200000000004,
+        "net_adverse_gross_losses": 37691.399999999994,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9324461282945183,
+        "net_base": -2332.199999999999,
+        "net_base_gross_gains": 35201.2,
+        "net_base_gross_losses": 37533.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9378633430491241,
+        "trades": 107
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 3,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -2197.4,
+        "net_adverse_gross_gains": 1162.4,
+        "net_adverse_gross_losses": 3359.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.34597297458182036,
+        "net_base": -2060.3999999999996,
+        "net_base_gross_gains": 1184.4,
+        "net_base_gross_losses": 3244.7999999999997,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.36501479289940836,
+        "trades": 69
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 22,
+        "available_days_without_fill": 2,
+        "expected_days": 22,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202603",
+      "observed": {
+        "net_adverse": -4314.4,
+        "net_adverse_gross_gains": 2383.4,
+        "net_adverse_gross_losses": 6697.799999999999,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.3558481889575682,
+        "net_base": -4167.4,
+        "net_base_gross_gains": 2415.4,
+        "net_base_gross_losses": 6582.799999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.3669259281764599,
+        "trades": 74
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 0,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202604",
+      "observed": {
+        "net_adverse": 4453.600000000003,
+        "net_adverse_gross_gains": 26653.600000000002,
+        "net_adverse_gross_losses": 22200.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.2006126126126127,
+        "net_base": 4661.6,
+        "net_base_gross_gains": 26711.600000000002,
+        "net_base_gross_losses": 22050.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.2114104308390024,
+        "trades": 104
+      },
+      "policy": "static__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 1,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -503.0000000000001,
+        "net_adverse_gross_gains": 1418.2,
+        "net_adverse_gross_losses": 1921.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7381844680408078,
+        "net_base": -373.0000000000001,
+        "net_base_gross_gains": 1444.1999999999998,
+        "net_base_gross_losses": 1817.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7947391591459387,
+        "trades": 65
+      },
+      "policy": "static__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 0,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": true,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -292.9999999999998,
+        "net_adverse_gross_gains": 2552.2000000000003,
+        "net_adverse_gross_losses": 2845.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8970195416842403,
+        "net_base": -132.99999999999963,
+        "net_base_gross_gains": 2598.6000000000004,
+        "net_base_gross_losses": 2731.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9513105872016402,
+        "trades": 80
+      },
+      "policy": "static__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 5,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202604",
+      "observed": {
+        "net_adverse": 7389.6,
+        "net_adverse_gross_gains": 18410.8,
+        "net_adverse_gross_losses": 11021.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.6704896018582367,
+        "net_base": 7477.6,
+        "net_base_gross_gains": 18434.8,
+        "net_base_gross_losses": 10957.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.682437118972,
+        "trades": 44
+      },
+      "policy": "static__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 12,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -605.8,
+        "net_adverse_gross_gains": 23.19999999999999,
+        "net_adverse_gross_losses": 629.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.03688394276629569,
+        "net_base": -579.8,
+        "net_base_gross_gains": 29.199999999999985,
+        "net_base_gross_losses": 609.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.047947454844006546,
+        "trades": 13
+      },
+      "policy": "static__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 5,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": 443.00000000000006,
+        "net_adverse_gross_gains": 1604.6000000000001,
+        "net_adverse_gross_losses": 1161.6000000000001,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.3813705234159779,
+        "net_base": 503.00000000000006,
+        "net_base_gross_gains": 1622.6,
+        "net_base_gross_losses": 1119.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.4492675955698464,
+        "trades": 30
+      },
+      "policy": "static__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 1,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -6679.999999999996,
+        "net_adverse_gross_gains": 18959.2,
+        "net_adverse_gross_losses": 25639.199999999997,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7394614496552155,
+        "net_base": -6429.999999999999,
+        "net_base_gross_gains": 19035.2,
+        "net_base_gross_losses": 25465.199999999997,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7474985470367405,
+        "trades": 125
+      },
+      "policy": "expanding__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 10,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -492.8,
+        "net_adverse_gross_gains": 121.80000000000001,
+        "net_adverse_gross_losses": 614.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.19817767653758545,
+        "net_base": -456.8,
+        "net_base_gross_gains": 125.80000000000003,
+        "net_base_gross_losses": 582.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.2159285959491933,
+        "trades": 18
+      },
+      "policy": "expanding__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 6,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -1008.5999999999999,
+        "net_adverse_gross_gains": 1032.8,
+        "net_adverse_gross_losses": 2041.3999999999999,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5059273047908298,
+        "net_base": -906.5999999999997,
+        "net_base_gross_gains": 1056.8000000000002,
+        "net_base_gross_losses": 1963.3999999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.5382499745339718,
+        "trades": 51
+      },
+      "policy": "expanding__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 8,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -3626.199999999998,
+        "net_adverse_gross_gains": 8829.6,
+        "net_adverse_gross_losses": 12455.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7088745805167072,
+        "net_base": -3512.1999999999994,
+        "net_base_gross_gains": 8867.6,
+        "net_base_gross_losses": 12379.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7162959013877446,
+        "trades": 57
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 15,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -232.60000000000005,
+        "net_adverse_gross_gains": 0,
+        "net_adverse_gross_losses": 232.60000000000005,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.0,
+        "net_base": -220.60000000000005,
+        "net_base_gross_gains": 0,
+        "net_base_gross_losses": 220.60000000000005,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.0,
+        "trades": 6
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 10,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -721.1999999999998,
+        "net_adverse_gross_gains": 411.2,
+        "net_adverse_gross_losses": 1132.3999999999999,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.3631225715294949,
+        "net_base": -677.1999999999998,
+        "net_base_gross_gains": 417.20000000000005,
+        "net_base_gross_losses": 1094.3999999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.3812134502923977,
+        "trades": 22
+      },
+      "policy": "expanding__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 0,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -15163.999999999996,
+        "net_adverse_gross_gains": 20195.8,
+        "net_adverse_gross_losses": 35359.799999999996,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.571151420539709,
+        "net_base": -14856.0,
+        "net_base_gross_gains": 20270.199999999997,
+        "net_base_gross_losses": 35126.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.5770678297111558,
+        "trades": 155
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 1,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -950.4000000000002,
+        "net_adverse_gross_gains": 665.6,
+        "net_adverse_gross_losses": 1616.0000000000002,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.41188118811881186,
+        "net_base": -842.4,
+        "net_base_gross_gains": 684.0000000000001,
+        "net_base_gross_losses": 1526.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.4481132075471699,
+        "trades": 54
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 1,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -1629.0,
+        "net_adverse_gross_gains": 619.0,
+        "net_adverse_gross_losses": 2248.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.275355871886121,
+        "net_base": -1519.0,
+        "net_base_gross_gains": 639.8,
+        "net_base_gross_losses": 2158.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.2963683527885862,
+        "trades": 55
+      },
+      "policy": "rolling12__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 7,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -10887.799999999997,
+        "net_adverse_gross_gains": 9754.400000000001,
+        "net_adverse_gross_losses": 20642.199999999997,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4725465308930251,
+        "net_base": -10732.800000000001,
+        "net_base_gross_gains": 9786.4,
+        "net_base_gross_losses": 20519.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.4769386720729853,
+        "trades": 78
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 8,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -595.8000000000001,
+        "net_adverse_gross_gains": 15.399999999999997,
+        "net_adverse_gross_losses": 611.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.025196335078534023,
+        "net_base": -559.8000000000001,
+        "net_base_gross_gains": 17.799999999999986,
+        "net_base_gross_losses": 577.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.030817174515235433,
+        "trades": 18
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 18,
+        "available_days_without_fill": 6,
+        "expected_days": 21,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "missing_dates": [
+        "20260401",
+        "20260409",
+        "20260415"
+      ],
+      "month": "202604",
+      "observed": {
+        "net_adverse": -913.1999999999999,
+        "net_adverse_gross_gains": 275.8,
+        "net_adverse_gross_losses": 1189.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.231959629941127,
+        "net_base": -859.1999999999998,
+        "net_base_gross_gains": 279.80000000000007,
+        "net_base_gross_losses": 1139.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.24565408252853385,
+        "trades": 27
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 0,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -5759.599999999998,
+        "net_adverse_gross_gains": 20518.2,
+        "net_adverse_gross_losses": 26277.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7808187900052517,
+        "net_base": -5558.599999999999,
+        "net_base_gross_gains": 20564.6,
+        "net_base_gross_losses": 26123.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7872159612911128,
+        "trades": 101
+      },
+      "policy": "static__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 1,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -555.6000000000003,
+        "net_adverse_gross_gains": 1506.3999999999999,
+        "net_adverse_gross_losses": 2062.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.730552861299709,
+        "net_base": -373.6,
+        "net_base_gross_gains": 1559.8000000000002,
+        "net_base_gross_losses": 1933.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.8067652839557258,
+        "trades": 91
+      },
+      "policy": "static__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 0,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -780.6,
+        "net_adverse_gross_gains": 2537.4,
+        "net_adverse_gross_losses": 3318.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7647377938517179,
+        "net_base": -598.5999999999997,
+        "net_base_gross_gains": 2581.2000000000003,
+        "net_base_gross_losses": 3179.7999999999997,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.8117491666142527,
+        "trades": 91
+      },
+      "policy": "static__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 7,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -1329.399999999998,
+        "net_adverse_gross_gains": 9080.600000000002,
+        "net_adverse_gross_losses": 10410.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8722958693563883,
+        "net_base": -1261.4000000000003,
+        "net_base_gross_gains": 9098.6,
+        "net_base_gross_losses": 10360.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.8782432432432433,
+        "trades": 34
+      },
+      "policy": "static__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 9,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -31.000000000000057,
+        "net_adverse_gross_gains": 713.4,
+        "net_adverse_gross_losses": 744.4000000000001,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.958355722729715,
+        "net_base": 18.99999999999997,
+        "net_base_gross_gains": 725.4,
+        "net_base_gross_losses": 706.4000000000001,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.0268969422423555,
+        "trades": 25
+      },
+      "policy": "static__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 3,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": 595.4000000000001,
+        "net_adverse_gross_gains": 2218.6,
+        "net_adverse_gross_losses": 1623.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.3668063085263675,
+        "net_base": 697.4000000000004,
+        "net_base_gross_gains": 2247.0000000000005,
+        "net_base_gross_losses": 1549.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.4500516262261232,
+        "trades": 51
+      },
+      "policy": "static__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 3,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -3246.3999999999983,
+        "net_adverse_gross_gains": 12518.2,
+        "net_adverse_gross_losses": 15764.599999999999,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.794070258680842,
+        "net_base": -3121.400000000001,
+        "net_base_gross_gains": 12564.199999999999,
+        "net_base_gross_losses": 15685.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.801002193094303,
+        "trades": 64
+      },
+      "policy": "expanding__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 9,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -224.20000000000002,
+        "net_adverse_gross_gains": 347.59999999999997,
+        "net_adverse_gross_losses": 571.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6079048618398041,
+        "net_base": -180.2,
+        "net_base_gross_gains": 355.59999999999997,
+        "net_base_gross_losses": 535.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6636804777902202,
+        "trades": 22
+      },
+      "policy": "expanding__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 7,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": 596.2,
+        "net_adverse_gross_gains": 1929.8,
+        "net_adverse_gross_losses": 1333.6000000000001,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.4470605878824234,
+        "net_base": 691.2000000000002,
+        "net_base_gross_gains": 1964.2,
+        "net_base_gross_losses": 1273.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.542969363707777,
+        "trades": 48
+      },
+      "policy": "expanding__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 11,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -4059.5999999999995,
+        "net_adverse_gross_gains": 3302.0000000000005,
+        "net_adverse_gross_losses": 7361.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4485437948272115,
+        "net_base": -4019.6000000000004,
+        "net_base_gross_gains": 3312.0,
+        "net_base_gross_losses": 7331.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.4517431392874679,
+        "trades": 21
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 15,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -207.60000000000002,
+        "net_adverse_gross_gains": 0,
+        "net_adverse_gross_losses": 207.60000000000002,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.0,
+        "net_base": -195.6,
+        "net_base_gross_gains": 0,
+        "net_base_gross_losses": 195.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.0,
+        "trades": 6
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 12,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -355.20000000000005,
+        "net_adverse_gross_gains": 106.19999999999997,
+        "net_adverse_gross_losses": 461.40000000000003,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.23016905071521448,
+        "net_base": -332.2,
+        "net_base_gross_gains": 112.2,
+        "net_base_gross_losses": 444.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.2524752475247525,
+        "trades": 12
+      },
+      "policy": "expanding__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 1,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": 1633.6000000000038,
+        "net_adverse_gross_gains": 18203.600000000002,
+        "net_adverse_gross_losses": 16569.999999999996,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.098587809293905,
+        "net_base": 1780.6,
+        "net_base_gross_gains": 18261.6,
+        "net_base_gross_losses": 16481.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.1080395607062676,
+        "trades": 74
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 4,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -17.600000000000062,
+        "net_adverse_gross_gains": 1425.6,
+        "net_adverse_gross_losses": 1443.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9878048780487804,
+        "net_base": 104.40000000000012,
+        "net_base_gross_gains": 1465.0000000000002,
+        "net_base_gross_losses": 1360.6000000000001,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.0767308540349847,
+        "trades": 61
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 2,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -1505.6000000000001,
+        "net_adverse_gross_gains": 1298.8,
+        "net_adverse_gross_losses": 2804.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4631293681357866,
+        "net_base": -1343.6,
+        "net_base_gross_gains": 1344.2,
+        "net_base_gross_losses": 2687.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.5001116154475779,
+        "trades": 81
+      },
+      "policy": "rolling12__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 8,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": 4440.0,
+        "net_adverse_gross_gains": 9627.4,
+        "net_adverse_gross_losses": 5187.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.855920114122682,
+        "net_base": 4490.000000000001,
+        "net_base_gross_gains": 9649.4,
+        "net_base_gross_losses": 5159.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.87025623134473,
+        "trades": 25
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 12,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": 170.60000000000002,
+        "net_adverse_gross_gains": 543.8,
+        "net_adverse_gross_losses": 373.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.4571275455519828,
+        "net_base": 198.6000000000001,
+        "net_base_gross_gains": 557.8000000000001,
+        "net_base_gross_losses": 359.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.5528953229398665,
+        "trades": 14
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 20,
+        "available_days_without_fill": 11,
+        "expected_days": 20,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202605",
+      "observed": {
+        "net_adverse": -208.20000000000002,
+        "net_adverse_gross_gains": 709.8,
+        "net_adverse_gross_losses": 918.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7732026143790849,
+        "net_base": -164.19999999999996,
+        "net_base_gross_gains": 723.8,
+        "net_base_gross_losses": 888.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.81509009009009,
+        "trades": 22
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 0,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": 9674.800000000001,
+        "net_adverse_gross_gains": 39948.8,
+        "net_adverse_gross_losses": 30273.999999999996,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.3195745524212197,
+        "net_base": 9868.800000000005,
+        "net_base_gross_gains": 40012.8,
+        "net_base_gross_losses": 30143.999999999996,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.3273885350318473,
+        "trades": 97
+      },
+      "policy": "static__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 0,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -1977.6000000000001,
+        "net_adverse_gross_gains": 2120.2,
+        "net_adverse_gross_losses": 4097.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5173995802625798,
+        "net_base": -1785.5999999999997,
+        "net_base_gross_gains": 2156.6000000000004,
+        "net_base_gross_losses": 3942.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.5470549439399321,
+        "trades": 96
+      },
+      "policy": "static__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 1,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": 905.8000000000005,
+        "net_adverse_gross_gains": 5094.400000000001,
+        "net_adverse_gross_losses": 4188.599999999999,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.2162536408346467,
+        "net_base": 1059.8000000000013,
+        "net_base_gross_gains": 5146.400000000001,
+        "net_base_gross_losses": 4086.5999999999995,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.259335388831792,
+        "trades": 77
+      },
+      "policy": "static__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 3,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": 1938.4000000000005,
+        "net_adverse_gross_gains": 27638.0,
+        "net_adverse_gross_losses": 25699.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.0754252984482249,
+        "net_base": 2090.400000000002,
+        "net_base_gross_gains": 27678.0,
+        "net_base_gross_losses": 25587.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.0816958214134973,
+        "trades": 76
+      },
+      "policy": "static__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 2,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -1841.6,
+        "net_adverse_gross_gains": 756.0,
+        "net_adverse_gross_losses": 2597.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.2910378811210348,
+        "net_base": -1739.6,
+        "net_base_gross_gains": 776.0000000000001,
+        "net_base_gross_losses": 2515.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.3084751152806488,
+        "trades": 51
+      },
+      "policy": "static__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 4,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": 575.4000000000002,
+        "net_adverse_gross_gains": 3714.0,
+        "net_adverse_gross_losses": 3138.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.1833301471993882,
+        "net_base": 677.4000000000008,
+        "net_base_gross_gains": 3744.0000000000005,
+        "net_base_gross_losses": 3066.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.2208961064370967,
+        "trades": 51
+      },
+      "policy": "static__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 0,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": 7119.600000000002,
+        "net_adverse_gross_gains": 40626.2,
+        "net_adverse_gross_losses": 33506.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.2124835107113225,
+        "net_base": 7357.600000000002,
+        "net_base_gross_gains": 40712.2,
+        "net_base_gross_losses": 33354.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.2205872653247227,
+        "trades": 119
+      },
+      "policy": "expanding__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 5,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -1705.3999999999999,
+        "net_adverse_gross_gains": 1180.2,
+        "net_adverse_gross_losses": 2885.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4089963958968672,
+        "net_base": -1587.3999999999999,
+        "net_base_gross_gains": 1206.2,
+        "net_base_gross_losses": 2793.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.43177262313860254,
+        "trades": 59
+      },
+      "policy": "expanding__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 3,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": 1305.8000000000002,
+        "net_adverse_gross_gains": 4240.2,
+        "net_adverse_gross_losses": 2934.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.4449972737186476,
+        "net_base": 1429.8000000000004,
+        "net_base_gross_gains": 4286.2,
+        "net_base_gross_losses": 2856.3999999999996,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.5005601456378659,
+        "trades": 62
+      },
+      "policy": "expanding__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 5,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": 5767.4000000000015,
+        "net_adverse_gross_gains": 26395.0,
+        "net_adverse_gross_losses": 20627.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.2795962690763831,
+        "net_base": 5889.4,
+        "net_base_gross_gains": 26445.0,
+        "net_base_gross_losses": 20555.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.286510731868688,
+        "trades": 61
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 12,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -1086.6,
+        "net_adverse_gross_gains": 798.2,
+        "net_adverse_gross_losses": 1884.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4234932088285229,
+        "net_base": -1014.5999999999999,
+        "net_base_gross_gains": 814.2,
+        "net_base_gross_losses": 1828.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.44520997375328086,
+        "trades": 36
+      },
+      "policy": "expanding__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 5,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": 90.40000000000039,
+        "net_adverse_gross_gains": 2459.6000000000004,
+        "net_adverse_gross_losses": 2369.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.0381563396927236,
+        "net_base": 172.4000000000002,
+        "net_base_gross_gains": 2487.6,
+        "net_base_gross_losses": 2315.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.074464409122322,
+        "trades": 41
+      },
+      "policy": "expanding__corrected",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 0,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -6294.599999999998,
+        "net_adverse_gross_gains": 30241.0,
+        "net_adverse_gross_losses": 36535.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8277132440687986,
+        "net_base": -6032.599999999999,
+        "net_base_gross_gains": 30321.0,
+        "net_base_gross_losses": 36353.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.8340576999251794,
+        "trades": 131
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 0,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -342.8000000000003,
+        "net_adverse_gross_gains": 2832.2,
+        "net_adverse_gross_losses": 3175.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.892031496062992,
+        "net_base": -156.79999999999956,
+        "net_base_gross_gains": 2889.6000000000004,
+        "net_base_gross_losses": 3046.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.948529411764706,
+        "trades": 93
+      },
+      "policy": "rolling12__control",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 2,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -3871.4,
+        "net_adverse_gross_gains": 3138.8,
+        "net_adverse_gross_losses": 7010.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.44774756782973385,
+        "net_base": -3673.399999999999,
+        "net_base_gross_gains": 3184.2000000000003,
+        "net_base_gross_losses": 6857.599999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.46433154456369585,
+        "trades": 99
+      },
+      "policy": "rolling12__control",
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 3,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -7771.399999999997,
+        "net_adverse_gross_gains": 18933.0,
+        "net_adverse_gross_losses": 26704.399999999998,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7089842872335645,
+        "net_base": -7613.4,
+        "net_base_gross_gains": 18973.0,
+        "net_base_gross_losses": 26586.399999999998,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.713635542984383,
+        "trades": 79
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 6,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -20.60000000000022,
+        "net_adverse_gross_gains": 2125.4,
+        "net_adverse_gross_losses": 2146.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9904007455731594,
+        "net_base": 81.40000000000025,
+        "net_base_gross_gains": 2158.8,
+        "net_base_gross_losses": 2077.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.039183594878213,
+        "trades": 51
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 21,
+        "available_days_without_fill": 8,
+        "expected_days": 21,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "missing_dates": [],
+      "month": "202606",
+      "observed": {
+        "net_adverse": -1725.9999999999993,
+        "net_adverse_gross_gains": 2022.4000000000005,
+        "net_adverse_gross_losses": 3748.3999999999996,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.5395368690641342,
+        "net_base": -1617.9999999999993,
+        "net_base_gross_gains": 2054.4000000000005,
+        "net_base_gross_losses": 3672.3999999999996,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.5594161856006973,
+        "trades": 55
+      },
+      "policy": "rolling12__corrected",
+      "ticker": "QQQ"
+    }
+  ],
+  "no_fill_scope": "available_days_without_fill counts days, not NO_FILL attempts",
+  "periods": [
+    {
+      "coverage": {
+        "available_days": 123,
+        "available_days_without_fill": 0,
+        "expected_days": 123,
+        "missing_days": 0,
+        "observable_daily_pass": true,
+        "universal_daily_pass": true,
+        "universal_daily_status": "PASS"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -6479.7999999999865,
+        "net_adverse_gross_gains": 162482.80000000002,
+        "net_adverse_gross_losses": 168962.59999999998,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9616495011322035,
+        "net_base": -5295.799999999989,
+        "net_base_gross_gains": 162817.2,
+        "net_base_gross_losses": 168113.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.96849856941462,
+        "trades": 593
+      },
+      "policy": "static__control",
+      "positive_months": 2,
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 6,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -5018.6,
+        "net_adverse_gross_gains": 11791.8,
+        "net_adverse_gross_losses": 16810.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7014586208537571,
+        "net_base": -3998.5999999999995,
+        "net_base_gross_gains": 12040.400000000001,
+        "net_base_gross_losses": 16039.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7506951804975374,
+        "trades": 511
+      },
+      "policy": "static__control",
+      "positive_months": 2,
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 2,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -422.5999999999991,
+        "net_adverse_gross_gains": 18485.0,
+        "net_adverse_gross_losses": 18907.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9776491992637881,
+        "net_base": 548.4000000000034,
+        "net_base_gross_gains": 18769.000000000004,
+        "net_base_gross_losses": 18220.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.0300978013896362,
+        "trades": 486
+      },
+      "policy": "static__control",
+      "positive_months": 2,
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 123,
+        "available_days_without_fill": 20,
+        "expected_days": 123,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -5978.39999999999,
+        "net_adverse_gross_gains": 109734.40000000001,
+        "net_adverse_gross_losses": 115712.79999999999,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9483341514508337,
+        "net_base": -5280.399999999995,
+        "net_base_gross_gains": 109916.4,
+        "net_base_gross_losses": 115196.79999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9541619211644768,
+        "trades": 349
+      },
+      "policy": "static__corrected",
+      "positive_months": 3,
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 37,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -3991.0,
+        "net_adverse_gross_gains": 5723.4,
+        "net_adverse_gross_losses": 9714.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.589166598040023,
+        "net_base": -3542.9999999999995,
+        "net_base_gross_gains": 5815.8,
+        "net_base_gross_losses": 9358.8,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6214258238235671,
+        "trades": 225
+      },
+      "policy": "static__corrected",
+      "positive_months": 2,
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 21,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "PASS",
+      "observed": {
+        "net_adverse": 1800.8000000000009,
+        "net_adverse_gross_gains": 13879.400000000001,
+        "net_adverse_gross_losses": 12078.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 1.1490901263391453,
+        "net_base": 2353.800000000002,
+        "net_base_gross_gains": 14033.2,
+        "net_base_gross_losses": 11679.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.2015343253934279,
+        "trades": 277
+      },
+      "policy": "static__corrected",
+      "positive_months": 5,
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 123,
+        "available_days_without_fill": 4,
+        "expected_days": 123,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -15970.19999999998,
+        "net_adverse_gross_gains": 166019.6,
+        "net_adverse_gross_losses": 181989.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9122467303112592,
+        "net_base": -14570.199999999993,
+        "net_base_gross_gains": 166458.0,
+        "net_base_gross_losses": 181028.2,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.9195141972355687,
+        "trades": 702
+      },
+      "policy": "expanding__control",
+      "positive_months": 2,
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 36,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -6043.6,
+        "net_adverse_gross_gains": 5268.2,
+        "net_adverse_gross_losses": 11311.800000000001,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4657260559769444,
+        "net_base": -5442.599999999999,
+        "net_base_gross_gains": 5415.6,
+        "net_base_gross_losses": 10858.199999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.49875670000552585,
+        "trades": 301
+      },
+      "policy": "expanding__control",
+      "positive_months": 0,
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 21,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -1344.1999999999994,
+        "net_adverse_gross_gains": 13443.0,
+        "net_adverse_gross_losses": 14787.2,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9090970569140878,
+        "net_base": -603.1999999999981,
+        "net_base_gross_gains": 13673.400000000001,
+        "net_base_gross_losses": 14276.599999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.957749043890002,
+        "trades": 372
+      },
+      "policy": "expanding__control",
+      "positive_months": 3,
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 123,
+        "available_days_without_fill": 28,
+        "expected_days": 123,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -46.79999999999063,
+        "net_adverse_gross_gains": 115167.20000000001,
+        "net_adverse_gross_losses": 115214.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9995937993646606,
+        "net_base": 727.2000000000012,
+        "net_base_gross_gains": 115433.20000000001,
+        "net_base_gross_losses": 114706.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.0063396858054505,
+        "trades": 388
+      },
+      "policy": "expanding__corrected",
+      "positive_months": 2,
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 70,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -3224.4,
+        "net_adverse_gross_gains": 3019.0,
+        "net_adverse_gross_losses": 6243.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4835506294647148,
+        "net_base": -2947.3999999999996,
+        "net_base_gross_gains": 3079.0000000000005,
+        "net_base_gross_losses": 6026.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.5109186247179079,
+        "trades": 139
+      },
+      "policy": "expanding__corrected",
+      "positive_months": 0,
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 45,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -230.79999999999893,
+        "net_adverse_gross_gains": 7436.200000000001,
+        "net_adverse_gross_losses": 7667.0,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.9698969610016956,
+        "net_base": 133.2000000000013,
+        "net_base_gross_gains": 7552.200000000001,
+        "net_base_gross_losses": 7418.999999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 1.0179539021431463,
+        "trades": 183
+      },
+      "policy": "expanding__corrected",
+      "positive_months": 4,
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 123,
+        "available_days_without_fill": 1,
+        "expected_days": 123,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -32320.799999999977,
+        "net_adverse_gross_gains": 154835.40000000002,
+        "net_adverse_gross_losses": 187156.19999999998,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8273057478192015,
+        "net_base": -30927.799999999996,
+        "net_base_gross_gains": 155247.8,
+        "net_base_gross_losses": 186175.6,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.8338783385148214,
+        "trades": 698
+      },
+      "policy": "rolling12__control",
+      "positive_months": 1,
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 13,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -3893.200000000001,
+        "net_adverse_gross_gains": 10909.6,
+        "net_adverse_gross_losses": 14802.800000000001,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.7369957035155511,
+        "net_base": -2950.199999999999,
+        "net_base_gross_gains": 11172.2,
+        "net_base_gross_losses": 14122.400000000001,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.7910978303970996,
+        "trades": 472
+      },
+      "policy": "rolling12__control",
+      "positive_months": 1,
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 12,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -14549.6,
+        "net_adverse_gross_gains": 12013.0,
+        "net_adverse_gross_losses": 26562.6,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4522524150497316,
+        "net_base": -13469.599999999999,
+        "net_base_gross_gains": 12298.400000000001,
+        "net_base_gross_losses": 25768.0,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.4772741384663149,
+        "trades": 541
+      },
+      "policy": "rolling12__control",
+      "positive_months": 0,
+      "ticker": "QQQ"
+    },
+    {
+      "coverage": {
+        "available_days": 123,
+        "available_days_without_fill": 21,
+        "expected_days": 123,
+        "missing_days": 0,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "FAIL"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -17801.399999999983,
+        "net_adverse_gross_gains": 102888.0,
+        "net_adverse_gross_losses": 120689.4,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.8525023738621619,
+        "net_base": -17015.399999999998,
+        "net_base_gross_gains": 103078.0,
+        "net_base_gross_losses": 120093.4,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.8583152779420018,
+        "trades": 394
+      },
+      "policy": "rolling12__corrected",
+      "positive_months": 2,
+      "ticker": "SPXW"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 50,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -3178.0000000000005,
+        "net_adverse_gross_gains": 5063.8,
+        "net_adverse_gross_losses": 8241.800000000001,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.6144046203499235,
+        "net_base": -2779.999999999999,
+        "net_base_gross_gains": 5159.6,
+        "net_base_gross_losses": 7939.599999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.6498564159403497,
+        "trades": 200
+      },
+      "policy": "rolling12__corrected",
+      "positive_months": 2,
+      "ticker": "SPY"
+    },
+    {
+      "coverage": {
+        "available_days": 120,
+        "available_days_without_fill": 38,
+        "expected_days": 123,
+        "missing_days": 3,
+        "observable_daily_pass": false,
+        "universal_daily_pass": false,
+        "universal_daily_status": "NO_EVALUABLE"
+      },
+      "economic_gate_status": "FAIL",
+      "observed": {
+        "net_adverse": -7909.799999999998,
+        "net_adverse_gross_gains": 7683.000000000001,
+        "net_adverse_gross_losses": 15592.8,
+        "net_adverse_pf_infinite": false,
+        "net_adverse_profit_factor": 0.4927274126519933,
+        "net_base": -7407.799999999998,
+        "net_base_gross_gains": 7814.400000000001,
+        "net_base_gross_losses": 15222.199999999999,
+        "net_base_pf_infinite": false,
+        "net_base_profit_factor": 0.5133554939496263,
+        "trades": 253
+      },
+      "policy": "rolling12__corrected",
+      "positive_months": 0,
+      "ticker": "QQQ"
+    }
+  ],
+  "winner_selected": null
+}

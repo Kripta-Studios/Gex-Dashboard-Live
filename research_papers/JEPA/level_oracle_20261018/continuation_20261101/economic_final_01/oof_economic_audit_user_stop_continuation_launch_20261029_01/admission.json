@@ -1,0 +1,22 @@
+{
+  "available_ram_bytes": 15820423168,
+  "cpu0_inheritance_test": {
+    "evidence": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261029\\oof_economic_audit_user_stop_implementation\\cpu_inheritance_01.json",
+      "sha256": "6133e8cefbddc2c87338ceb0d825bf096cfe36e0c51e640c894fe2ef57cfd8f5"
+    },
+    "status": "PASS_FIRST_INSTRUCTION_CPU0_THREADS1"
+  },
+  "free_commit_bytes": 28007579648,
+  "mechanism": "Windows_child_inherits_parent_affinity_at_CreateProcess",
+  "minimum_free_bytes": 2000000000,
+  "parent_cpu_affinity": [
+    0
+  ],
+  "parent_pid": 33744,
+  "previous_parent_cpu_affinity": [
+    0
+  ],
+  "utc": "2026-11-01T12:35:06.710821+00:00",
+  "verified_utc": "2026-11-01T12:35:06.709920+00:00"
+}

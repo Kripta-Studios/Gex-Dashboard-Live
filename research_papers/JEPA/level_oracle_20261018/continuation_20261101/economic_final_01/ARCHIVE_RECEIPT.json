@@ -1,0 +1,151 @@
+{
+  "status": "COMPACT_ARCHIVE_VERIFIED",
+  "utc": "2026-11-01T13:34:30.278925+00:00",
+  "copies": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_20261029_01\\audit.json",
+      "copy": "oof_economic_audit_user_stop_continuation_20261029_01\\audit.json",
+      "bytes": 5711094,
+      "sha256": "eed09d14bc2074767e24959a2bfa0962fad45181f0f44a92b1b34edf02e8b4d1"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\completion.json",
+      "copy": "oof_economic_audit_user_stop_continuation_launch_20261029_01\\completion.json",
+      "bytes": 2324,
+      "sha256": "793bd6c95f144806b535920166327c0b875eeeb763e1a176fb3fa8ef53fb0ec3"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\exit.json",
+      "copy": "oof_economic_audit_user_stop_continuation_launch_20261029_01\\exit.json",
+      "bytes": 1243,
+      "sha256": "a0f5851ccdcceab64ce3438926a849df1c98a291b07371d024f811ef96dada12"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\process.json",
+      "copy": "oof_economic_audit_user_stop_continuation_launch_20261029_01\\process.json",
+      "bytes": 1520,
+      "sha256": "65579ec682f02abb326ee3dcea7d234dbea31c9fbf93d61f8eac5a320ed2df3d"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\preflight.json",
+      "copy": "oof_economic_audit_user_stop_continuation_launch_20261029_01\\preflight.json",
+      "bytes": 85884,
+      "sha256": "c9f5c4c1bf0c874aaa2c3efb8b6b2cce902a23526801beb47e2f39bfb2d87ef8"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\launch.json",
+      "copy": "oof_economic_audit_user_stop_continuation_launch_20261029_01\\launch.json",
+      "bytes": 1816,
+      "sha256": "97a0d122c10e6555d9f787bc6d75a0b2f6a94f029481c3fed8ee526b6a93d96a"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\admission.json",
+      "copy": "oof_economic_audit_user_stop_continuation_launch_20261029_01\\admission.json",
+      "bytes": 842,
+      "sha256": "ae9390c814a5e8097de74eefa2cee4071a4d74aa41605de8bcd864caf0c60c78"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\stdout.log",
+      "copy": "oof_economic_audit_user_stop_continuation_launch_20261029_01\\stdout.log",
+      "bytes": 131,
+      "sha256": "3bcfa2e04189df056915933eb0f3aa248f88b13e573d7c0ce69380a2c4cfbe73"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\stderr.log",
+      "copy": "oof_economic_audit_user_stop_continuation_launch_20261029_01\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\admission.json",
+      "copy": "oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\admission.json",
+      "bytes": 2624,
+      "sha256": "3991dc8bbefba1cad3c83353871d71f97f47902a05513a8cce8caa68b848c46b"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\exit.json",
+      "copy": "oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\exit.json",
+      "bytes": 1041,
+      "sha256": "f3926bedc1a6d5e4994edc8f73e3692f27f6c2c7763642234aeaaed9b7f42da3"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\process.json",
+      "copy": "oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\process.json",
+      "bytes": 1365,
+      "sha256": "45ec669aeb65353c953f8c40ba8b429ab87dfc13e7ce869d1b5bf47ec9e57adc"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\stderr.log",
+      "copy": "oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\stdout.log",
+      "copy": "oof_economic_audit_user_stop_continuation_observer_20261101_01\\execute_01\\stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_20261101_01\\manifest.json",
+      "copy": "oof_h1_descriptive_report_20261101_01\\manifest.json",
+      "bytes": 1067,
+      "sha256": "36473f46f784208047ea8809c19d802ad37ca9c939d1338e849a22f5ff0a54d3"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_20261101_01\\monthly_net_usd.png",
+      "copy": "oof_h1_descriptive_report_20261101_01\\monthly_net_usd.png",
+      "bytes": 271830,
+      "sha256": "612d13bcd0d1032e97f7c4e34e388a4bc4d889ca5d76b38ddd12ada6e8329c1f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_20261101_01\\monthly_net_usd.svg",
+      "copy": "oof_h1_descriptive_report_20261101_01\\monthly_net_usd.svg",
+      "bytes": 259196,
+      "sha256": "50af43de0f30dfd09f3e013694760adb7ac08f029bdbec3aa184a8027dd1b08a"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_20261101_01\\tables.json",
+      "copy": "oof_h1_descriptive_report_20261101_01\\tables.json",
+      "bytes": 119621,
+      "sha256": "21ad30b4b56ea580c0db5dc0f731a73959ac41da03561bf0e54a96f9a3c1e259"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_observer_20261101_01\\admission.json",
+      "copy": "oof_h1_descriptive_report_observer_20261101_01\\admission.json",
+      "bytes": 1762,
+      "sha256": "2afcf195b950ff554d3c993c6c92ada803738d61563c4c9c30fe37a68b7ea5b3"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_observer_20261101_01\\exit.json",
+      "copy": "oof_h1_descriptive_report_observer_20261101_01\\exit.json",
+      "bytes": 927,
+      "sha256": "d54d8f110698644438f24e1d52174f198ebff14127e1efceb96a9832740aea7b"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_observer_20261101_01\\process.json",
+      "copy": "oof_h1_descriptive_report_observer_20261101_01\\process.json",
+      "bytes": 721,
+      "sha256": "4dd16d8d035c863f21773f1b54129b981e9603a157a024b1da112b43bf8328bb"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_observer_20261101_01\\stderr.log",
+      "copy": "oof_h1_descriptive_report_observer_20261101_01\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_observer_20261101_01\\stdout.log",
+      "copy": "oof_h1_descriptive_report_observer_20261101_01\\stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "count": 23,
+  "bytes": 6465008,
+  "closure_files_verified": 8,
+  "verified_files_payloads_rehashed": false,
+  "independent_closure_review": "review_producer_exit CLEAR",
+  "independent_report_reconciliation": "audit_requirements CLEAR 108 monthly 18 H1",
+  "root_png_visual": "9 panels inspected, labels readable, April missing shaded, no clipping"
+}

@@ -1,0 +1,27 @@
+{
+  "audit_path": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_20261029_01\\audit.json",
+  "audit_sha256": "eed09d14bc2074767e24959a2bfa0962fad45181f0f44a92b1b34edf02e8b4d1",
+  "code_sha256": "a52191e2154cec9e6abf12920352a07dbe92c88468c613cd49ec7a21c5cace33",
+  "files": {
+    "monthly_net_usd.png": {
+      "bytes": 271830,
+      "sha256": "612d13bcd0d1032e97f7c4e34e388a4bc4d889ca5d76b38ddd12ada6e8329c1f"
+    },
+    "monthly_net_usd.svg": {
+      "bytes": 259196,
+      "sha256": "50af43de0f30dfd09f3e013694760adb7ac08f029bdbec3aa184a8027dd1b08a"
+    },
+    "tables.json": {
+      "bytes": 119621,
+      "sha256": "21ad30b4b56ea580c0db5dc0f731a73959ac41da03561bf0e54a96f9a3c1e259"
+    }
+  },
+  "h1_rows": 18,
+  "monthly_rows": 108,
+  "promotion_approved": false,
+  "source_rehashed_before_after": true,
+  "source_scope": "Only the audit JSON; no verified_files payload rehash",
+  "status": "COMPLETE_DESCRIPTIVE_OOF_H1_AUDIT_REPORT",
+  "technical_ready": false,
+  "winner_selected": null
+}

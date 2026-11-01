@@ -1,0 +1,30 @@
+{
+  "utc": "2026-11-01T13:30:38.216598+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\report_oof_h1_audit_20261024.py",
+    "--audit",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_20261029_01\\audit.json",
+    "--audit-sha256",
+    "eed09d14bc2074767e24959a2bfa0962fad45181f0f44a92b1b34edf02e8b4d1",
+    "--out",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_h1_descriptive_report_20261101_01"
+  ],
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\report_oof_h1_audit_20261024.py": "a52191e2154cec9e6abf12920352a07dbe92c88468c613cd49ec7a21c5cace33",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_20261029_01\\audit.json": "eed09d14bc2074767e24959a2bfa0962fad45181f0f44a92b1b34edf02e8b4d1",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_H1_AUDIT_REPORT_IMPLEMENTATION_REVIEW_20261024.json": "ec8d484e8d3be8a64d1157733ff59874f6cb7316182058a2938aab8ab8db0ad7",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+  },
+  "resources": {
+    "available_ram_bytes": 14915006464,
+    "free_commit_bytes": 24830590976
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1
+}

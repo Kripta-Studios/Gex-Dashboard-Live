@@ -1,0 +1,23 @@
+{
+  "binding_sha256": "87f0e49fc0dd6e0837fe1e920d10214573482ad0f2b15a78fa43601e63e60f63",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\audit_oof_calibrated_policy.py",
+    "--request",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\OOF_ECONOMIC_AUDIT_USER_STOP_REQUEST_20261101_01.json",
+    "--request-sha256",
+    "69d45a141bdb23e5f0a2723e6e85b4b6457746a0c4782c1176b930fed16d3415",
+    "--output",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_20261029_01"
+  ],
+  "preflight_sha256": "c9f5c4c1bf0c874aaa2c3efb8b6b2cce902a23526801beb47e2f39bfb2d87ef8",
+  "request_sha256": "69d45a141bdb23e5f0a2723e6e85b4b6457746a0c4782c1176b930fed16d3415",
+  "snapshots": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\OOF_USER_STOP_CONTINUATION_DESIGN_20261029.md": "ae9d7466aa09f2c43e694fca86a5216d3222e0cff0042b035d7c8d057f54d109",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\launch_oof_economic_audit_user_stop_continuation_20261029.py": "48169acfe736a55855f742a26af53cc262a0450b57cc7bea3ce43a623ac7bfa7",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_launch_20261029_01\\test_launch_oof_economic_audit_user_stop_continuation_20261029.py": "5a2cdbe7d1a8fb376da0d01ef9aeeb5073115921cf1b06ec7939e59a4fd35304"
+  },
+  "status": "OOF_ECONOMIC_AUDIT_SUPERVISOR_ADMITTED_NOT_SPAWNED",
+  "utc": "2026-11-01T12:35:05.285157+00:00"
+}
