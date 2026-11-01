@@ -1,0 +1,15 @@
+{
+  "pid": 46740,
+  "creation_time": 1793547027.1712813,
+  "utc": "2026-11-01T15:30:27.175102+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\extract_weekly_context_1030.py",
+    "--build-reviewed-inventory",
+    "--extractor-sha256",
+    "e70be193286ffb1a314530b224e8de73a6f33cb774fac6692d0e4144b82a1b7e"
+  ]
+}

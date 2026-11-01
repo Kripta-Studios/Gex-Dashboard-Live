@@ -1,0 +1,13 @@
+{
+  "pid": 35112,
+  "creation_time": 1793546839.0524812,
+  "utc": "2026-11-01T15:27:19.059747+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\replay_equal_risk_frozen.py",
+    "--execute-reviewed-replay"
+  ]
+}

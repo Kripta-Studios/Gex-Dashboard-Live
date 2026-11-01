@@ -1,0 +1,27 @@
+{
+  "utc": "2026-11-01T15:27:19.051565+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\replay_equal_risk_frozen.py",
+    "--execute-reviewed-replay"
+  ],
+  "publication_commit": "0808fcab54e18a997380e8ed7c828f2d0dcc2708",
+  "code_sha256": "e4f42a9fa65120939cf5e131911c8f2990a9cd33d21ae036fa98d9eb816d5b9d",
+  "manifests": {
+    "h2_dataset_v2_01": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8",
+    "h2_ev_v2_01": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96",
+    "h2_dataset_v2_extension_2026q3_partial_01": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b",
+    "h2_ev_frozen_extension_2026q3_partial_01": "7bd50a5a1fe5214df2c4281e785313f0fb016ca73d725d682788dcb78b283d8e"
+  },
+  "resources": {
+    "available_ram_bytes": 11494543360,
+    "free_commit_bytes": 17388466176
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1
+}

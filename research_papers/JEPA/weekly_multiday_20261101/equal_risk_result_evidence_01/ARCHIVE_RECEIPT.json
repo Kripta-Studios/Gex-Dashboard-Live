@@ -1,0 +1,145 @@
+{
+  "count": 23,
+  "bytes": 1371959.0,
+  "utc": "2026-11-01T15:33:21.0024448Z",
+  "files": [
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_abstain_adverse.jsonl",
+      "bytes": 40530,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_abstain_adverse.jsonl",
+      "sha256": "9e37b25a60677b686619aa458bf79383edecd2e0ef12bdde38e48adddecbf171"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_abstain_base.jsonl",
+      "bytes": 39423,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_abstain_base.jsonl",
+      "sha256": "c21dd82dbc559f4474f1ea164136384a846c7777df4b5f3d2f7657981936db90"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_call_h2_adverse.jsonl",
+      "bytes": 155613,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_call_h2_adverse.jsonl",
+      "sha256": "bca4d923a1464303c209d641736eefdcb1b361bc0180047048e30515e289c5a6"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_call_h2_base.jsonl",
+      "bytes": 153195,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_call_h2_base.jsonl",
+      "sha256": "5fd23cf138c7d461db314b8b97451d2ca7130da708530f91726c5142691a117a"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_put_h2_adverse.jsonl",
+      "bytes": 164378,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_put_h2_adverse.jsonl",
+      "sha256": "83ff36a917ea3c6166fb64449ec26fafb61e84854889d4b1f8f467171421905d"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_put_h2_base.jsonl",
+      "bytes": 161637,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_always_put_h2_base.jsonl",
+      "sha256": "fbc190729e5cbd2a63403bc9d39d2511a01f6470ae8d7947476fb041316f662f"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_ev_top1_h2_adverse.jsonl",
+      "bytes": 115161,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_ev_top1_h2_adverse.jsonl",
+      "sha256": "4d6f11bf673ea4f642bc186f32404c29f04f0804bf0bb01f9dbb96b0b9111790"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_ev_top1_h2_base.jsonl",
+      "bytes": 113509,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_h1_eval_ev_top1_h2_base.jsonl",
+      "sha256": "9687b6df2e4e540e787c1b90e26d5fa448ebbcdf40b2ba2ebbdea71ddb79a004"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_abstain_adverse.jsonl",
+      "bytes": 17573,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_abstain_adverse.jsonl",
+      "sha256": "d9e5631fb2aff70720d712d931d369bfe359092fc46f114d4e83fab35a8e90e0"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_abstain_base.jsonl",
+      "bytes": 17096,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_abstain_base.jsonl",
+      "sha256": "4e3487a071ee1891a8eae5f5e0eaeb1a6117c3740cfea246577bf1bb3b6a0c67"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_call_h2_adverse.jsonl",
+      "bytes": 74885,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_call_h2_adverse.jsonl",
+      "sha256": "2bb9201c7d52041f6817cf8f612d07256883aade148e42192594673c75e40a4e"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_call_h2_base.jsonl",
+      "bytes": 74249,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_call_h2_base.jsonl",
+      "sha256": "fcbf435df6885f21ad9915456edc9ace7bcf98e130e56cee9aa8e609d4ea16b1"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_put_h2_adverse.jsonl",
+      "bytes": 63753,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_put_h2_adverse.jsonl",
+      "sha256": "465ba73d0ad3f795195f624db20b70aa3331f6fa829311e5375a511f1b2f24da"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_put_h2_base.jsonl",
+      "bytes": 63016,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_always_put_h2_base.jsonl",
+      "sha256": "841fdcfe7f40c53f728ce32783934800138901245ea22783e8e5df51681eaae9"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_ev_top1_h2_adverse.jsonl",
+      "bytes": 46065,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_ev_top1_h2_adverse.jsonl",
+      "sha256": "6210436ce034c9fe0babdbe5155d8af2153586d692256acae5b6c4c2516a94ea"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_ev_top1_h2_base.jsonl",
+      "bytes": 45429,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\ledger_equal_risk_q3_partial_ev_top1_h2_base.jsonl",
+      "sha256": "a1b565ab80a20edc0c735663c0bcc8dbf2ea2c6200722287e0295027b3e27187"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\manifest.json",
+      "bytes": 3973,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\manifest.json",
+      "sha256": "50fa6b7a02aad9d122dc0bfdd84f8c01f9a5f468bafc7f175eed39aa3ea9418d"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_frozen_01\\summary.json",
+      "bytes": 20107,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_frozen_01\\summary.json",
+      "sha256": "b3cd3144107768bc4c64505da1e44aefc559875ec857128d79b9bdb653b69aad"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_observer_01\\admission.json",
+      "bytes": 1101,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_observer_01\\admission.json",
+      "sha256": "2eafcb8a7b4940af8d9322bb60626da9bfc5bec0e02dd7e9acf966bb0cc4e7b5"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_observer_01\\exit.json",
+      "bytes": 856,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_observer_01\\exit.json",
+      "sha256": "1383ac7ef0dcaf568da56041875e7d5a1a9bd42da027408cba222de2ef88e6e7"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_observer_01\\process.json",
+      "bytes": 410,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_observer_01\\process.json",
+      "sha256": "c234f6c1e4735e79e36dae8abfde48ea33619bb69ce286367b50e8793e0a8550"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_observer_01\\stderr.log",
+      "bytes": 0,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_observer_01\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_equal_risk_observer_01\\stdout.log",
+      "bytes": 0,
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\equal_risk_result_evidence_01\\h2_equal_risk_observer_01\\stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}
