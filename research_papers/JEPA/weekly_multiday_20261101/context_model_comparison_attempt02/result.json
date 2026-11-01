@@ -1,0 +1,68 @@
+{
+  "schema": "weekly_h2_context_model_comparison_implementation_evidence_v1",
+  "status": "SYNTHETIC_IMPLEMENTATION_ONLY_FIX_FIRST_RESOLVED",
+  "observed_utc": "2026-11-01T15:43:32.3516600Z",
+  "sources": {
+    "evaluate_weekly_context_models.py": "bdc6534f059ade7acc58f23952a88ed2068c7a712518b04f438945a583a07a2f",
+    "test_evaluate_weekly_context_models.py": "4776a0ade50ca2aacd1a99c5480042e46f8000abf08315e4a443f3cfde4c52cd",
+    "CONTEXT_MODEL_COMPARISON_CONTRACT_20261101.md": "8a535acd67ae36e6854ccf3aa02ab0f4f699c08be91bbeae5e17f7925e670ca4"
+  },
+  "checks": {
+    "pytest_exit": 0,
+    "pytest": "10 passed",
+    "ruff_exit": 0,
+    "bootstrap_eligible_only": true,
+    "external_manifests_snapshotted_at_admission": true,
+    "closing_mutation_focal": true,
+    "real_output_absent": true,
+    "real_fit_executed": false,
+    "attempt01_preserved": true
+  },
+  "limitations": [
+    "Only synthetic LogisticRegression fits were executed.",
+    "No sealed context rows/arrays or real economic payloads were read in attempt02.",
+    "No real candidate scoring, replay, economics, or model comparison was executed."
+  ],
+  "evidence": {
+    "resource_gate.json": {
+      "bytes": 307,
+      "sha256": "44427792486294ff3f00656b59ff1470af81693943dce8e65d9def1efe5067ef"
+    },
+    "pytest.stdout.txt": {
+      "bytes": 101,
+      "sha256": "dc08b7d051cc8be81cfb0580941cd2b8540ae55339d6f5a7b0f0dbe934086407"
+    },
+    "pytest.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "ruff.stdout.txt": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "ruff.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ruff.exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "evaluate_weekly_context_models.py.pretest": {
+      "bytes": 31947,
+      "sha256": "bdc6534f059ade7acc58f23952a88ed2068c7a712518b04f438945a583a07a2f"
+    },
+    "test_evaluate_weekly_context_models.py.pretest": {
+      "bytes": 9554,
+      "sha256": "4776a0ade50ca2aacd1a99c5480042e46f8000abf08315e4a443f3cfde4c52cd"
+    },
+    "CONTEXT_MODEL_COMPARISON_CONTRACT_20261101.md.pretest": {
+      "bytes": 6438,
+      "sha256": "8a535acd67ae36e6854ccf3aa02ab0f4f699c08be91bbeae5e17f7925e670ca4"
+    }
+  }
+}

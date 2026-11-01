@@ -1,0 +1,530 @@
+"""Frozen BASE18/CATEGORY30/CONTEXT182 comparison for weekly H2.
+
+The CLI is deliberately fail closed.  It consumes only sealed compact artifacts,
+fits exactly the two predeclared models, and reuses pinned pure evaluator/replay
+functions.  Importing this module never reads data or fits a model.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.metadata
+import importlib.util
+import json
+import math
+import os
+from pathlib import Path
+import random
+import statistics
+from typing import Any, Iterable
+import warnings
+
+import numpy as np
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+
+
+HERE = Path(__file__).resolve().parent
+BASE = Path(r"D:\GexResearchArtifacts\weekly_multiday_20261101")
+DATASET = BASE / "h2_dataset_v2_01"
+FROZEN_EVAL = BASE / "h2_ev_v2_01"
+CONTEXT = BASE / "h2_context_1030_01"
+RISK = BASE / "h2_equal_risk_frozen_01"
+OUTPUT = BASE / "h2_context_model_comparison_01"
+CONTRACT = HERE / "CONTEXT_MODEL_COMPARISON_CONTRACT_20261101.md"
+EVALUATOR = HERE / "evaluate_weekly_h2_ev_v2.py"
+REPLAY = HERE / "replay_equal_risk_frozen.py"
+CONTRACT_SHA256 = "8a535acd67ae36e6854ccf3aa02ab0f4f699c08be91bbeae5e17f7925e670ca4"
+EVALUATOR_SHA256 = "8a9e75855d542a12662e5c812583f2ef86042f5c3ae1bbbad73c16042e063476"
+REPLAY_SHA256 = "e4f42a9fa65120939cf5e131911c8f2990a9cd33d21ae036fa98d9eb816d5b9d"
+DATASET_MANIFEST_SHA256 = "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8"
+FROZEN_EVAL_MANIFEST_SHA256 = "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+FROZEN_MODEL_SHA256 = "68712c7c326d2337a34f8401579ddc52a4dab0e3f505c8c4ff2f1b1d51c03fb4"
+FROZEN_MEANS_SHA256 = "a8dc329233ce431b282c500e27cf91ac91d845cbb6a1fc752cee36026aef3f90"
+RISK_MANIFEST_SHA256 = "50fa6b7a02aad9d122dc0bfdd84f8c01f9a5f468bafc7f175eed39aa3ea9418d"
+TICKERS = ("SPY", "QQQ", "SPXW")
+RIGHTS = ("CALL", "PUT")
+WEEKDAYS = tuple(range(5))
+MODELS = ("BASE18_FROZEN", "CATEGORY30", "CONTEXT182")
+NEW_MODELS = ("CATEGORY30", "CONTEXT182")
+FEATURE18 = (
+    "ticker_SPY", "ticker_QQQ", "ticker_SPXW", "right_call", "dte", "weekday",
+    "spot", "strike", "moneyness", "bid", "ask", "spread_relative", "delta",
+    "implied_vol", "gamma", "theta", "vega", "rho",
+)
+EXPECTED = {"total": 3054, "TRAIN": 1752, "CAL": 870, "EVAL": 426, "context_keys": 2625, "sessions": 123}
+ALPHAS = tuple(index / 10 for index in range(11))
+
+
+class ComparisonError(RuntimeError):
+    pass
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ComparisonError(message)
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def plain(path: Path, label: str, *, must_exist: bool = True) -> Path:
+    path = Path(os.path.abspath(path))
+    if must_exist:
+        require(path.exists(), f"missing {label}")
+    current = path if path.exists() else path.parent
+    while True:
+        if current.exists():
+            attrs = getattr(current.lstat(), "st_file_attributes", 0)
+            require(not current.is_symlink() and not attrs & 0x400, f"link/reparse {label}")
+        if current.parent == current:
+            break
+        current = current.parent
+    return path
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    require(isinstance(value, dict), f"object required: {path}")
+    return value
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8") as handle:
+        for number, line in enumerate(handle, 1):
+            require(bool(line.strip()), f"blank JSONL {path}:{number}")
+            value = json.loads(line)
+            require(isinstance(value, dict), f"object required {path}:{number}")
+            rows.append(value)
+    return rows
+
+
+def write_json(path: Path, value: Any) -> None:
+    path.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
+
+
+def write_jsonl(path: Path, values: Iterable[dict[str, Any]]) -> None:
+    with path.open("x", encoding="utf-8", newline="\n") as handle:
+        for value in values:
+            handle.write(json.dumps(value, sort_keys=True, allow_nan=False) + "\n")
+
+
+def pin(path: Path) -> dict[str, Any]:
+    return {"bytes": path.stat().st_size, "sha256": sha256_file(path)}
+
+
+def verify_pin(path: Path, expected: dict[str, Any], label: str) -> None:
+    require(path.is_file(), f"missing {label}")
+    require(path.stat().st_size == expected["bytes"] and sha256_file(path) == expected["sha256"], f"pin {label}")
+
+
+def import_pinned(path: Path, expected_sha256: str, name: str) -> Any:
+    require(sha256_file(path) == expected_sha256, f"implementation pin {name}")
+    spec = importlib.util.spec_from_file_location(name, path)
+    require(spec is not None and spec.loader is not None, f"module spec {name}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def category_names() -> list[str]:
+    return [f"{ticker}:{right}:weekday{weekday}" for ticker in TICKERS for right in RIGHTS for weekday in WEEKDAYS]
+
+
+def category30(row: dict[str, Any]) -> list[float]:
+    weekday = int(row["features"]["weekday"])
+    require(row["ticker"] in TICKERS and row["right"] in RIGHTS and weekday in WEEKDAYS, "category identity")
+    index = (TICKERS.index(row["ticker"]) * 2 + RIGHTS.index(row["right"])) * 5 + weekday
+    values = [0.0] * 30
+    values[index] = 1.0
+    return values
+
+
+def context_names(feature_names: list[str]) -> list[str]:
+    require(len(feature_names) == 81 and len(set(feature_names)) == 81, "context feature names")
+    return [*FEATURE18, *[f"context:{name}" for name in feature_names], *[f"side_context:{name}" for name in feature_names], "source_available", "state_valid"]
+
+
+def context182(row: dict[str, Any], context: dict[str, Any]) -> list[float]:
+    status = context.get("status")
+    valid = context.get("state_valid")
+    if status == "CONTEXT_MISSING_SOURCE":
+        require(valid is None and context.get("context_81") is None, "missing context semantics")
+        vector, flags = [0.0] * 81, [0.0, 0.0]
+    else:
+        require(status == "CONTEXT_AVAILABLE" and isinstance(valid, bool), "available context semantics")
+        raw = context.get("context_81")
+        require(isinstance(raw, list) and len(raw) == 81, "context vector shape")
+        require(all(isinstance(value, (int, float)) and math.isfinite(float(value)) for value in raw), "context vector finite")
+        vector = [float(value) for value in raw] if valid else [0.0] * 81
+        flags = [1.0, float(valid)]
+    original = [float(row["features"][name]) if row["features"][name] is not None else math.nan for name in FEATURE18]
+    sign = 1.0 if row["right"] == "CALL" else -1.0
+    output = [*original, *vector, *[sign * value for value in vector], *flags]
+    require(len(output) == 182, "CONTEXT182 width")
+    return output
+
+
+def join_context(
+    rows: list[dict[str, Any]], context_rows: list[dict[str, Any]], coverage: dict[str, Any],
+    feature_names: list[str],
+) -> None:
+    require(len(feature_names) == 81, "context names count")
+    index: dict[tuple[str, str], dict[str, Any]] = {}
+    for item in context_rows:
+        key = (item.get("ticker"), item.get("date"))
+        require(key[0] in TICKERS and isinstance(key[1], str) and key not in index, "duplicate/bad context key")
+        index[key] = item
+    cover: dict[tuple[str, str], dict[str, Any]] = {}
+    for item in coverage.get("rows", []):
+        key = (item.get("ticker"), item.get("date"))
+        require(key not in cover, "duplicate context coverage key")
+        cover[key] = item
+    require(set(index) == set(cover), "context/coverage identity mismatch")
+    for row in rows:
+        key = (row["ticker"], row["entry_date"])
+        require(key in index, "candidate lacks context coverage")
+        row["_x_category"] = category30(row)
+        row["_x_context"] = context182(row, index[key])
+        row["_context_status"] = index[key]["status"]
+        row["_context_state_valid"] = index[key]["state_valid"]
+
+
+class GenericTrainTransformer:
+    def __init__(self, feature_names: list[str]) -> None:
+        self.feature_names = list(feature_names)
+        require(len(self.feature_names) == len(set(self.feature_names)), "duplicate transformer feature")
+        self.imputer = SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True)
+        self.scaler = StandardScaler()
+
+    def fit(self, values: np.ndarray) -> "GenericTrainTransformer":
+        require(values.ndim == 2 and values.shape[1] == len(self.feature_names) and len(values) > 0, "TRAIN transform shape")
+        self.scaler.fit(self.imputer.fit_transform(values))
+        return self
+
+    def transform(self, values: np.ndarray) -> np.ndarray:
+        require(hasattr(self.imputer, "statistics_"), "transformer not fitted")
+        require(values.ndim == 2 and values.shape[1] == len(self.feature_names), "transform shape")
+        return self.scaler.transform(self.imputer.transform(values))
+
+    def as_dict(self) -> dict[str, Any]:
+        require(hasattr(self.imputer, "statistics_"), "transformer not fitted")
+        indices = self.imputer.indicator_.features_.astype(int).tolist()
+        return {
+            "feature_order": self.feature_names,
+            "missing_indicator_source_indices": indices,
+            "missing_indicator_order": [f"{self.feature_names[index]}__missing" for index in indices],
+            "medians": self.imputer.statistics_.tolist(),
+            "scaler_mean": self.scaler.mean_.tolist(), "scaler_scale": self.scaler.scale_.tolist(),
+            "fit_scope": "TRAIN_ONLY", "imputer": {"strategy": "median", "add_indicator": True, "keep_empty_features": True},
+        }
+
+
+def eligible_splits(evaluator: Any, rows: list[dict[str, Any]], *, strict: bool = True) -> dict[str, list[dict[str, Any]]]:
+    splits = evaluator.split_rows(rows)
+    eligible = {name: [row for row in values if row["_model_label_eligible"]] for name, values in splits.items()}
+    if strict:
+        require(len(rows) == EXPECTED["total"], "candidate count")
+        for name in ("TRAIN", "CAL", "EVAL"):
+            require(len(eligible[name]) == EXPECTED[name], f"eligible {name} count")
+    return splits
+
+
+def fit_one(
+    evaluator: Any, rows: list[dict[str, Any]], matrix_key: str, names: list[str],
+    prior: np.ndarray, means: dict[str, Any], fit_log: list[str], model_name: str,
+) -> dict[str, Any]:
+    train = [row for row in rows if row["_split"] == "TRAIN" and row["_model_label_eligible"]]
+    cal = [row for row in rows if row["_split"] == "CAL" and row["_model_label_eligible"]]
+    transformer = GenericTrainTransformer(names).fit(np.asarray([row[matrix_key] for row in train], dtype=float))
+    model = LogisticRegression(C=1.0, max_iter=2000, random_state=0, solver="lbfgs")
+    with warnings.catch_warnings(record=True) as captured:
+        warnings.simplefilter("always")
+        model.fit(transformer.transform(np.asarray([row[matrix_key] for row in train], dtype=float)), np.asarray([row["scenario"] for row in train], dtype=int))
+    for warning in captured:
+        warnings.warn(str(warning.message), warning.category, stacklevel=2)
+    fit_log.append(model_name)
+    cal_prob = evaluator.full_probabilities(model, transformer.transform(np.asarray([row[matrix_key] for row in cal], dtype=float)))
+    alpha, grid = evaluator.choose_calibration(cal_prob, np.asarray([row["scenario"] for row in cal], dtype=int), prior)
+    return {
+        "transform": transformer.as_dict(),
+        "model": {
+            "type": "LogisticRegression", "sklearn_version": importlib.metadata.version("scikit-learn"),
+            "C": 1.0, "solver": "lbfgs", "max_iter": 2000, "random_state": 0,
+            "classes_present": model.classes_.astype(int).tolist(), "classes_full": list(range(5)),
+            "coefficient": model.coef_.tolist(), "intercept": model.intercept_.tolist(),
+            "fit_scope": "TRAIN_ONLY", "fit_warnings": [f"{item.category.__name__}: {item.message}" for item in captured],
+        },
+        "calibration": {"formula": "(1-alpha)*p_model+alpha*p_train_prior", "selected_alpha": alpha, "scores": grid},
+        "_runtime": {"transformer": transformer, "model": model, "matrix_key": matrix_key, "alpha": alpha, "prior": prior, "means": means},
+    }
+
+
+def fit_two_models(
+    evaluator: Any, rows: list[dict[str, Any]], context_feature_names: list[str],
+    prior: np.ndarray, means: dict[str, Any],
+) -> dict[str, Any]:
+    fit_log: list[str] = []
+    artifacts = {
+        "CATEGORY30": fit_one(evaluator, rows, "_x_category", category_names(), prior, means, fit_log, "CATEGORY30"),
+        "CONTEXT182": fit_one(evaluator, rows, "_x_context", context_names(context_feature_names), prior, means, fit_log, "CONTEXT182"),
+    }
+    require(fit_log == ["CATEGORY30", "CONTEXT182"], "exactly two declared fits")
+    return artifacts
+
+
+def score_fitted(evaluator: Any, rows: list[dict[str, Any]], model_name: str, fitted: dict[str, Any]) -> None:
+    runtime = fitted["_runtime"]
+    matrix = runtime["transformer"].transform(np.asarray([row[runtime["matrix_key"]] for row in rows], dtype=float))
+    p_model = evaluator.full_probabilities(runtime["model"], matrix)
+    p_cal = (1 - runtime["alpha"]) * p_model + runtime["alpha"] * runtime["prior"]
+    for row, raw, calibrated in zip(rows, p_model, p_cal, strict=True):
+        row[f"_p_{model_name}"] = calibrated.tolist()
+        row[f"_p_model_{model_name}"] = raw.tolist()
+        key = f"{row['ticker']}:{row['right']}"
+        for cost in ("base", "adverse"):
+            conditional = np.asarray([runtime["means"]["cells"][cost][key][str(label)]["mean_y"] for label in range(5)])
+            row[f"_ev_{model_name}_{cost}"] = float(row["decision_ask"]) * 100 * float(np.dot(calibrated, conditional))
+
+
+def probability_metrics(rows: list[dict[str, Any]], model: str, *, selected_ids: set[str] | None = None, observed_only: bool = False) -> dict[str, Any]:
+    values = [row for row in rows if row["_model_label_eligible"] and (selected_ids is None or row["candidate_id"] in selected_ids) and (not observed_only or not row["payoff_is_lower_bound"])]
+    if not values:
+        return {"n": 0, "log_loss": None, "brier": None, "reliability": []}
+    probabilities = np.asarray([row[f"_p_{model}"] for row in values], dtype=float)
+    labels = np.asarray([row["scenario"] for row in values], dtype=int)
+    targets = np.eye(5)[labels]
+    reliability = []
+    for label in range(5):
+        for index in range(10):
+            low, high = index / 10, (index + 1) / 10
+            mask = (probabilities[:, label] >= low) & ((probabilities[:, label] < high) | ((index == 9) & (probabilities[:, label] <= high)))
+            if mask.any():
+                reliability.append({"class": label, "bin_low": low, "bin_high": high, "n": int(mask.sum()), "predicted": float(probabilities[mask, label].mean()), "observed": float((labels[mask] == label).mean())})
+    return {"n": len(values), "log_loss": float(-np.log(np.clip(probabilities[np.arange(len(labels)), labels], 1e-12, 1)).mean()), "brier": float(np.square(probabilities - targets).sum(axis=1).mean()), "reliability": reliability}
+
+
+def ev_metrics(rows: list[dict[str, Any]], model: str, *, selected_ids: set[str] | None = None, observed_only: bool = False) -> dict[str, Any]:
+    values = [row for row in rows if row["_model_label_eligible"] and (selected_ids is None or row["candidate_id"] in selected_ids) and (not observed_only or not row["payoff_is_lower_bound"])]
+    output: dict[str, Any] = {}
+    for cost in ("base", "adverse"):
+        errors = [float(row[f"_ev_{model}_{cost}"]) - float(row[f"net_{cost}"]) for row in values]
+        output[cost] = {"n": len(errors), "bias": statistics.fmean(errors) if errors else None, "mae": statistics.fmean(map(abs, errors)) if errors else None}
+    return output
+
+
+def percentile_type7(values: list[float], probability: float) -> float:
+    require(values and 0 <= probability <= 1, "percentile input")
+    ordered = sorted(values)
+    h = (len(ordered) - 1) * probability
+    low, fraction = int(math.floor(h)), h - math.floor(h)
+    high = min(low + 1, len(ordered) - 1)
+    return ordered[low] + fraction * (ordered[high] - ordered[low])
+
+
+def paired_bootstrap(rows: list[dict[str, Any]], sessions: list[str], *, resamples: int = 10_000, seed: int = 20_261_101, block: int = 5) -> dict[str, Any]:
+    require(len(sessions) == len(set(sessions)) and sessions == sorted(sessions), "session order/uniqueness")
+    by_day = {day: [0.0, 0] for day in sessions}
+    for row in rows:
+        require(row["entry_date"] in by_day, "EVAL row outside session calendar")
+        label = int(row["scenario"])
+        base = max(float(row["_p_BASE18_FROZEN"][label]), 1e-12)
+        context = max(float(row["_p_CONTEXT182"][label]), 1e-12)
+        by_day[row["entry_date"]][0] += -math.log(base) + math.log(context)
+        by_day[row["entry_date"]][1] += 1
+    rng = random.Random(seed)
+    values: list[float] = []
+    size = len(sessions)
+    require(size > 0, "no sessions")
+    for _ in range(resamples):
+        sampled: list[str] = []
+        while len(sampled) < size:
+            start = rng.randrange(size)
+            sampled.extend(sessions[(start + offset) % size] for offset in range(block))
+        numerator = math.fsum(by_day[day][0] for day in sampled[:size])
+        denominator = sum(by_day[day][1] for day in sampled[:size])
+        require(denominator > 0, "bootstrap zero denominator")
+        values.append(numerator / denominator)
+    contributions = [{"date": day, "loss_sum_base_minus_context": by_day[day][0], "candidate_count": by_day[day][1]} for day in sessions]
+    denominator = sum(value[1] for value in by_day.values())
+    return {"seed": seed, "block_sessions": block, "resamples": resamples, "sessions": size, "estimate": math.fsum(value[0] for value in by_day.values()) / denominator, "percentile_type7_2_5": percentile_type7(values, 0.025), "percentile_type7_97_5": percentile_type7(values, 0.975), "paired_daily_contributions": contributions, "interpretation": "exploratory post-development interval; no p-value or independent validation claim"}
+
+
+def selected_ids(ledger: list[dict[str, Any]]) -> set[str]:
+    return {row["candidate_id"] for row in ledger if row["event"] in {"ENTRY", "NO_FILL", "CAPITAL_BLOCKED"} and "candidate_id" in row}
+
+
+def exact_baseline(actual: dict[str, list[dict[str, Any]]], expected: dict[str, list[dict[str, Any]]]) -> None:
+    for cost in ("base", "adverse"):
+        require(actual[cost] == expected[cost], f"BASE18 risk ledger mismatch {cost}")
+
+
+def prepare_model_rows(rows: list[dict[str, Any]], model: str) -> list[dict[str, Any]]:
+    output = []
+    for row in rows:
+        value = dict(row)
+        value["_ev_base"] = row[f"_ev_{model}_base"]
+        value["_ev_adverse"] = row[f"_ev_{model}_adverse"]
+        output.append(value)
+    return output
+
+
+def _manifest_output(manifest: dict[str, Any], name: str) -> dict[str, Any]:
+    value = manifest.get("outputs", {}).get(name)
+    require(isinstance(value, dict) and set(value) >= {"bytes", "sha256"}, f"manifest output {name}")
+    return value
+
+
+def run(context_manifest_sha256: str, output: Path = OUTPUT) -> dict[str, Any]:
+    require(sha256_file(CONTRACT) == CONTRACT_SHA256, "contract pin")
+    evaluator = import_pinned(EVALUATOR, EVALUATOR_SHA256, "weekly_h2_evaluator_pure")
+    replay = import_pinned(REPLAY, REPLAY_SHA256, "weekly_h2_equal_risk_pure")
+    output = plain(output, "output", must_exist=False)
+    require(not output.exists(), "immutable output exists")
+    roots = {name: plain(path, name) for name, path in {"dataset": DATASET, "frozen_eval": FROZEN_EVAL, "context": CONTEXT, "risk": RISK}.items()}
+    manifests = {name: roots[name] / "manifest.json" for name in roots}
+    manifest_shas = {"dataset": DATASET_MANIFEST_SHA256, "frozen_eval": FROZEN_EVAL_MANIFEST_SHA256, "context": context_manifest_sha256, "risk": RISK_MANIFEST_SHA256}
+    for name, path in manifests.items():
+        require(sha256_file(path) == manifest_shas[name], f"external manifest {name}")
+    dataset_manifest = read_json(manifests["dataset"])
+    eval_manifest = read_json(manifests["frozen_eval"])
+    context_manifest = read_json(manifests["context"])
+    risk_manifest = read_json(manifests["risk"])
+    require(context_manifest.get("schema") == "weekly_context_1030_manifest_v1", "context manifest schema")
+    require(context_manifest.get("status") == "COMPLETE_CAUSAL_CONTEXT_1030_NOT_JOINED_NOT_EVALUATED", "context manifest status")
+    require(context_manifest.get("state_i") == 60 and context_manifest.get("counts", {}).get("identities") == EXPECTED["context_keys"], "context manifest scope")
+    require(context_manifest.get("flags") == {"actions_read": False, "economic_join_performed": False, "fit_performed": False, "outcomes_read": False, "promotion_approved": False, "raw_read": False, "technical_ready": False}, "context manifest flags")
+    candidates_path, coverage_path = roots["dataset"] / "candidates.jsonl", roots["dataset"] / "coverage.json"
+    rows, coverage, _ = evaluator.load_inputs(candidates_path, coverage_path, manifests["dataset"], DATASET_MANIFEST_SHA256)
+    splits = eligible_splits(evaluator, rows)
+    context_path, context_coverage_path = roots["context"] / "context.jsonl", roots["context"] / "coverage.json"
+    verify_pin(context_path, context_manifest["files"]["context.jsonl"], "context rows")
+    verify_pin(context_coverage_path, context_manifest["files"]["coverage.json"], "context coverage")
+    context_coverage = read_json(context_coverage_path)
+    require(context_coverage.get("schema") == "weekly_context_1030_coverage_v1", "context coverage schema")
+    require(context_manifest.get("feature_names") == context_coverage.get("feature_names"), "context names binding")
+    context_rows = read_jsonl(context_path)
+    require(len(context_rows) == EXPECTED["context_keys"], "context identity count")
+    join_context(rows, context_rows, context_coverage, context_manifest["feature_names"])
+    frozen_scores_path = roots["frozen_eval"] / "candidate_scores.jsonl"
+    model_path, means_path = roots["frozen_eval"] / "model.json", roots["frozen_eval"] / "conditional_means.json"
+    for path, name in ((frozen_scores_path, "candidate_scores.jsonl"), (model_path, "model.json"), (means_path, "conditional_means.json")):
+        verify_pin(path, _manifest_output(eval_manifest, name), f"frozen {name}")
+    require(sha256_file(model_path) == FROZEN_MODEL_SHA256 and sha256_file(means_path) == FROZEN_MEANS_SHA256, "frozen model/means authority")
+    frozen_scores, frozen_model, means = read_jsonl(frozen_scores_path), read_json(model_path), read_json(means_path)
+    require(len(frozen_scores) == EXPECTED["total"], "frozen score count")
+    score_index = {item["candidate_id"]: item for item in frozen_scores}
+    require(len(score_index) == len(frozen_scores) == len(rows), "frozen score IDs")
+    for row in rows:
+        score = score_index.get(row["candidate_id"])
+        require(score is not None and score["label_eligible"] == row["_model_label_eligible"] and score["scenario"] == row["scenario"], "frozen score eligibility/label")
+        row["_p_BASE18_FROZEN"] = score["p_cal"]
+        row["_ev_BASE18_FROZEN_base"], row["_ev_BASE18_FROZEN_adverse"] = score["ev_base"], score["ev_adverse"]
+    train = [row for row in splits["TRAIN"] if row["_model_label_eligible"]]
+    support = np.bincount(np.asarray([row["scenario"] for row in train], dtype=int), minlength=5)
+    prior = support.astype(float) / len(train)
+    require(np.allclose(prior, np.asarray(frozen_model["train_prior"], dtype=float), atol=0, rtol=0), "frozen TRAIN prior/support")
+    artifacts = fit_two_models(evaluator, rows, context_manifest["feature_names"], prior, means)
+    # Freeze both predeclared fits before any new EVAL probabilities/economics.
+    output.mkdir(parents=True, exist_ok=False)
+    for model, values in artifacts.items():
+        for name in ("transform", "model", "calibration"):
+            write_json(output / f"{model.lower()}_{name}.json", values[name])
+    for model in NEW_MODELS:
+        score_fitted(evaluator, rows, model, artifacts[model])
+    eval_rows = splits["EVAL"]
+    h1_coverage, sessions = replay.filtered_calendar(coverage, "20260101", "20260630")
+    require(len(sessions) == EXPECTED["sessions"], "H1 session count")
+    books: dict[str, dict[str, list[dict[str, Any]]]] = {}
+    for model in MODELS:
+        books[model] = replay.replay_pair(prepare_model_rows(eval_rows, model), h1_coverage, sessions, "20260630", "EV_TOP1_H2")
+    baseline_paths = {
+        cost: roots["risk"] / f"ledger_equal_risk_h1_eval_ev_top1_h2_{cost}.jsonl"
+        for cost in ("base", "adverse")
+    }
+    for cost in ("base", "adverse"):
+        verify_pin(baseline_paths[cost], _manifest_output(risk_manifest, baseline_paths[cost].name), f"risk baseline {cost}")
+    expected_baseline = {cost: read_jsonl(path) for cost, path in baseline_paths.items()}
+    exact_baseline(books["BASE18_FROZEN"], expected_baseline)
+    selected = {model: selected_ids(books[model]["adverse"]) for model in MODELS}
+    for model in MODELS:
+        require(selected[model] == selected_ids(books[model]["base"]), f"shared decisions {model}")
+    metrics = {
+        model: {
+            "probability_all": probability_metrics(eval_rows, model),
+            "probability_observed_only": probability_metrics(eval_rows, model, observed_only=True),
+            "probability_selected": probability_metrics(eval_rows, model, selected_ids=selected[model]),
+            "probability_selected_observed_only": probability_metrics(eval_rows, model, selected_ids=selected[model], observed_only=True),
+            "ev_all": ev_metrics(eval_rows, model), "ev_selected": ev_metrics(eval_rows, model, selected_ids=selected[model]),
+            "ev_observed_only": ev_metrics(eval_rows, model, observed_only=True),
+            "ev_selected_observed_only": ev_metrics(eval_rows, model, selected_ids=selected[model], observed_only=True),
+            "lower_bound": {"all": sum(row["payoff_is_lower_bound"] for row in eval_rows), "selected": sum(row["candidate_id"] in selected[model] and row["payoff_is_lower_bound"] for row in eval_rows)},
+            "economics": {cost: replay.book_metrics(books[model][cost]) for cost in ("base", "adverse")},
+        } for model in MODELS
+    }
+    bootstrap = paired_bootstrap(eval_rows, sessions)
+    risk_summary_path = roots["risk"] / "summary.json"
+    verify_pin(risk_summary_path, _manifest_output(risk_manifest, "summary.json"), "risk controls summary")
+    risk_summary = read_json(risk_summary_path)
+    summary = {
+        "schema": "weekly_h2_context_model_comparison_v1", "status": "COMPLETE_SEEN_DEVELOPMENT_DESCRIPTIVE",
+        "split_counts": {name: len(values) for name, values in splits.items()},
+        "eligible_counts": {name: sum(row["_model_label_eligible"] for row in values) for name, values in splits.items()},
+        "models": metrics, "paired_logloss_base_minus_context": bootstrap,
+        "fit_count": 2, "new_fits": list(NEW_MODELS), "base18_refit": False,
+        "controls": {"source": "frozen equal-risk replay", "books": {policy: risk_summary["blocks"]["H1_EVAL"][policy] for policy in ("ALWAYS_CALL_H2", "ALWAYS_PUT_H2", "ALWAYS_ABSTAIN")}},
+        "flags": {"development_seen": True, "promotion_approved": False, "technical_ready": False, "q3_used": False, "raw_or_api_used": False},
+    }
+    consumed = {
+        manifests["dataset"]: pin(manifests["dataset"]), manifests["frozen_eval"]: pin(manifests["frozen_eval"]),
+        manifests["context"]: pin(manifests["context"]), manifests["risk"]: pin(manifests["risk"]),
+        candidates_path: dataset_manifest["files"]["candidates.jsonl"], coverage_path: dataset_manifest["files"]["coverage.json"],
+        frozen_scores_path: _manifest_output(eval_manifest, "candidate_scores.jsonl"), model_path: _manifest_output(eval_manifest, "model.json"),
+        means_path: _manifest_output(eval_manifest, "conditional_means.json"), context_path: context_manifest["files"]["context.jsonl"],
+        context_coverage_path: context_manifest["files"]["coverage.json"],
+        **{path: _manifest_output(risk_manifest, path.name) for path in baseline_paths.values()},
+        risk_summary_path: _manifest_output(risk_manifest, "summary.json"),
+    }
+    for path, expected in consumed.items():
+        verify_pin(path, expected, f"closing {path.name}")
+    score_rows = [{"candidate_id": row["candidate_id"], "split": row["_split"], "scenario": row["scenario"], "payoff_is_lower_bound": row["payoff_is_lower_bound"], "context_status": row["_context_status"], "context_state_valid": row["_context_state_valid"], **{f"p_{model.lower()}": row[f"_p_{model}"] for model in MODELS}, **{f"ev_{model.lower()}_{cost}": row[f"_ev_{model}_{cost}"] for model in MODELS for cost in ("base", "adverse")}} for row in rows]
+    write_jsonl(output / "candidate_scores_context_comparison.jsonl", score_rows)
+    for model, cost_books in books.items():
+        for cost, ledger in cost_books.items():
+            write_jsonl(output / f"ledger_{model.lower()}_eval_{cost}.jsonl", ledger)
+    write_json(output / "summary.json", summary)
+    for path, expected in consumed.items():
+        verify_pin(path, expected, f"post-write {path.name}")
+    outputs = {path.name: pin(path) for path in sorted(output.iterdir())}
+    write_json(output / "manifest.json", {
+        "schema": "weekly_h2_context_model_comparison_manifest_v1",
+        "external_manifests": manifest_shas,
+        "consumed_payloads": {str(path): expected for path, expected in consumed.items()},
+        "implementation": {Path(__file__).name: sha256_file(Path(__file__)), EVALUATOR.name: EVALUATOR_SHA256, REPLAY.name: REPLAY_SHA256, CONTRACT.name: CONTRACT_SHA256},
+        "outputs": outputs, "flags": summary["flags"],
+    })
+    return summary
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Frozen weekly H2 context comparison")
+    parser.add_argument("--execute-reviewed-comparison", action="store_true")
+    parser.add_argument("--context-manifest-sha256", required=True)
+    args = parser.parse_args()
+    if not args.execute_reviewed_comparison:
+        parser.error("execution requires --execute-reviewed-comparison")
+    require(len(args.context_manifest_sha256) == 64, "context manifest SHA-256")
+    run(args.context_manifest_sha256.lower())
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
