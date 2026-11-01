@@ -20,9 +20,17 @@ PID43236/sesión29475 terminados, no relanzar. Inventario6bbcb667/diagnósticob9
 manifest7d41eed7:69admitidos/0ausentes,16085740filas;17clocksnativos/52proxy.
 12gruposH2 a10:35 conservan todas las identidades yquotesválidas enambosextremos.
 Revisión independienteCLEAR,14copias1016192B recibo4c46fe81. SinPnL/fitweekly.
-Próxima comparaciónH2 fija selección10:30/ask10:35→bidH210:35 antesexpiry,
-modeloP+EV/WAIT ycontrolesCALL/PUT/ABSTAIN. Contrato9459feae revisadoCLEAR tras
-corregir riesgo de missingexit y CAPITAL_BLOCKED; código/fixtures enpreparación.
+Comparación H2: contrato245a6df1, selección10:30/ask10:35→bidH210:35 pre-expiry,
+modeloP+EV/WAIT y controlesCALL/PUT/ABSTAIN. Primer builder falló por clocks :30;
+fallo36c95171 preservado, ningún dataset/modelo real producido en ese intento.
+V2 ec19e2c9 filtra instantes exactos sin redondear; amendment9210c6e5 revisado.
+Inventario099dcf06 cerrado exit0: mismos2625planes/2619fuentes que el original.
+Builder V2 único PID40784/sesión84269 inició desde c58834d7; NO RELANZAR.
+Salida h2_dataset_v2_01; observer h2_dataset_v2_observer_01/builder conserva handle.
+EvaluadorV2 8a9e7585/tests e479c2f6:23sintéticosPASS/Ruff/CLEAR;13componentes
+AST económicos idénticos. Espera dataset cerrado y binding real antes de fit.
+Una comprobación previa bloqueó archivos JSON no publicados por gitignore;
+se archivó el bloqueo sin hijo y se publicaron bytes exactos antes del lanzamiento.
 Sólo D:/ThetaData, artefactos D:/GexResearchArtifacts/weekly_multiday_20261101.
 El oracle weekly histórico permanece cerrado; nueva investigación separada.
 API/bróker/VPS/producción y cambios ajenos intactos.
