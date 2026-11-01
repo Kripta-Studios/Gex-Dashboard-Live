@@ -1,0 +1,12 @@
+{
+  "exit_code": 0,
+  "observed_utc": "2026-11-01T12:28:28.484595+00:00",
+  "elapsed_seconds": 98.30478090000543,
+  "exit_source": "subprocess.Popen.wait_retained_handle",
+  "files": {
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\preflight_01\\admission.json": "facec062bd5e2d0944505064ec0a14df15b0d838c603b3e3d03c325c8aea7137",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\preflight_01\\process.json": "3cdc44cc45c9ced5a4cd7cc763f914343fbc56da7c4f98b93027e0c274538ea3",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\preflight_01\\stdout.log": "78cd1a9ed2474ecc52003c17fb5bf29c5518a15d3342616ddc1ef8afa2b1420a",
+    "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\preflight_01\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "copies": [
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\preflight_01\\admission.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\economic_preflight_01\\admission.json",
+      "sha256": "facec062bd5e2d0944505064ec0a14df15b0d838c603b3e3d03c325c8aea7137",
+      "bytes": 2606
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\preflight_01\\exit.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\economic_preflight_01\\exit.json",
+      "sha256": "951987f6bc2f759d9c2b32b7af7d89ec53536af0f2930fd81d65ef0888208776",
+      "bytes": 1048
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\preflight_01\\process.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\economic_preflight_01\\process.json",
+      "sha256": "3cdc44cc45c9ced5a4cd7cc763f914343fbc56da7c4f98b93027e0c274538ea3",
+      "bytes": 1333
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\preflight_01\\stderr.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\economic_preflight_01\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\level_oracle_20261018\\oof_economic_audit_user_stop_continuation_observer_20261101_01\\preflight_01\\stdout.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\continuation_20261101\\economic_preflight_01\\stdout.log",
+      "sha256": "78cd1a9ed2474ecc52003c17fb5bf29c5518a15d3342616ddc1ef8afa2b1420a",
+      "bytes": 83914
+    }
+  ],
+  "root_publication_pins_rehashed": 82,
+  "economic_auditor_started": false
+}
