@@ -1,5 +1,17 @@
 # AI Agent Hand-off: Current Production Reality
 
+Nueva orden1nov: investigar reentrenamiento mensual/semanal yevitar regresión.
+Contrato ADAPTATION_WALKFORWARD_CONTRACT_20261101.md608dae37 revisado CLEAR:
+42fitsfresh únicos,TRAINexpansivo/CAL63maduras,5políticas/10libroscontinuos;
+RAW inmediato,GUARDED21sesiones futuras enshadow,gateprobabilidad+economía,
+snapshotincumbent/stale/pending. No fit adaptativo real todavía.
+Puente junio29/30 prerequisito: contratoH2_JUNE_JULY_BRIDGE_CONTRACT fe506ec9
+CLEAR; seiscoverage,4fuentespresentes/2missing metadata, sinquotes extraídas.
+Implementaciones preparándose; contratos debenpublicarse antesdefixtures,
+code/tests/review/binding antesdereales. Q3frozenfail siguecerrado einmutable.
+Goal activo,SEEN_DEVELOPMENT,promociónfalse,producción intacta.
+[Autoridad y continuación](research_papers/JEPA/weekly_multiday_20261101/ADAPTATION_AND_BRIDGE_DESIGN_REVIEW_20261101.md).
+
 Checkpoint 1-nov17:05UTC: Q3 contextual COMPLETO y auditado; todos los procesos cerrados.
 CONTEXT182 mantiene H1+41.871USD pero Q3 parcial pierde−58.128,60USD adversos,
 41trades/PF0,2427/DDrealizado58.128,60; pierde3/3meses y3/3tickers. Logloss
