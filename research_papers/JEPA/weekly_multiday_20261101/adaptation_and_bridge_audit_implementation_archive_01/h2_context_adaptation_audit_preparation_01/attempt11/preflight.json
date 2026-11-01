@@ -1,0 +1,26 @@
+{
+  "free_commit_proxy_bytes": 25753067520,
+  "snapshots": [
+    {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_preparation_01\\attempt11\\audit_weekly_context_adaptation.py.before_test",
+      "sha256": "2fd4893f288d411319328a7995ffb96c4e883c584b4d037d9d492349dc242598"
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_audit_preparation_01\\attempt11\\test_audit_weekly_context_adaptation.py.before_test",
+      "sha256": "6cc365c4d0dbca4713d9390518b1337556b91d43f370bdde06ded684eeb0ab57"
+    }
+  ],
+  "requested_processor_affinity_mask": 1,
+  "gate_2gb": true,
+  "thread_variables": {
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "observed_utc": "2026-11-01T17:45:44.7335731Z",
+  "free_physical_bytes": 7259684864,
+  "incidental_rg_limit": "5 producer matching lines/names displayed earlier; no import or algorithm copy; independent reconstruction, not blind clean-room"
+}

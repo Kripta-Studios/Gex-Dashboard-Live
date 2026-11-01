@@ -1,0 +1,63 @@
+{
+  "all_exit_zero": true,
+  "outputs_before_manifest": {
+    "commands.json": {
+      "bytes": 3161,
+      "sha256": "18d1fae289328a255f0f4a5305d3ef7287c62233e0e628ddb3c207da8a87bd2d"
+    },
+    "compile_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "compile_stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evaluate_weekly_context_adaptation.py": {
+      "bytes": 60458,
+      "sha256": "d03494bf68e281bc7c9e68f385aa111567eac4206cf5b44133e17bb480ed5df8"
+    },
+    "launch_monthly_test_index_v2_audit_20261024.py": {
+      "bytes": 31463,
+      "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    "pytest_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest_stdout.log": {
+      "bytes": 102,
+      "sha256": "ff16cbfd65652c7f2843e56aa0f79a4c916f6f192810fdcf09db58474dc9350a"
+    },
+    "resource_gate.json": {
+      "bytes": 1132,
+      "sha256": "66ad1666699b84c20680e342a6d3f887be86931a4699be666470424428c14b0c"
+    },
+    "ruff_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ruff_stdout.log": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "run_context_adaptation_checks.py": {
+      "bytes": 5077,
+      "sha256": "dd723f8172523a8428215f5fbe6ff49c21700be22403d7fb41876f8f401baaa8"
+    },
+    "test_evaluate_weekly_context_adaptation.py": {
+      "bytes": 12812,
+      "sha256": "2f44f17d459cd7cb43c5c3842fb4b2d72c689278f797426a75ac006f0d5db43f"
+    },
+    "versions_stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "versions_stdout.log": {
+      "bytes": 19,
+      "sha256": "2caf35d9aec6b10ac7be3cc259d8fdcf807d630731033a8099b74133017e3192"
+    }
+  },
+  "real_data_or_outcomes_opened": false,
+  "schema": "weekly_context_adaptation_implementation_checks_v1"
+}

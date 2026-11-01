@@ -1,0 +1,40 @@
+F...........                                                             [100%]
+================================== FAILURES ===================================
+______ test_calendar_schedule_has_42_physical_states_and_shared_overlaps ______
+
+    def test_calendar_schedule_has_42_physical_states_and_shared_overlaps() -> None:
+        sessions = evaluation_sessions()
+        schedule = audit.creation_dates(sessions)
+        states = [{"state_id": f"s-{day}"} for day in schedule["physical"]]
+        plans = []
+        for day in schedule["physical"]:
+            cadences = []
+            if day in schedule["monthly"]:
+                cadences.append("MONTHLY")
+            if day in schedule["weekly"]:
+                cadences.append("WEEKLY")
+            plans.append({"creation_date": day, "state_id": f"s-{day}", "frequencies": cadences})
+        result = audit.validate_fit_plan_schedule(sessions, plans, states)
+        assert result == {
+            "monthly_references": 9,
+            "weekly_references": 38,
+            "physical_states": 42,
+            "coincident_dates": 5,
+        }
+        broken = copy.deepcopy(plans)
+>       overlap = next(item for item in broken if len(item["cadences"]) == 2)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\weekly_multiday_20261101\test_audit_weekly_context_adaptation.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+.0 = <list_iterator object at 0x0000014517710E50>
+
+>   overlap = next(item for item in broken if len(item["cadences"]) == 2)
+                                                  ^^^^^^^^^^^^^^^^
+E   KeyError: 'cadences'
+
+research_papers\JEPA\weekly_multiday_20261101\test_audit_weekly_context_adaptation.py:121: KeyError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_audit_weekly_context_adaptation.py::test_calendar_schedule_has_42_physical_states_and_shared_overlaps
+1 failed, 11 passed in 2.81s

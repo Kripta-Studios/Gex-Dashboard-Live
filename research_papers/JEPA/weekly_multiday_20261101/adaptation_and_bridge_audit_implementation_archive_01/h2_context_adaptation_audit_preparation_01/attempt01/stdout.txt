@@ -1,0 +1,31 @@
+.F.......                                                                [100%]
+================================== FAILURES ===================================
+____________ test_split_uses_label_maturity_and_purges_boundaries _____________
+
+    def test_split_uses_label_maturity_and_purges_boundaries() -> None:
+        calendar = calendar_sessions(date(2025, 9, 1), 75)
+        creation = calendar[70]
+        cal_start = calendar[5]
+        cal_day = calendar[10]
+        values = [
+            row("train", calendar[2], 0, f"{cal_start[:4]}-{cal_start[4:6]}-{cal_start[6:]}T00:00:00-04:00"),
+            row("purged-train", calendar[3], 1, f"{cal_start[:4]}-{cal_start[4:6]}-{cal_start[6:]}T00:00:00-04:00"),
+            row("cal", cal_day, 0, "2025-09-20T10:35:00-04:00"),
+            row("purged-cal", calendar[68], 1, audit.midnight(creation).isoformat()),
+        ]
+        # Strictly before CAL_start: move the first row one second earlier.
+        values[0]["label_available_at"] = "2025-09-07T23:59:59-04:00"
+        plan = audit.derive_split(creation, calendar, values)
+        assert plan["train_ids"] == ["train"]
+        assert plan["cal_ids"] == ["cal"]
+>       assert plan["purged_ids"] == ["purged-cal", "purged-train"]
+E       AssertionError: assert ['purged-train'] == ['purged-cal', 'purged-train']
+E         
+E         At index 0 diff: 'purged-train' != 'purged-cal'
+E         Right contains one more item: 'purged-train'
+E         Use -v to get more diff
+
+research_papers\JEPA\weekly_multiday_20261101\test_audit_weekly_context_adaptation.py:140: AssertionError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_audit_weekly_context_adaptation.py::test_split_uses_label_maturity_and_purges_boundaries
+1 failed, 8 passed in 2.63s

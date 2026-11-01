@@ -1,0 +1,10 @@
+{
+  "status": "COMPLETED_BUT_EXIT_CODE_NOT_RETAINED",
+  "pid": 49880,
+  "observation_utc": "2026-11-01T17:49:33.7179706Z",
+  "stdout_sha256": "ff3bc6ed72a2ba6264d1cd3ec8d2b55fb87135916dcd82811b8ad6c351296c53",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_tail": ".............                                                            [100%]\n13 passed in 35.60s",
+  "exit_code": null,
+  "limitation": "Parent shell was cut at tool yield while retained child continued; summary shows 13 passed, but exit code was not retained. Do not use as final evidence."
+}

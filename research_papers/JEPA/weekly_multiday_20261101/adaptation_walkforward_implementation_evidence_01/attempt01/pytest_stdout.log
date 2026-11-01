@@ -1,0 +1,56 @@
+.....F..........                                                         [100%]
+================================== FAILURES ===================================
+____ test_real_two_class_fit_state_has_no_warning_and_saved_scoring_parity ____
+
+    def test_real_two_class_fit_state_has_no_warning_and_saved_scoring_parity() -> None:
+        feature_names = [f"context_{index}" for index in range(81)]
+        rows = []
+        for index in range(16):
+            scenario = 1 if index % 2 == 0 else 4
+            rows.append({
+                "candidate_id": f"C{index}", "_x_context": [float((index + column) % 7) for column in range(182)],
+                "scenario": scenario, "ticker": "SPY", "right": "CALL", "decision_ask": 1.0,
+                "net_base": float(scenario - 2), "net_adverse": float(scenario - 2.1),
+                "_model_label_eligible": True,
+            })
+        plan = {"state_id": "CONTEXT182_TOY", "train_ids": [row["candidate_id"] for row in rows[:10]], "cal_ids": [row["candidate_id"] for row in rows[10:]], "purged_train_ids": []}
+        by_id = {row["candidate_id"]: row for row in rows}
+        by_id["__feature_names__"] = feature_names
+        state = adaptation.fit_state(plan, by_id, context_helper, evaluator)
+        assert state["model"]["classes_present"] == [1, 4]
+        assert state["model"]["fit_warnings"] == [] and state["model"]["penalty"] == "l2"
+>       runtime = adaptation.score_state(state, rows[10:])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research_papers\JEPA\weekly_multiday_20261101\test_evaluate_weekly_context_adaptation.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+state = {'_runtime': {'model': LogisticRegression(max_iter=2000, random_state=0), 'transformer': <evaluate_weekly_context_mode...00000000001, '2': 0.0, '3': 0.0, ...}, 'base': {'0': 0.0, '1': -0.01, '2': 0.0, '3': 0.0, ...}}, 'shrinkage': 20}, ...}
+rows = [{'_model_label_eligible': True, '_x_context': [3.0, 4.0, 5.0, 6.0, 0.0, 1.0, ...], 'candidate_id': 'C10', 'decision_a...l_eligible': True, '_x_context': [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, ...], 'candidate_id': 'C15', 'decision_ask': 1.0, ...}]
+
+    def score_state(state: dict[str, Any], rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        if not rows:
+            return []
+        matrix = np.asarray([row["_x_context"] for row in rows], dtype=float)
+        runtime = state.get("_runtime")
+        if runtime:
+            partial = np.zeros((len(rows), 5), dtype=float)
+            raw = runtime["model"].predict_proba(runtime["transformer"].transform(matrix))
+            for column, label in enumerate(runtime["model"].classes_.astype(int)):
+                partial[:, label] = raw[:, column]
+        else:
+            partial = saved_probabilities(matrix, state)
+        alpha = float(state["calibration"]["selected_alpha"])
+        prior = np.asarray(state["prior"], dtype=float)
+        calibrated = (1 - alpha) * partial + alpha * prior
+        output: list[dict[str, Any]] = []
+        for row, p_model, p_cal in zip(rows, partial, calibrated, strict=True):
+            key = f"{row['ticker']}:{row['right']}"
+>           item = {"candidate_id": row["candidate_id"], "entry_date": row["entry_date"], "ticker": row["ticker"], "right": row["right"], "model_id": state["state_id"], "p_model": p_model.tolist(), "p_cal": p_cal.tolist()}
+                                                                       ^^^^^^^^^^^^^^^^^
+E           KeyError: 'entry_date'
+
+research_papers\JEPA\weekly_multiday_20261101\evaluate_weekly_context_adaptation.py:365: KeyError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_evaluate_weekly_context_adaptation.py::test_real_two_class_fit_state_has_no_warning_and_saved_scoring_parity
+1 failed, 15 passed in 51.57s

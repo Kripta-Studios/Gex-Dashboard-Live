@@ -1,0 +1,50 @@
+{
+  "schema": "root_synthetic_attempt_v1",
+  "outputs": {
+    "audit_weekly_h2_boundary_bridge.py": {
+      "bytes": 24101,
+      "sha256": "69cb5c8bc018b80f12a9cf2203ecb1ba2928f419a17d2252dfe383c279a18750"
+    },
+    "gate.json": {
+      "bytes": 803,
+      "sha256": "36964c81764b4c0ea3e44424678c712e221143f4943ad0e50cc27b9f3e7c1398"
+    },
+    "pytest.exit.json": {
+      "bytes": 166,
+      "sha256": "572088edc775881a1159d79a48a79da6d4e8a16f8964f4cf557e89f6c2df2877"
+    },
+    "pytest.process.json": {
+      "bytes": 414,
+      "sha256": "29ccb949348a552d7cbfabb9bfdf9d81377ab213ef686ec05e8d757494ee7bc4"
+    },
+    "pytest.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pytest.stdout.log": {
+      "bytes": 102,
+      "sha256": "a646f783223d8e30e8ad3d8da3af617824518eb37c0dfc39d488d3192f65a88f"
+    },
+    "ruff.exit.json": {
+      "bytes": 166,
+      "sha256": "af498995c5634bf918968a14aa0ee673cc7c8ca9a02fad7a8a6031b10c017eb0"
+    },
+    "ruff.process.json": {
+      "bytes": 584,
+      "sha256": "a34910d9aa4eaf7317d2ffa9037e3684a8df0c77bdfa08b8ab4e24a8ed4ee254"
+    },
+    "ruff.stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ruff.stdout.log": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "test_audit_weekly_h2_boundary_bridge.py": {
+      "bytes": 10374,
+      "sha256": "5a829742c5035854a336a4eb2cc973106b7d29c427e9721bcdcc818c1f6d1694"
+    }
+  },
+  "real_data": false
+}

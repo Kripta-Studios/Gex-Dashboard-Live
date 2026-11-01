@@ -1,0 +1,13 @@
+F401 [*] `copy` imported but unused
+  --> research_papers\JEPA\weekly_multiday_20261101\audit_weekly_context_adaptation.py:12:8
+   |
+11 | import argparse
+12 | import copy
+   |        ^^^^
+13 | from datetime import datetime
+14 | import hashlib
+   |
+help: Remove unused import: `copy`
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

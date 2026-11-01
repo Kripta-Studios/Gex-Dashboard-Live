@@ -1,0 +1,85 @@
+[
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-c",
+      "import sklearn, numpy, pytest; print(sklearn.__version__, numpy.__version__, pytest.__version__)"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T17:50:12.941256+00:00",
+    "name": "versions",
+    "started_at_utc": "2026-11-01T17:49:56.493462+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 19,
+      "sha256": "2caf35d9aec6b10ac7be3cc259d8fdcf807d630731033a8099b74133017e3192"
+    }
+  },
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "py_compile",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_context_adaptation.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_evaluate_weekly_context_adaptation.py"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T17:50:14.022585+00:00",
+    "name": "compile",
+    "started_at_utc": "2026-11-01T17:50:12.955583+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "ruff",
+      "check",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_context_adaptation.py",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_evaluate_weekly_context_adaptation.py"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T17:50:14.865007+00:00",
+    "name": "ruff",
+    "started_at_utc": "2026-11-01T17:50:14.026798+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    }
+  },
+  {
+    "command": [
+      "C:\\Program Files\\Python314\\python.exe",
+      "-m",
+      "pytest",
+      "-q",
+      "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_evaluate_weekly_context_adaptation.py"
+    ],
+    "exit_code": 0,
+    "finished_at_utc": "2026-11-01T17:50:38.255563+00:00",
+    "name": "pytest",
+    "started_at_utc": "2026-11-01T17:50:14.879576+00:00",
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 102,
+      "sha256": "ff16cbfd65652c7f2843e56aa0f79a4c916f6f192810fdcf09db58474dc9350a"
+    }
+  }
+]

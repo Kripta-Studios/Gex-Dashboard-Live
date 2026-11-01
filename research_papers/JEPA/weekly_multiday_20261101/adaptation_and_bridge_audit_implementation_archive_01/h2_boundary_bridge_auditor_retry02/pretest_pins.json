@@ -1,0 +1,37 @@
+[
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_auditor_retry02\\pretest_snapshot\\audit_weekly_h2_boundary_bridge.py",
+    "bytes": 22856,
+    "sha256": "530604341d649671cc021231896990ffff176ded9461ebea16be0f5894385532"
+  },
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_auditor_retry02\\pretest_snapshot\\build_weekly_h2_boundary_bridge.py",
+    "bytes": 25626,
+    "sha256": "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2"
+  },
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_auditor_retry02\\pretest_snapshot\\build_weekly_h2_dataset_v2.py",
+    "bytes": 33142,
+    "sha256": "ec19e2c9066f0bb6103526ccf30a5b156c69a25a96349220d9fd680a92822945"
+  },
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_auditor_retry02\\pretest_snapshot\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+    "bytes": 5069,
+    "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+  },
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_auditor_retry02\\pretest_snapshot\\resource_helper.py",
+    "bytes": 31463,
+    "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+  },
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_auditor_retry02\\pretest_snapshot\\test_audit_weekly_h2_boundary_bridge.py",
+    "bytes": 8709,
+    "sha256": "dd8e366ede619fb4a5af35bf7ee46d32d51530a4d96398f9068b762d01832897"
+  },
+  {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_auditor_retry02\\pretest_snapshot\\weekly_multiday_source_pilot.py",
+    "bytes": 31380,
+    "sha256": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878"
+  }
+]

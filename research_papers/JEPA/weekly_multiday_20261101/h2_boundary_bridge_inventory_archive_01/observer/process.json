@@ -1,0 +1,15 @@
+{
+  "pid": 14324,
+  "creation_time": 1793555559.9858975,
+  "utc": "2026-11-01T17:52:40.015606+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_boundary_bridge.py",
+    "--build-reviewed-inventory",
+    "--wrapper-sha256",
+    "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2"
+  ]
+}
