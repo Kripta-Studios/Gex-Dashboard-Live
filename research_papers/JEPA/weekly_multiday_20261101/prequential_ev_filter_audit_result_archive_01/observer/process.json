@@ -1,0 +1,19 @@
+{
+  "pid": 47400,
+  "creation_time": 1793562887.5043733,
+  "utc": "2026-11-01T19:54:47.513154+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_prequential_ev_filter.py",
+    "--execute-reviewed-audit",
+    "--producer-manifest-sha256",
+    "4c166202bd3d20d16f88f7d6fbfef9f5fe42d099071be6b414d6786126e3ddec",
+    "--producer-exit-sha256",
+    "76962d8c22e46b87a1d5a52ab049913aed9d3831f1d2766c5eb4e440afd93878",
+    "--auditor-sha256",
+    "16e62e2e3670837f5f3f05020f9dd765bf3c34cdfab7b9e3a439d17be51d7139"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "created_utc": "2026-11-01T19:59:23.305166+00:00",
+  "status": "REPORT_EXACT_COPIES_TOOL_EXIT_ONLY_NO_OBSERVER",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_report_01\\prequential_ev_filter_monthly.png",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_result_01\\prequential_ev_filter_monthly.png",
+      "bytes": 124688,
+      "sha256": "fa9d34d34b006a720e22b68ba72f8f20e82186c5e78563cba434ebf7cd0866ae"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_report_01\\prequential_ev_filter_monthly.svg",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_result_01\\prequential_ev_filter_monthly.svg",
+      "bytes": 93842,
+      "sha256": "1dfd5d409b3c3f6c3dc454a5db8cbef43a6dd41cb6148d6403bf7620a965a547"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_report_01\\PREQUENTIAL_EV_FILTER_RESULT_20261101.md",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_result_01\\PREQUENTIAL_EV_FILTER_RESULT_20261101.md",
+      "bytes": 6713,
+      "sha256": "3a4ae27ec7ae3d777e13c9f973d6cdc1d79e1c7b4ba55d2bd09a25db641d48bc"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_report_01\\report_receipt.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_result_01\\report_receipt.json",
+      "bytes": 12954,
+      "sha256": "554338fbd822f1417cb5304e96543d86a8fba6b9b8db1e49df58a45b9b3908fb"
+    }
+  ],
+  "total_bytes": 238197
+}

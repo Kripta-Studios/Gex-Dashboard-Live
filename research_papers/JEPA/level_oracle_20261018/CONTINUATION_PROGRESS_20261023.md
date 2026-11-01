@@ -1,5 +1,20 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+Checkpoint 1-nov19:54UTC: filtro EV CERRADO y auditado, todos fallan8/8.
+Productor10716exit0/manifest4c166202; auditor47400exit0retenido19:54:51UTC,
+audit2012cc51/exitbc2fef5e:515intenciones,1584estados,12libros,216diagnósticos,
+maxdiff0. Revisión adicional108meses/12totales y285comparacionesdelinforme exactos.
+Netos adverse filtro frozen/mensual/semanal −17691.20/−17044.60/−38255.80USD,
+meses positivos2/2/1 de8. Semanalcontrol+2693.80,3/8; filtro pierde ganadoresAbr/May.
+No retocar parámetros ni rescatar meses. PNG/informe revisados y copiados exactos.
+Renderer exit0 observado en herramienta, sin observer/logs/exitarchivo; limitación
+registrada, no inventar evidencia ni repetir. Productor/auditor sí tienenhandles.
+Siguiente hipótesis solicitada: frecuencia diaria, aún SIN contrato/fit.178sesiones,
+42estados reusables y136fechas nuevas para agenda completa. TRAIN excluyeCAL63,
+por lo que más frecuencia no incorpora esos63días en coeficientes. Aclarado al
+usuario neto semanal dos mil693.80USD, no millones. Goal activo, SEEN/promociónfalse.
+[Cierre y continuación](../weekly_multiday_20261101/PREQUENTIAL_EV_FILTER_CLOSURE_20261101.md).
+
 Checkpoint 1-nov19:49UTC: filtro EV productor CERRADO, auditor real pendiente.
 PID10716 exit0 retenido19:49:55UTC, manifest4c166202/exit76962d8c;24inputs y
 16outputs exactos,23copias6771092B/a204ae5d. No relanzar ni interpretar antesaudit.

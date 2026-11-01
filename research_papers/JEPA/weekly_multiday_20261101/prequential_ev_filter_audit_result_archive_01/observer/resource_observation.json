@@ -1,0 +1,20 @@
+{
+  "utc": "2026-11-01T19:54:47.501702+00:00",
+  "resources": {
+    "available_ram_bytes": 5902397440,
+    "free_commit_bytes": 5294551040
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "thread_variables": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "ARROW_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1"
+  }
+}
