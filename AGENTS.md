@@ -15,12 +15,15 @@ Selecciónnull, technical_ready/promotion_approved false; 2025/2026 SEEN_DEVELOP
 
 AMPLIACIÓN expresa1nov: siguiente familia weekly con posiciones de varios días,
 probabilidades/EV y días sin operar. [Dirección](research_papers/JEPA/level_oracle_20261018/WEEKLY_MULTIDAY_DIRECTION_20261101.md).
-Piloto de continuidad publicado22224ee6: código ad5b3ffb/contrato b5ce2cb1,
-16tests sintéticos y revisión independiente CLEAR. Inventario real exit0:
-69archivos,16085740filas,468159644B, SHA6bbcb667. Diagnóstico único activo
-PID43236/sesiónroot29475 bajo fuente D:/ThetaData local; todavía sin cierre ni
-rentabilidad weekly. No relanzar. Resultado nuevo en D:/GexResearchArtifacts/
-weekly_multiday_20261101/source_pilot_01; observer source_pilot_observer_01.
+Piloto de continuidad publicado22224ee6 cerrado exit0 a13:40:55UTC413,97s;
+PID43236/sesión29475 terminados, no relanzar. Inventario6bbcb667/diagnósticob9ddb5f4/
+manifest7d41eed7:69admitidos/0ausentes,16085740filas;17clocksnativos/52proxy.
+12gruposH2 a10:35 conservan todas las identidades yquotesválidas enambosextremos.
+Revisión independienteCLEAR,14copias1016192B recibo4c46fe81. SinPnL/fitweekly.
+Próxima comparaciónH2 fija selección10:30/ask10:35→bidH210:35 antesexpiry,
+modeloP+EV/WAIT ycontrolesCALL/PUT/ABSTAIN. Contrato9459feae revisadoCLEAR tras
+corregir riesgo de missingexit y CAPITAL_BLOCKED; código/fixtures enpreparación.
+Sólo D:/ThetaData, artefactos D:/GexResearchArtifacts/weekly_multiday_20261101.
 El oracle weekly histórico permanece cerrado; nueva investigación separada.
 API/bróker/VPS/producción y cambios ajenos intactos.
 

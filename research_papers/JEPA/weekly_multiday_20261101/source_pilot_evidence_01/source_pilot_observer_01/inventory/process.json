@@ -1,0 +1,13 @@
+{
+  "pid": 17564,
+  "creation_time": 1793539987.9496198,
+  "utc": "2026-11-01T13:33:07.960436+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py",
+    "--build-reviewed-inventory"
+  ]
+}

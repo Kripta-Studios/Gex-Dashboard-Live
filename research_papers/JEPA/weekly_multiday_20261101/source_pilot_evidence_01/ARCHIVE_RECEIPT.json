@@ -1,0 +1,93 @@
+{
+  "status": "COMPACT_SOURCE_PILOT_ARCHIVE_VERIFIED",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_01\\diagnostic.json",
+      "copy": "source_pilot_01\\diagnostic.json",
+      "bytes": 914216,
+      "sha256": "b9ddb5f4a979fbc687450154f02c17011ee05d2bda569c4d638c8daa2866415a"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_01\\final_manifest.json",
+      "copy": "source_pilot_01\\final_manifest.json",
+      "bytes": 824,
+      "sha256": "7d41eed74e5e4c50cb136bf1c736bad0206d1bea0be9d0348811118a8d9def1e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_01\\inventory.json",
+      "copy": "source_pilot_01\\inventory.json",
+      "bytes": 95370,
+      "sha256": "6bbcb6675eec34e7d88c8821a3e279aaf262c53d81c1f8b496e4dd579649a20c"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_01\\inventory_manifest.json",
+      "copy": "source_pilot_01\\inventory_manifest.json",
+      "bytes": 137,
+      "sha256": "620bdf066ae0fab320e8242193d590962fdcb421ca114ab310e2d4942efa9c39"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\inventory\\admission.json",
+      "copy": "source_pilot_observer_01\\inventory\\admission.json",
+      "bytes": 1330,
+      "sha256": "144038334dee773cc500103752361940904ed2666a9f8a8e99f8874c0dfc688f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\inventory\\exit.json",
+      "copy": "source_pilot_observer_01\\inventory\\exit.json",
+      "bytes": 894,
+      "sha256": "6606493ad707ba5524859e354e37d1e038a0b0350584e6f4dee571de83dcf43e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\inventory\\process.json",
+      "copy": "source_pilot_observer_01\\inventory\\process.json",
+      "bytes": 415,
+      "sha256": "9df6253086d48f5b8bea6217e02d72332ce509c43624d7a01a1ace22bad1b226"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\inventory\\stderr.log",
+      "copy": "source_pilot_observer_01\\inventory\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\inventory\\stdout.log",
+      "copy": "source_pilot_observer_01\\inventory\\stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\diagnostic\\admission.json",
+      "copy": "source_pilot_observer_01\\diagnostic\\admission.json",
+      "bytes": 1476,
+      "sha256": "82ea092b7ce245942529ada56235424990f51f3d283bca865f6b078ac1423d0e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\diagnostic\\exit.json",
+      "copy": "source_pilot_observer_01\\diagnostic\\exit.json",
+      "bytes": 898,
+      "sha256": "541fc02603993033c8900e4580108222aa1732fb58eb06882bb354e7d598da51"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\diagnostic\\process.json",
+      "copy": "source_pilot_observer_01\\diagnostic\\process.json",
+      "bytes": 632,
+      "sha256": "383bb41cfcc079cb43c890e2b0ccc89531b63dbacad2582d6cafe7afd0a7090b"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\diagnostic\\stderr.log",
+      "copy": "source_pilot_observer_01\\diagnostic\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\source_pilot_observer_01\\diagnostic\\stdout.log",
+      "copy": "source_pilot_observer_01\\diagnostic\\stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "count": 14,
+  "bytes": 1016192,
+  "raw_sources_rehashed_by_archiver": false,
+  "independent_compact_review": "review_producer_exit CLEAR"
+}

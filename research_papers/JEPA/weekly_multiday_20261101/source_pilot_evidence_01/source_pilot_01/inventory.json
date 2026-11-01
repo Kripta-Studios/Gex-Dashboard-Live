@@ -1,0 +1,3664 @@
+{
+  "files": [
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 20,
+      "identifier": "SPY:20250404:20250411:20250404",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250411_20250404_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 157182,
+      "session_index": 0,
+      "sha256": "6ad686aa45aa0b8876bdb4ed4041f4114bcbff5e01913111357eb39eba1a9545",
+      "size": 5638648,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250404"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250404:20250411:20250407",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250411_20250407_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 200192,
+      "session_index": 1,
+      "sha256": "1b42dba18e78bec1d90a7b038b861c764d321e1ba35dd73858b1cad9bdc43657",
+      "size": 6581975,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250407"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250404:20250411:20250408",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250411_20250408_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 227562,
+      "session_index": 2,
+      "sha256": "036adf5ec53300331bfb40b10485467d38fe8880d51968b9755b0ce0ee28f796",
+      "size": 7057623,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250408"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250404:20250411:20250409",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250411_20250409_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 227562,
+      "session_index": 3,
+      "sha256": "479270d6b10740d17e4892e2291c68afe49902835f1e0ca52f9bb31c9078c84c",
+      "size": 6746091,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250409"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250404:20250411:20250410",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250411_20250410_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 227562,
+      "session_index": 4,
+      "sha256": "a6d9f3c49425c6510dfca4d876a7bf60d5b52c88806c64ae3529bbf8bafe00b7",
+      "size": 6161077,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250410"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250404:20250411:20250411",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250411_20250411_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 227562,
+      "session_index": 5,
+      "sha256": "95b3c8cc5b3297128cd757af69960ddd442dc95100cfe05ffbe447cf171d8a82",
+      "size": 4601608,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250411"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 20,
+      "identifier": "SPY:20250411:20250417:20250411",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250417_20250411_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 299506,
+      "session_index": 0,
+      "sha256": "9e38b1dd4d3120fe2c2f7669fdbd3ece983464108c5eb4c7d1d6953f66dbe4b8",
+      "size": 9308432,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250411"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250411:20250417:20250414",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250417_20250414_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 299506,
+      "session_index": 1,
+      "sha256": "9c017cbaa1a9775cf19a4b44831d985a67149715acaedb5af8f31b4317b4987d",
+      "size": 7613371,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250414"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250411:20250417:20250415",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250417_20250415_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 299506,
+      "session_index": 2,
+      "sha256": "ad1a2ce374d65705634bf39348c6d2504570fb60d683e9a09f7d5009be781b43",
+      "size": 6599668,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250415"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250411:20250417:20250416",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250417_20250416_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 299506,
+      "session_index": 3,
+      "sha256": "f324a19bcd7a0437728a98f0adac67cfe908cdd805efcb6237bc26234a4306b9",
+      "size": 6040857,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250416"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250411:20250417:20250417",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250417_20250417_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 299506,
+      "session_index": 4,
+      "sha256": "c457f81da709efa85e721638b64c5e1e541aa93ede6651a6758bd3b17e20b249",
+      "size": 4831514,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250417"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 20,
+      "identifier": "SPY:20250417:20250425:20250417",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250425_20250417_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 228344,
+      "session_index": 0,
+      "sha256": "4098ff804181a5b69431eff792842a3b881b5f20a16d3e02a4af964d7d6e642d",
+      "size": 6853061,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250417"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250417:20250425:20250421",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250425_20250421_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 228344,
+      "session_index": 1,
+      "sha256": "634859a7f6f6351224fee815f4d6bde5b06016977ef9fd7071b5ffe6960df721",
+      "size": 6491360,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250421"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250417:20250425:20250422",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250425_20250422_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 228344,
+      "session_index": 2,
+      "sha256": "1fefec8d9fa36255529aced476805677be23b494ffdc9b9f4c831d72e31ef22a",
+      "size": 5918222,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250422"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250417:20250425:20250423",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250425_20250423_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 228344,
+      "session_index": 3,
+      "sha256": "0376ac6d1f9f205b109adea9923e8ef8d659dbc862825f4780358d701bd5208e",
+      "size": 5602650,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250423"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250417:20250425:20250424",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250425_20250424_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 228344,
+      "session_index": 4,
+      "sha256": "04331c719f270d49785bbed3608355a01d381f94c0c1852be600f9b68374ba7f",
+      "size": 4726758,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250424"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250417:20250425:20250425",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250425_20250425_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 228344,
+      "session_index": 5,
+      "sha256": "6716d6d74120bab4d4bb0c0b5553ec2e356f5d1fb321fb4a28db98a052b41efa",
+      "size": 3691996,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250425"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 20,
+      "identifier": "SPY:20250425:20250502:20250425",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250502_20250425_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 168130,
+      "session_index": 0,
+      "sha256": "b63729a99c18db9dfc936fd62715eda8a0e84e06eb37e2fb588f70370e6e440c",
+      "size": 5114456,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250425"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250425:20250502:20250428",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250502_20250428_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 168130,
+      "session_index": 1,
+      "sha256": "ff67822dd92ff2a566fc6bfc6b20430e8852b103caad491cb6c0940a8213f0f1",
+      "size": 4976226,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250428"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250425:20250502:20250429",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250502_20250429_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 168130,
+      "session_index": 2,
+      "sha256": "f1924655d60affc01de50d12129cc2426d6ebaa795f5a2615916bcbe871df3f0",
+      "size": 4770771,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250429"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250425:20250502:20250430",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\04\\SPY_20250502_20250430_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 168130,
+      "session_index": 3,
+      "sha256": "a5608036b782ba9500deb51a98955287d4dc62aa2ffb1b1cbd28c29ba5e09e77",
+      "size": 4647518,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250430"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250425:20250502:20250501",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\05\\SPY_20250502_20250501_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 168130,
+      "session_index": 4,
+      "sha256": "767b6306879511f2c4afb8ef36e57f36558f329f0296ae0551819945aaaffcba",
+      "size": 3785626,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250501"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPY:20250425:20250502:20250502",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2025\\05\\SPY_20250502_20250502_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 168130,
+      "session_index": 5,
+      "sha256": "05c6346af96b497e2309f060c9d095464e3ba10cffcbb0409d4b5a79b97600a1",
+      "size": 2891515,
+      "status": "INVENTORIED",
+      "ticker": "SPY",
+      "trade_date": "20250502"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 20,
+      "identifier": "QQQ:20250404:20250411:20250404",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250411_20250404_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 159528,
+      "session_index": 0,
+      "sha256": "da0b2343dec503203bb78e049d060cccea86044b5a2ec62a85cbb7d377e048ac",
+      "size": 5537705,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250404"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250404:20250411:20250407",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250411_20250407_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 177514,
+      "session_index": 1,
+      "sha256": "ccf49bcfa8dfb6802191ec240754cf498dec7cb77d167cad08e0e77af5752172",
+      "size": 5804400,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250407"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250404:20250411:20250408",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250411_20250408_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 219742,
+      "session_index": 2,
+      "sha256": "51453f66254a633b3e95f4850db552e13fdda5f0b7b146a17ec40438127172b3",
+      "size": 6477279,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250408"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 20,
+      "identifier": "QQQ:20250404:20250411:20250409",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250411_20250409_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 219742,
+      "session_index": 3,
+      "sha256": "5c2fba5c275b3f1cc959bc4cdb7e58d96e75d985ce6211241bbf4e4c307a4ba4",
+      "size": 6472016,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250409"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 20,
+      "identifier": "QQQ:20250404:20250411:20250410",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250411_20250410_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 219742,
+      "session_index": 4,
+      "sha256": "708ba8d303c48e2c84c45bf81094534a1b5ca8410b88b394a20d87932289f73d",
+      "size": 5992039,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250410"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250404:20250411:20250411",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250411_20250411_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 219742,
+      "session_index": 5,
+      "sha256": "1cd410d5b02b6f097e9e2c827368925cbe081ade620513a4211c9f3ff0f7a31e",
+      "size": 4583930,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250411"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 20,
+      "identifier": "QQQ:20250411:20250417:20250411",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250417_20250411_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 252586,
+      "session_index": 0,
+      "sha256": "74f14800961f97912108646e8bdaadd631b856b25be420549018a883eba0de88",
+      "size": 7958882,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250411"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250411:20250417:20250414",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250417_20250414_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 252586,
+      "session_index": 1,
+      "sha256": "782258f96f88091c82ad1eedf1d416540d8cbc49cd481b635c18f4ad6a0993b1",
+      "size": 6787177,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250414"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250411:20250417:20250415",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250417_20250415_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 252586,
+      "session_index": 2,
+      "sha256": "e0098a949a9ddd84001916b090e895306ce7bf0a1cd11ef81b5f9f0fc5bdedd1",
+      "size": 6134056,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250415"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250411:20250417:20250416",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250417_20250416_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 252586,
+      "session_index": 3,
+      "sha256": "e7de9939e7c9e8247020cce594f8c1817243733ab186d57c8d060027014b3661",
+      "size": 5427136,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250416"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250411:20250417:20250417",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250417_20250417_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 252586,
+      "session_index": 4,
+      "sha256": "4c82c68c44f417bf36562a7307d377f1bca675b6818524ada586bd8bde0d84c2",
+      "size": 4259499,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250417"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 20,
+      "identifier": "QQQ:20250417:20250425:20250417",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250425_20250417_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 204102,
+      "session_index": 0,
+      "sha256": "c9b1904479e411f02acea0cdc8b7bd068bfc47c6caa2e59e71e9d2f4650a1144",
+      "size": 6358195,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250417"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250417:20250425:20250421",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250425_20250421_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 204102,
+      "session_index": 1,
+      "sha256": "8d3bfe4013cf68cbb29efeb725640f04da90672c2ea09c83637541ad58d2edc0",
+      "size": 5797449,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250421"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 20,
+      "identifier": "QQQ:20250417:20250425:20250422",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250425_20250422_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 204102,
+      "session_index": 2,
+      "sha256": "57fd3b32e6f80f279dca5113fbe6b8c6467fbf1f822fec950ffcad835689fc9a",
+      "size": 5499097,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250422"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250417:20250425:20250423",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250425_20250423_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 204102,
+      "session_index": 3,
+      "sha256": "af53a8e9db274230d5820201f8b7e5e3b9f97e827d49945050f4ffb566dd7547",
+      "size": 5235620,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250423"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 20,
+      "identifier": "QQQ:20250417:20250425:20250424",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250425_20250424_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 204102,
+      "session_index": 4,
+      "sha256": "0d23875c8a3966be9355a61be7c36ff8a88cafb8fa982b29514b9f7d5ffdf250",
+      "size": 4512728,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250424"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250417:20250425:20250425",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250425_20250425_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 204102,
+      "session_index": 5,
+      "sha256": "8fd16d324e42e0958ebd4e80ed5491502a7a922cea9226312eb8eab620e64655",
+      "size": 3205404,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250425"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 20,
+      "identifier": "QQQ:20250425:20250502:20250425",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250502_20250425_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 144670,
+      "session_index": 0,
+      "sha256": "ec6ee5816fbf94fa9931325c1f3200fd7167b84f251f9d6d938f3dd5ff4e8620",
+      "size": 4666705,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250425"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250425:20250502:20250428",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250502_20250428_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 144670,
+      "session_index": 1,
+      "sha256": "b98b8c1fad0c76e7ca7a9bc98819d1e5b288df478dd8787180c19f7e3ba61de9",
+      "size": 4462535,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250428"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250425:20250502:20250429",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250502_20250429_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 144670,
+      "session_index": 2,
+      "sha256": "36b55c12b32bdb0e0c31bf09fa5e6095ac8dc162f871581cffca70a0bf4f4468",
+      "size": 4220852,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250429"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 20,
+      "identifier": "QQQ:20250425:20250502:20250430",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\04\\QQQ_20250502_20250430_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 144670,
+      "session_index": 3,
+      "sha256": "8cec7845ea69ec96ad99e81c13634878b9ffffee0a4cb7cd79d9ea950ff5e35d",
+      "size": 4139194,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250430"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250425:20250502:20250501",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\05\\QQQ_20250502_20250501_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 144670,
+      "session_index": 4,
+      "sha256": "6a094ae4355066cd7964d0dcbd2924e33497464d69f53a6ba97711d91a743d6b",
+      "size": 3518145,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250501"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "QQQ:20250425:20250502:20250502",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2025\\05\\QQQ_20250502_20250502_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 150926,
+      "session_index": 5,
+      "sha256": "ac8586a7e6d11314d0cc0e796c72e45b22a97b6c7469afff2d51375863ad5b93",
+      "size": 2534960,
+      "status": "INVENTORIED",
+      "ticker": "QQQ",
+      "trade_date": "20250502"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 20,
+      "identifier": "SPXW:20250404:20250411:20250404",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250411_20250404_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 217396,
+      "session_index": 0,
+      "sha256": "c6b66e8fd4312986d1868d5b047af141cc3039e530db98414065645ee356cc80",
+      "size": 8703432,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250404"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250404:20250411:20250407",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250411_20250407_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 275264,
+      "session_index": 1,
+      "sha256": "88f524b8c55f07dbdde3bfeacbee2c757ab88ed31ca658e9a2f53711afd60230",
+      "size": 10683118,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250407"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250404:20250411:20250408",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250411_20250408_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 277610,
+      "session_index": 2,
+      "sha256": "3b5f02f3e3d821d7b72ecb0d2cb8695019f1994676ec60ccbc14de78992528c6",
+      "size": 10787402,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250408"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250404:20250411:20250409",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250411_20250409_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 287776,
+      "session_index": 3,
+      "sha256": "3da69ffe464852126e2d00d24d08953fe4273c2eb30ac4b5e1d8da428ad58bb8",
+      "size": 11296681,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250409"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250404:20250411:20250410",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250411_20250410_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 287776,
+      "session_index": 4,
+      "sha256": "9db9c25f26936e15c23399a649ed0f51e0b59d2fd14e015801d195997e7973f5",
+      "size": 10729509,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250410"
+    },
+    {
+      "entry_date": "20250404",
+      "expiration": "20250411",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250404:20250411:20250411",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250411_20250411_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 287776,
+      "session_index": 5,
+      "sha256": "caa3232dc8b15cccaa063aa5a06db2a334f378518e62a4a20492b835cd8c5fa6",
+      "size": 8874003,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250411"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 20,
+      "identifier": "SPXW:20250411:20250417:20250411",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250417_20250411_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 409768,
+      "session_index": 0,
+      "sha256": "034106c38a1313d482ee987b4bd5ad9a068982bed9ade11d1819d051d964eda5",
+      "size": 15362658,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250411"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250411:20250417:20250414",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250417_20250414_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 409768,
+      "session_index": 1,
+      "sha256": "24785d64d9300c24e0ac8e37291bc1e623bf27304260bc691672c17a0af24ffc",
+      "size": 13275727,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250414"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250411:20250417:20250415",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250417_20250415_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 409768,
+      "session_index": 2,
+      "sha256": "06582ac0013a2b1ec63fda38821754ec1d01138a8599cebeb73b07a04eb217f6",
+      "size": 12025514,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250415"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250411:20250417:20250416",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250417_20250416_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 409768,
+      "session_index": 3,
+      "sha256": "318a092638eb5b2f8d0bb02061635270951e63e6fb1309f5c012ee7ad31ddb2e",
+      "size": 11641138,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250416"
+    },
+    {
+      "entry_date": "20250411",
+      "expiration": "20250417",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250411:20250417:20250417",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250417_20250417_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 409768,
+      "session_index": 4,
+      "sha256": "c757f1b9e5e8c95f788a8aeac3c0ce51ae165826113c1abbfcced742be94e497",
+      "size": 9963818,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250417"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 20,
+      "identifier": "SPXW:20250417:20250425:20250417",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250425_20250417_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 233036,
+      "session_index": 0,
+      "sha256": "6720a9aeb7c2482afcb3be103aba3e401205b5143cc8049c75fe97f57b36bfc3",
+      "size": 9470904,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250417"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250417:20250425:20250421",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250425_20250421_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 233036,
+      "session_index": 1,
+      "sha256": "a68e7c55dbcf9ff64834b0b5e93aba77774b017681733db74e5e0965d1d7e68f",
+      "size": 8690849,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250421"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250417:20250425:20250422",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250425_20250422_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 233036,
+      "session_index": 2,
+      "sha256": "8b9e6672cba54331772d9a415d4392704e61161f8652916871558214419a3b82",
+      "size": 8379300,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250422"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250417:20250425:20250423",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250425_20250423_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 233036,
+      "session_index": 3,
+      "sha256": "f2fc012b2b05ba9be990480857f5f4bd904b20fb6f8509e731761adc6f7e01d2",
+      "size": 8638600,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250423"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250417:20250425:20250424",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250425_20250424_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 233036,
+      "session_index": 4,
+      "sha256": "af475fcad92b8a081e09fef013d6b969663b1138b6171ff7f1586b2d39078bcf",
+      "size": 8005684,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250424"
+    },
+    {
+      "entry_date": "20250417",
+      "expiration": "20250425",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250417:20250425:20250425",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250425_20250425_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 233036,
+      "session_index": 5,
+      "sha256": "053c4872c6c6c75390c36f64520d3061bde44d0911048f65f41c97446231900c",
+      "size": 6148172,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250425"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 20,
+      "identifier": "SPXW:20250425:20250502:20250425",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250502_20250425_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 207230,
+      "session_index": 0,
+      "sha256": "80d0ba33e54d43f1ac7536b1fc7f262759f06ad16543f8d3d909e7e1fe1eda0b",
+      "size": 8224862,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250425"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250425:20250502:20250428",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250502_20250428_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 213486,
+      "session_index": 1,
+      "sha256": "8ad6fa3000c575ab9e5531bcb18e8d7743e8356095164c513789673776eeaeeb",
+      "size": 8227545,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250428"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250425:20250502:20250429",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250502_20250429_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 213486,
+      "session_index": 2,
+      "sha256": "05f16693b2f1c73af797bd672af5cc79bbea20df4d271a0c3cb385a6c217f906",
+      "size": 7781304,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250429"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250425:20250502:20250430",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\04\\SPXW_20250502_20250430_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 215832,
+      "session_index": 3,
+      "sha256": "91606f533cbe49a4ac2edf274c8c4997b84ca8a5d10c8edeecda07eb3857711b",
+      "size": 7962979,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250430"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250425:20250502:20250501",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\05\\SPXW_20250502_20250501_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 216614,
+      "session_index": 4,
+      "sha256": "f0054c9d83ada5e72e86cfcbe8f35f221b9038ec8cb46a735b6f065f1d4708fe",
+      "size": 7022294,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250501"
+    },
+    {
+      "entry_date": "20250425",
+      "expiration": "20250502",
+      "full_schema_field_count": 19,
+      "identifier": "SPXW:20250425:20250502:20250502",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2025\\05\\SPXW_20250502_20250502_greeks.parquet",
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        }
+      ],
+      "row_count_footer": 216614,
+      "session_index": 5,
+      "sha256": "4f1d0e0009a9356699dab5fe4fe3f8dc5ae0c38572f3f9cb73f47c29cd2987f8",
+      "size": 6028125,
+      "status": "INVENTORIED",
+      "ticker": "SPXW",
+      "trade_date": "20250502"
+    }
+  ],
+  "mode": "METADATA_HASHES_ONLY_NO_RECORD_BATCHES",
+  "nominal_file_count": 69,
+  "schema": "weekly_multiday_source_inventory_v1",
+  "source_root": "D:\\ThetaData"
+}

@@ -1,0 +1,26 @@
+{
+  "utc": "2026-11-01T13:33:07.946922+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py",
+    "--build-reviewed-inventory"
+  ],
+  "publication_commit": "22224ee65f0ad451f8932100175961170cbcd959",
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\SOURCE_PILOT_CONTRACT.md": "b5ce2cb180676344cab807185bb5b9fc607da93d136a7e16eb44dd9cfb4047f5",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_weekly_multiday_source_pilot.py": "18489a33ecde3e1e00026f8772363d0fd7ebec6494e7994a541282addbfb9a0a"
+  },
+  "resources": {
+    "available_ram_bytes": 14491062272,
+    "free_commit_bytes": 24234631168
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1,
+  "record_batches": false
+}
