@@ -1,0 +1,17 @@
+{
+  "name": "pytest",
+  "pid": 19232,
+  "start_utc": "2026-11-01T19:51:19.8305689Z",
+  "end_utc": "2026-11-01T19:51:37.0086542Z",
+  "exit_code": 0,
+  "arguments": [
+    "-m",
+    "pytest",
+    "-q",
+    "test_audit_weekly_prequential_ev_filter.py"
+  ],
+  "handle_retained": true,
+  "cpu_affinity_inherited": [
+    0
+  ]
+}

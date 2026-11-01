@@ -1,0 +1,145 @@
+{
+  "created_utc": "2026-11-01T19:50:22.062870+00:00",
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\decision_states.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\decision_states.jsonl",
+      "bytes": 4265553,
+      "sha256": "4463271f34a79183972cf285b11d189e060b09647afdd228d3f158825e1d9124"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ev_diagnostics.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ev_diagnostics.jsonl",
+      "bytes": 74809,
+      "sha256": "ff34c05b319062f1ff9ac76f7b24b7c2e5a79d862ae7468495f3825279148197"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\intentions.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\intentions.jsonl",
+      "bytes": 246755,
+      "sha256": "7db7f90ea404246720556f84e306ca03343a2bebc11a91865803be109a2eb570"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_frozen_context182_control_adverse.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_frozen_context182_control_adverse.jsonl",
+      "bytes": 248435,
+      "sha256": "2a6221a3622fa5a99488540ee93df104990ea6bc3fe4e784f3788c2a8bc4aa0b"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_frozen_context182_control_base.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_frozen_context182_control_base.jsonl",
+      "bytes": 248214,
+      "sha256": "21f9a1707839360f87330ac53267a80917d52bc400a6f9f386dde011b2691b57"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_frozen_context182_filter_adverse.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_frozen_context182_filter_adverse.jsonl",
+      "bytes": 158871,
+      "sha256": "c3f38d1f7561881d01e2c3448aff97f9c272b9387293f935262433346b79dcd8"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_frozen_context182_filter_base.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_frozen_context182_filter_base.jsonl",
+      "bytes": 156781,
+      "sha256": "e9d5deeee375e408ae722139555dd77f943302934c23654a24292a1f04475ad8"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_monthly_raw_control_adverse.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_monthly_raw_control_adverse.jsonl",
+      "bytes": 201565,
+      "sha256": "87384278487e60d0ef8c4245c9cdfc6782e57ecd1b2b48b9c9f99326c494384b"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_monthly_raw_control_base.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_monthly_raw_control_base.jsonl",
+      "bytes": 199120,
+      "sha256": "604bdbcf3a35ed27d86b8e0f6d4249f43efdba7bf23b5a0e10bddbd68fec9702"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_monthly_raw_filter_adverse.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_monthly_raw_filter_adverse.jsonl",
+      "bytes": 140089,
+      "sha256": "21ea13e2fd7b6648b5d66cc9d6822c12e85fa157734cb2fb295e50cca6f86d5b"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_monthly_raw_filter_base.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_monthly_raw_filter_base.jsonl",
+      "bytes": 138254,
+      "sha256": "f68a66c192b30b68897df390acb743d43fd0e202ab3c72bd123a6a57694f1982"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_weekly_raw_control_adverse.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_weekly_raw_control_adverse.jsonl",
+      "bytes": 194230,
+      "sha256": "4d650574f9afda736b5df6cf40ba995723e443176dd364329fd627e71e7d9570"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_weekly_raw_control_base.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_weekly_raw_control_base.jsonl",
+      "bytes": 192111,
+      "sha256": "3227436232a1f3477d0227233b3b13e94ca7e5f0264a3ca7de1bb8d3ce498c2e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_weekly_raw_filter_adverse.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_weekly_raw_filter_adverse.jsonl",
+      "bytes": 129490,
+      "sha256": "e668abb92ff2867e96e4feeae66eae71b22a3671b4a81d41d9bde0e4e02379c9"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\ledger_weekly_raw_filter_base.jsonl",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\ledger_weekly_raw_filter_base.jsonl",
+      "bytes": 127582,
+      "sha256": "88497f59be89c11de990507bc45f6faf58a3839acc8fbde3a677bfbeb9e552a4"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\manifest.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\manifest.json",
+      "bytes": 12788,
+      "sha256": "4c166202bd3d20d16f88f7d6fbfef9f5fe42d099071be6b414d6786126e3ddec"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_01\\summary.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\payload\\summary.json",
+      "bytes": 31405,
+      "sha256": "75c7c2b8320ed3a4bf39d596d5e65f33b3b3d971b8ae16f2ea7930c9a3665338"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_observer_01\\admission.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\observer\\admission.json",
+      "bytes": 2408,
+      "sha256": "7ec60407201bc55051717bb5df28d0a1be7e4765953186256885f6d194d399fe"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_observer_01\\exit.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\observer\\exit.json",
+      "bytes": 1075,
+      "sha256": "76962d8c22e46b87a1d5a52ab049913aed9d3831f1d2766c5eb4e440afd93878"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_observer_01\\process.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\observer\\process.json",
+      "bytes": 926,
+      "sha256": "2e080759006ab2210985cfa7b6177d147ae42f3b6239516adb53747b22118e4e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_observer_01\\resource_observation.json",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\observer\\resource_observation.json",
+      "bytes": 470,
+      "sha256": "29f68e4d5e9ce7ae5142d4dc7c2560d56e3dbcbc74c77751a266ded6a5721b4b"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_observer_01\\stderr.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\observer\\stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\prequential_ev_filter_observer_01\\stdout.log",
+      "copy": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\prequential_ev_filter_producer_archive_01\\observer\\stdout.log",
+      "bytes": 161,
+      "sha256": "7f8ab61b291dbf8f01332002d483e3db8d51175c4f2d9e03cf28a9c297c729af"
+    }
+  ],
+  "total_bytes": 6771092,
+  "status": "PRODUCER_CLOSED_PENDING_INDEPENDENT_AUDIT"
+}

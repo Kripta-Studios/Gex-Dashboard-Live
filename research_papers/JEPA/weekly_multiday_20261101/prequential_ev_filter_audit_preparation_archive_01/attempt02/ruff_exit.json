@@ -1,0 +1,18 @@
+{
+  "name": "ruff",
+  "pid": 48796,
+  "start_utc": "2026-11-01T19:48:39.5110692Z",
+  "end_utc": "2026-11-01T19:48:40.8515843Z",
+  "exit_code": 1,
+  "arguments": [
+    "-m",
+    "ruff",
+    "check",
+    "audit_weekly_prequential_ev_filter.py",
+    "test_audit_weekly_prequential_ev_filter.py"
+  ],
+  "handle_retained": true,
+  "cpu_affinity_inherited": [
+    0
+  ]
+}

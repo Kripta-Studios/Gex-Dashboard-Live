@@ -1,0 +1,14 @@
+{
+  "status": "PASS_FORMAL_SYNTHETIC_AUDITOR_FIXTURES",
+  "attempt": "attempt03",
+  "code_sha256": "16e62e2e3670837f5f3f05020f9dd765bf3c34cdfab7b9e3a439d17be51d7139",
+  "tests_sha256": "38c278e9c91474f2c90f3710708ddc06d84e13ba4004b345b5e0466ee7c56c62",
+  "compile_exit": 0,
+  "ruff_exit": 0,
+  "pytest_exit": 0,
+  "attempt01_gate_failure_preserved": true,
+  "attempt02_ruff_failure_preserved": true,
+  "retry_authorized": true,
+  "real_runtime_executed": false,
+  "closed_utc": "2026-11-01T19:51:37.0206006Z"
+}

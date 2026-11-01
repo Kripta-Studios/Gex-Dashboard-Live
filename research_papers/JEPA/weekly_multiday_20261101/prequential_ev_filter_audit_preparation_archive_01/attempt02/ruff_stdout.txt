@@ -1,0 +1,48 @@
+F401 [*] `collections.Counter` imported but unused
+  --> audit_weekly_prequential_ev_filter.py:12:25
+   |
+11 | import argparse
+12 | from collections import Counter, defaultdict
+   |                         ^^^^^^^
+13 | from datetime import datetime
+14 | import hashlib
+   |
+help: Remove unused import: `collections.Counter`
+
+F401 [*] `statistics` imported but unused
+  --> audit_weekly_prequential_ev_filter.py:20:8
+   |
+18 | import os
+19 | from pathlib import Path
+20 | import statistics
+   |        ^^^^^^^^^^
+21 | from typing import Any, Iterable
+22 | from zoneinfo import ZoneInfo
+   |
+help: Remove unused import: `statistics`
+
+F401 [*] `typing.Iterable` imported but unused
+  --> audit_weekly_prequential_ev_filter.py:21:25
+   |
+19 | from pathlib import Path
+20 | import statistics
+21 | from typing import Any, Iterable
+   |                         ^^^^^^^^
+22 | from zoneinfo import ZoneInfo
+   |
+help: Remove unused import: `typing.Iterable`
+
+F841 Local variable `candidate_index` is assigned to but never used
+   --> test_audit_weekly_prequential_ev_filter.py:254:5
+    |
+252 |     dump_lines(bridge / "candidates.jsonl", bridge_rows)
+253 |     all_candidates = [*bridge_rows, *q3_rows]
+254 |     candidate_index = {row["candidate_id"]: row for row in all_candidates}
+    |     ^^^^^^^^^^^^^^^
+255 |
+256 |     h1_dates, q3_dates = ("20260629", "20260630"), ("20260701", "20260702", "20260703")
+    |
+help: Remove assignment to unused variable `candidate_index`
+
+Found 4 errors.
+[*] 3 fixable with the `--fix` option (1 hidden fix can be enabled with the `--unsafe-fixes` option).

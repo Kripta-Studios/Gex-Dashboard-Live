@@ -1,0 +1,17 @@
+{
+  "name": "compile",
+  "pid": 45084,
+  "start_utc": "2026-11-01T19:51:11.3647439Z",
+  "end_utc": "2026-11-01T19:51:15.6234881Z",
+  "exit_code": 0,
+  "arguments": [
+    "-m",
+    "py_compile",
+    "audit_weekly_prequential_ev_filter.py",
+    "test_audit_weekly_prequential_ev_filter.py"
+  ],
+  "handle_retained": true,
+  "cpu_affinity_inherited": [
+    0
+  ]
+}
