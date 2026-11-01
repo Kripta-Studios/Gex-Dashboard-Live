@@ -1,0 +1,27 @@
+{
+  "utc": "2026-11-01T15:33:32.542568+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\extract_weekly_context_1030.py",
+    "--execute-reviewed-extraction",
+    "--extractor-sha256",
+    "e70be193286ffb1a314530b224e8de73a6f33cb774fac6692d0e4144b82a1b7e",
+    "--inventory",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_1030_01\\inventory.json",
+    "--inventory-sha256",
+    "b347523c8638825c822100cf78b5a03ab4f56fc948bc7aa23674b0b73866df5e"
+  ],
+  "publication_commit": "ee7a65afd4a28d185a2f7822072766660f4625bd",
+  "code_sha256": "e70be193286ffb1a314530b224e8de73a6f33cb774fac6692d0e4144b82a1b7e",
+  "resources": {
+    "available_ram_bytes": 11802787840,
+    "free_commit_bytes": 17314713600
+  },
+  "cpu_affinity": [
+    0
+  ],
+  "threads": 1
+}
