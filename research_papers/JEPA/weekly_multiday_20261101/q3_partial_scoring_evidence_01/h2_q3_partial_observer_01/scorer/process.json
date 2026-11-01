@@ -1,0 +1,22 @@
+{
+  "pid": 4540,
+  "creation_time": 1793545329.9848354,
+  "utc": "2026-11-01T15:02:09.988187+00:00",
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\score_weekly_h2_q3_partial_frozen.py",
+    "--dataset-root",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01",
+    "--dataset-manifest-sha256",
+    "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b",
+    "--frozen-evaluation-root",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01",
+    "--frozen-evaluation-manifest-sha256",
+    "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96",
+    "--output",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_frozen_extension_2026q3_partial_01"
+  ]
+}

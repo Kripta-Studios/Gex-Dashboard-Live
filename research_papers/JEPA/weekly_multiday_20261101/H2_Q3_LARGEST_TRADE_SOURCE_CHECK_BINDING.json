@@ -1,0 +1,108 @@
+{
+  "schema": "weekly_h2_q3_largest_trade_source_check_binding_v1",
+  "status": "PREPARED_FOR_ROOT_REVIEW_NOT_EXECUTED",
+  "scope": {
+    "candidate_id": "SPXW:20260803:20260807:CALL",
+    "purpose": "post-result source traceability for the single largest adverse-net Q3 trade",
+    "not_selection": true,
+    "no_fit": true,
+    "no_global_replay": true,
+    "no_live_fill_claim": true,
+    "api_used": false
+  },
+  "checker": {
+    "path": "research_papers/JEPA/weekly_multiday_20261101/check_h2_largest_trade_source.py",
+    "sha256": "99bbf756370ec4a0ad9ae1ab53242004a53c59d12abeff15b58bc33707e95160",
+    "modified_for_q3": false
+  },
+  "inputs": {
+    "candidates": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\candidates.jsonl",
+      "sha256": "c1aae6b9d45240fe712aabceb296b8d42506b12523465eb8755a8c6939045864"
+    },
+    "inventory": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\inventory.json",
+      "sha256": "f633d0ee192f28650698a4033ee7f6d2dc00dad07aa38239c40e9e2b5092ea5c"
+    },
+    "dataset_manifest": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\manifest.json",
+      "sha256": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b"
+    },
+    "ledger": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_frozen_extension_2026q3_partial_01\\ledger_ev_top1_h2_q3_partial_2026_seen_development_adverse.jsonl",
+      "sha256": "07ead617cb0aa9ee55d1aa3700656572938c9269325800e850286b6e12a89c35"
+    },
+    "scoring_manifest": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_frozen_extension_2026q3_partial_01\\manifest.json",
+      "sha256": "7bd50a5a1fe5214df2c4281e785313f0fb016ca73d725d682788dcb78b283d8e"
+    }
+  },
+  "candidate_binding": {
+    "ticker": "SPXW",
+    "entry_date": "20260803",
+    "exit_date": "20260805",
+    "expiration": "20260807",
+    "strike": 7575.0,
+    "right": "CALL",
+    "status": "OBSERVED_EXIT",
+    "decision_10_30": {
+      "bid": 33.7,
+      "ask": 34.0,
+      "spot": 7569.98,
+      "delta": 0.4939
+    },
+    "entry_10_35_ask": 34.1,
+    "exit_10_35_bid": 198.0,
+    "net_adverse": 16383.4,
+    "clock_basis_entry": "NATIVE_STORED_TIMESTAMP",
+    "clock_basis_exit": "NATIVE_STORED_TIMESTAMP"
+  },
+  "raw_sources_not_opened_by_preparation": {
+    "entry": {
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\08\\SPXW_20260807_20260803_greeks.parquet",
+      "sha256": "a1986af28828eaf89196f25c5a52215c8e7f347f78e20c2bbae4e88f86d1f7ea"
+    },
+    "exit": {
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\08\\SPXW_20260807_20260805_greeks.parquet",
+      "sha256": "8f7df9373dc75a5db05018e02fed96c6b0463a0af7346816dd0fddf7f6d635a5"
+    }
+  },
+  "output": {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_largest_trade_source_check_01",
+    "exists_at_preparation": false,
+    "immutable_new_root": true
+  },
+  "environment": {
+    "cpu_affinity": [0],
+    "threads": 1,
+    "minimum_available_ram_bytes": 2000000000,
+    "minimum_free_commit_bytes": 2000000000,
+    "preparation_observation": {
+      "available_ram_bytes": 12126715904,
+      "free_commit_bytes": 19036446720
+    }
+  },
+  "command": [
+    "python",
+    "research_papers/JEPA/weekly_multiday_20261101/check_h2_largest_trade_source.py",
+    "--candidate-id",
+    "SPXW:20260803:20260807:CALL",
+    "--ledger",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_frozen_extension_2026q3_partial_01\\ledger_ev_top1_h2_q3_partial_2026_seen_development_adverse.jsonl",
+    "--candidates",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\candidates.jsonl",
+    "--inventory",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\inventory.json",
+    "--output-dir",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_largest_trade_source_check_01"
+  ],
+  "runtime_requirements_after_review_and_publication": [
+    "rehash checker, candidates, inventory, dataset manifest, ledger and scoring manifest before launch",
+    "observe CPU 0, one thread, available RAM and free commit both at least 2000000000 bytes",
+    "execute the command exactly once in the absent output root",
+    "retain stdout, stderr, exit code and process identity",
+    "require entry and exit source hashes before and after the projected read",
+    "require exact identity and exact stored clocks 10:30/10:35 without nearest or fill",
+    "report stored timestamp basis as snapshot metadata, not observed live receipt"
+  ]
+}

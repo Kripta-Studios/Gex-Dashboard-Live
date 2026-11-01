@@ -1,0 +1,41 @@
+{
+  "schema": "weekly_h2_q3_numeric_audit_preparation_result_v1",
+  "status": "PASS_SYNTHETIC_PREPARATION_ONLY_AWAITING_Q3_CLOSURE",
+  "final_attempt": "retry03",
+  "files": {
+    "audit_weekly_h2_q3_given_parameters.py": "e1428e1d6d2546dc8746190cc397b770257edcf34c9671cca4711a98ccdc0d00",
+    "test_audit_weekly_h2_q3_given_parameters.py": "2773563904ec42dd06e49b8a095f0925779b017203eae0250f9d1e728633d7cd"
+  },
+  "verification": {
+    "pytest": "6 passed in 1.03s",
+    "pytest_exit": 0,
+    "ruff_exit": 0,
+    "cpu_affinity": [0],
+    "threads": 1,
+    "resource_gate_2gb": true
+  },
+  "method": [
+    "manual frozen JSON imputation, missing indicators, and scaling",
+    "sklearn LogisticRegression restored from arrays with classes_, coef_, intercept_, n_features_in_, and n_features_ without fit",
+    "predict_proba compared with frozen scorer scores, followed by independent calibration and EV",
+    "independent causal replay for four policies by two cost books",
+    "event ordering, cash, reserved capital, one-open-position-per-ticker, H2 exits, decisions, and ledger equality",
+    "pooled/ticker summary and monthly reconciliation"
+  ],
+  "history": {
+    "initial": "4 passed / 1 fixture assertion API error preserved",
+    "retry02": "5 passed before explicit n_features_ and same-ticker overlap focal",
+    "retry03": "final 6 passed"
+  },
+  "flags": {
+    "active_q3_partial_read": false,
+    "actual_scorer_run": false,
+    "actual_audit_run": false,
+    "actual_output_created": false,
+    "refit_performed": false,
+    "scorer_module_imported": false,
+    "theta_data_accessed": false,
+    "promotion_approved": false
+  },
+  "next_condition": "root must provide closed dataset and scorer manifests before real audit"
+}

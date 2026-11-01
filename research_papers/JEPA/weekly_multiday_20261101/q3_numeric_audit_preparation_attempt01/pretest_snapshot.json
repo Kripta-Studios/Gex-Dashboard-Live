@@ -1,0 +1,16 @@
+{
+  "status": "PRETEST_SNAPSHOT",
+  "created_at_utc": "2026-11-01T15:02:21.9529603Z",
+  "files": {
+    "audit_weekly_h2_q3_given_parameters.py": {
+      "bytes": 21991,
+      "sha256": "24e9d10e029ba4e7ea2d0e05d88189abcab67fa5998aadf15d1cdaa78d4bc36f"
+    },
+    "test_audit_weekly_h2_q3_given_parameters.py": {
+      "bytes": 5117,
+      "sha256": "a62d70425ae74f1ce845315b2fa9b13b191e9fecdc1534ba00dfc73a315f59e7"
+    }
+  },
+  "q3_real_inputs_read": false,
+  "q3_scorer_run": false
+}

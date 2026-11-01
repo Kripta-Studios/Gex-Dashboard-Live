@@ -1,0 +1,17 @@
+CPU_AFFINITY=[0] THREADS=1
+.F...                                                                    [100%]
+================================== FAILURES ===================================
+______________ test_transform_imputes_and_adds_frozen_indicator _______________
+
+    def test_transform_imputes_and_adds_frozen_indicator() -> None:
+        transform, _, _, _ = artifacts()
+        matrix = audit.transform_matrix([{"features": {"x": 5.0, "z": None}}], transform)
+>       assert matrix.tolist() == pytest.approx([[2.0, 0.25, 1.0]])
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: pytest.approx() does not support nested data structures: [2.0, 0.25, 1.0] at index 0
+E         full sequence: [[2.0, 0.25, 1.0]]
+
+research_papers\JEPA\weekly_multiday_20261101\test_audit_weekly_h2_q3_given_parameters.py:53: TypeError
+=========================== short test summary info ===========================
+FAILED research_papers/JEPA/weekly_multiday_20261101/test_audit_weekly_h2_q3_given_parameters.py::test_transform_imputes_and_adds_frozen_indicator
+1 failed, 4 passed in 1.18s

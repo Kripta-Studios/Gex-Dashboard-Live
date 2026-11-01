@@ -1,0 +1,38 @@
+{
+  "schema": "weekly_h2_q3_numeric_audit_preparation_result_v2",
+  "status": "PASS_SYNTHETIC_PREPARATION_ONLY_NOT_REAL_AUDIT",
+  "final_attempt": "retry04",
+  "files": {
+    "audit_weekly_h2_q3_given_parameters.py": "40facb6d615875fd6f4b1fc41c3b14e9b417ced6779720f15276056e7af12898",
+    "test_audit_weekly_h2_q3_given_parameters.py": "5f8fd7d1af6ac13013700dc0ec8cd5d288e6a9ed5e9f6553d063270b8f20abff"
+  },
+  "closed_authorities_seen_for_schema_only": {
+    "dataset_manifest_sha256": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b",
+    "scorer_manifest_sha256": "7bd50a5a1fe5214df2c4281e785313f0fb016ca73d725d682788dcb78b283d8e",
+    "frozen_manifest_sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+  },
+  "verification": {
+    "pytest": "7 passed in 1.12s",
+    "pytest_exit": 0,
+    "ruff_exit": 0,
+    "cpu_affinity": [0],
+    "threads": 1,
+    "resource_gate_2gb": true
+  },
+  "review_fixes": [
+    "complete published economics map reproduced and compared for pooled and ticker scopes",
+    "monthly vectors independently sum to each net result",
+    "all dataset, frozen-state, scorer-output, and manifest payloads verified by bytes and SHA at admission and closing",
+    "dataset/scorer/frozen schemas, statuses, split, flags, implementation pins, and transitive scorer input bindings checked",
+    "synthetic summary-field corruption and closing-payload mutation fail closed"
+  ],
+  "flags": {
+    "q3_actual_audit_run": false,
+    "q3_outcomes_reported": false,
+    "output_created": false,
+    "refit_performed": false,
+    "scorer_module_imported": false,
+    "theta_data_accessed": false,
+    "promotion_approved": false
+  }
+}
