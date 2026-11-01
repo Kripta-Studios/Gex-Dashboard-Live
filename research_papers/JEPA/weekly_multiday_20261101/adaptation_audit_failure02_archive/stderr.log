@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_context_adaptation_v2.py", line 1732, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_context_adaptation_v2.py", line 1691, in main
+    numeric = numeric_audit_from_sealed_payloads(helper, snapshots, payloads)
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_context_adaptation_v2.py", line 1532, in numeric_audit_from_sealed_payloads
+    books = rebuild_continuous_books(
+        helper, [rows_by_id[value] for value in sorted(eval_ids)],
+        list(coverage_index.values()), sessions, LAST_ENTRY,
+        producer_scores, active_models,
+    )
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_context_adaptation_v2.py", line 765, in rebuild_continuous_books
+    require(ledger and ledger[0]["cash"] <= STARTING_CASH, "continuous book start")
+                       ~~~~~~~~~^^^^^^^^
+KeyError: 'cash'
