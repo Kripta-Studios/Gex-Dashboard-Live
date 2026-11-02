@@ -1,0 +1,19 @@
+{
+  "attempt_directory_created": false,
+  "failed_harness_bytes": 14821,
+  "failed_harness_sha256": "68ccf006b83e47556dd9660961348ed8ddf9f43df852da107790a039faff6b6c",
+  "mismatch": {
+    "actual_bytes": 21539,
+    "actual_sha256": "ac5d0fbee457396e8d9e15d217089a17927f1ba73953d681ffa02f2fc4840deb",
+    "expected_bytes": 21461,
+    "expected_sha256": "b427ea0b6e73c9811ffc7cf18b00575f456000e95c904635f77ab38b90f842f5",
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths.py"
+  },
+  "phase": "PREFLIGHT_EXACT_SNAPSHOT_BEFORE_ATTEMPT_CREATION",
+  "process_pid": null,
+  "recorded_utc": "2026-11-02T12:56:00+00:00",
+  "root_correction": "Use a new standalone attempt05b harness with explicit current pins; preserve the failed attempt05 harness unchanged.",
+  "scientific_child_created": false,
+  "tool_error": "RuntimeError: pin bytes/hash mismatch: test_audit_weekly_zone_event_value_paths.py",
+  "tool_reported_exit_code": 1
+}

@@ -1,0 +1,430 @@
+"""Synthetic, outcome-free tests for the independent weekly value-path auditor."""
+from __future__ import annotations
+
+from datetime import date, datetime, timezone
+import ast
+import json
+import math
+from pathlib import Path
+import sys
+from zoneinfo import ZoneInfo
+
+import numpy as np
+import pyarrow as pa
+import pyarrow.parquet as pq
+import pytest
+
+import audit_weekly_zone_event_value_paths as audit
+
+
+NY = ZoneInfo("America/New_York")
+
+
+def option_schema(*, gamma: bool = True, interval_type: pa.DataType = pa.string()) -> pa.Schema:
+    fields = [
+        pa.field("symbol", pa.string()), pa.field("expiration", pa.string()),
+        pa.field("trade_date", pa.string()), pa.field("strike", pa.float64()),
+        pa.field("right", pa.string()), pa.field("timestamp", pa.string()),
+        pa.field("underlying_timestamp", pa.string()),
+        pa.field("underlying_price", pa.float64()), pa.field("bid", pa.float64()),
+        pa.field("ask", pa.float64()), pa.field("delta", pa.float64()),
+        pa.field("implied_vol", pa.float64()),
+    ]
+    if gamma:
+        fields.append(pa.field("gamma", pa.float64()))
+    fields.extend([pa.field("theta", pa.float64()), pa.field("vega", pa.float64()),
+                   pa.field("rho", pa.float64()), pa.field("interval_used", interval_type)])
+    return pa.schema(fields)
+
+
+def option_row(clock: str = "2026-01-05T10:30:00", *, right: str = "C", strike: float = 500.0,
+               bid: float = 1.0, ask: float = 1.1, delta: float = 0.5) -> dict[str, object]:
+    return {"symbol": "SPY", "expiration": "20260109", "trade_date": "20260105",
+            "strike": strike, "right": right, "timestamp": clock,
+            "underlying_timestamp": "2026-01-05T10:29:59", "underlying_price": 500.0,
+            "bid": bid, "ask": ask, "delta": delta, "implied_vol": 0.2,
+            "gamma": 0.01, "theta": -0.1, "vega": 0.2, "rho": 0.01,
+            "interval_used": "1m"}
+
+
+def write_option(path: Path, rows: list[dict[str, object]], *, gamma: bool = True) -> None:
+    schema = option_schema(gamma=gamma)
+    if not gamma:
+        rows = [{key: value for key, value in row.items() if key != "gamma"} for row in rows]
+    pq.write_table(pa.Table.from_pylist(rows, schema=schema), path)
+
+
+@pytest.mark.parametrize(("value", "expected"), [
+    (date(2026, 1, 5), "20260105"), ("20260105", "20260105"), ("2026-01-05", "20260105"),
+])
+def test_parse_day_allowed(value: object, expected: str) -> None:
+    assert audit.parse_day(value, "fixture") == expected
+
+
+@pytest.mark.parametrize("value", [20260105, True, datetime(2026, 1, 5), " 20260105", "20260230"])
+def test_parse_day_rejects_ambiguous_or_invalid(value: object) -> None:
+    with pytest.raises(audit.AuditError):
+        audit.parse_day(value, "fixture")
+
+
+def test_clock_naive_and_aware_normalize_to_new_york() -> None:
+    naive = audit.parse_clock("2026-01-05T10:30:00", "20260105")
+    aware = audit.parse_clock("2026-01-05T15:30:00+00:00", "20260105")
+    assert naive == aware
+    assert audit.minute_index("2026-01-05T10:30:00", "20260105")[:2] == (60, True)
+
+
+@pytest.mark.parametrize("value", [None, 1_700_000_000, True, "2026-01-05", "junk",
+                                    "2026-01-06T00:30:00+00:00"])
+def test_clock_rejects_null_epoch_bool_incomplete_malformed_or_local_date_mismatch(value: object) -> None:
+    with pytest.raises(audit.AuditError):
+        audit.parse_clock(value, "20260105")
+
+
+def test_dst_nonexistent_and_ambiguous_naive_are_fatal() -> None:
+    with pytest.raises(audit.AuditError):
+        audit.parse_clock("2026-03-08T02:30:00", "20260308")
+    with pytest.raises(audit.AuditError):
+        audit.parse_clock("2026-11-01T01:30:00", "20261101")
+
+
+def test_subminute_is_not_exact_and_is_never_rounded() -> None:
+    minute, exact, _local = audit.minute_index("2026-01-05T10:30:00.001", "20260105")
+    assert (minute, exact) == (60, False)
+
+
+@pytest.mark.parametrize(("raw", "expected"), [("C", "CALL"), (" call ", "CALL"),
+                                                 ("P", "PUT"), ("put", "PUT")])
+def test_right_aliases(raw: str, expected: str) -> None:
+    assert audit.normalize_right(raw) == expected
+
+
+def test_decimal_identity_stays_in_price_units() -> None:
+    assert audit.canonical_strike(500.0)[0] == "500"
+    assert audit.canonical_strike("500.1250")[0] == "500.125"
+
+
+@pytest.mark.parametrize(("bid", "ask", "valid"), [
+    (0.0, 0.01, True), (1.0, 1.0, True), (-0.1, 1.0, False),
+    (1.1, 1.0, False), (1.0, 0.0, False), (math.nan, 1.0, False), (True, 1.0, False),
+])
+def test_quote_validity(bid: object, ask: object, valid: bool) -> None:
+    assert audit.quote_valid(bid, ask) is valid
+
+
+def test_selector_side_delta_ask_limit_and_tie_break() -> None:
+    base = option_row()
+    assert audit.candidate_key(base, "CALL") == pytest.approx((0.0, 1 / 11, 500.0))
+    assert audit.candidate_key({**base, "delta": -0.5}, "CALL") is None
+    assert audit.candidate_key({**base, "ask": 49.95}, "CALL") is not None
+    assert audit.candidate_key({**base, "ask": 49.9500001}, "CALL") is None
+
+
+def test_scan_only_exact_1030_for_selector_and_counts_ignored(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "quotes.parquet"
+    rows = [option_row("2026-01-05T10:29:00"), option_row("2026-01-05T10:30:00"),
+            option_row("2026-01-05T10:30:00.001", strike=501.0),
+            option_row("2026-01-05T16:01:00", strike=502.0)]
+    write_option(path, rows)
+    monkeypatch.setattr(audit, "SOURCE_ROOT", tmp_path)
+    selected, footer, counts = audit.scan_option_source(path, "SPY", "20260105", "20260109", 390, None, True)
+    assert [row["minute_i"] for row in selected] == [60]
+    assert footer["clock_basis"] == "NATIVE_STORED_TIMESTAMP"
+    assert counts["ignored_subminute_rows"] == 1
+    assert counts["ignored_out_of_session_rows"] == 1
+
+
+def test_scan_duplicate_contract_minute_is_fatal(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "quotes.parquet"
+    write_option(path, [option_row(), option_row()])
+    monkeypatch.setattr(audit, "SOURCE_ROOT", tmp_path)
+    with pytest.raises(audit.AuditError, match="duplicate"):
+        audit.scan_option_source(path, "SPY", "20260105", "20260109", 390, None, False)
+
+
+def test_scan_duplicate_nonwanted_contract_is_still_fatal(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "quotes.parquet"
+    write_option(path, [option_row(strike=600.0), option_row(strike=600.0)])
+    monkeypatch.setattr(audit, "SOURCE_ROOT", tmp_path)
+    with pytest.raises(audit.AuditError, match="duplicate"):
+        audit.scan_option_source(path, "SPY", "20260105", "20260109", 390, {("500", "CALL")}, False)
+
+
+def test_gamma_absent_is_explicit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "quotes.parquet"
+    write_option(path, [option_row()], gamma=False)
+    monkeypatch.setattr(audit, "SOURCE_ROOT", tmp_path)
+    rows, footer, _counts = audit.scan_option_source(path, "SPY", "20260105", "20260109", 390, None, False)
+    assert rows[0]["gamma_column_present"] is False
+    assert footer["gamma_column_present"] is False
+
+
+def test_interval_used_type_guard() -> None:
+    with pytest.raises(audit.AuditError, match="interval_used"):
+        audit.validate_option_schema(option_schema(interval_type=pa.list_(pa.int32())))
+
+
+def test_missing_ranges_are_maximal_inclusive() -> None:
+    assert audit.missing_ranges({0, 1, 4, 6}, 6) == [
+        {"start_i": 2, "end_i": 3}, {"start_i": 5, "end_i": 5},
+    ]
+    assert audit.missing_ranges(set(), 2) == [{"start_i": 0, "end_i": 2}]
+
+
+def test_stable_ids_use_compact_json_contract() -> None:
+    parts = ["SPY:20260105", "SPY", "20260109", "500", "CALL"]
+    expected = __import__("hashlib").sha256(b'["SPY:20260105","SPY","20260109","500","CALL"]').hexdigest()
+    assert audit.stable_id(parts) == expected
+
+
+def test_npz_reads_only_triplet_and_preserves_invalid_nan(tmp_path: Path) -> None:
+    path = tmp_path / "cache.npz"
+    start = np.datetime64("2026-01-05T09:30", "ns").astype(np.int64)
+    axis = start + np.arange(391, dtype=np.int64) * 60_000_000_000
+    spot = np.full(391, 500.0, dtype=np.float64)
+    valid = np.ones(391, dtype=np.bool_)
+    spot[7], valid[7] = np.nan, False
+    np.savez(path, time_ns=axis, spot=spot, spot_valid=valid, forbidden=np.arange(3))
+    rows, counts = audit.validate_npz(path, "SPY", "20260105", 390)
+    assert math.isnan(rows[7]["spot"]) and rows[7]["spot_valid"] is False
+    assert counts["invalid_count"] == 1
+
+
+def test_npz_axis_dtype_shape_and_true_mask_are_strict(tmp_path: Path) -> None:
+    path = tmp_path / "bad.npz"
+    axis = np.arange(391, dtype=np.int64)
+    np.savez(path, time_ns=axis, spot=np.ones(391, dtype=np.float64), spot_valid=np.ones(391, dtype=np.bool_))
+    with pytest.raises(audit.AuditError, match="time axis"):
+        audit.validate_npz(path, "SPY", "20260105", 390)
+
+
+def test_cache_metadata_triplet_schema_and_version(tmp_path: Path) -> None:
+    json_path, npz_path = tmp_path / "cache.json", tmp_path / "cache.npz"
+    npz_path.write_bytes(b"fixture")
+    pin = audit.file_pin(npz_path)
+    document = {"version": "SESSION_CLOCK_CACHE_V1", "ticker": "SPY", "date": "20261127",
+                "npz_bytes": pin["bytes"], "sha256": pin["sha256"],
+                "array_schema": {"time_ns": {"shape": [211], "dtype": "int64"},
+                                 "spot": {"shape": [211], "dtype": "float64"},
+                                 "spot_valid": {"shape": [211], "dtype": "bool"},
+                                 "fourth": {"shape": [211], "dtype": "float64"}}}
+    assert audit.validate_cache_metadata(document, json_path, npz_path, "SPY", "20261127", 210, pin) == "SESSION_CLOCK_CACHE_V1"
+
+
+def test_guard_rejects_traversal_symlink_hardlink_and_alias(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    source.write_text("x", encoding="utf-8")
+    with pytest.raises(audit.AuditError):
+        audit.guard_file(tmp_path / ".." / tmp_path.name / "source", (tmp_path,))
+    link = tmp_path / "link"
+    try:
+        link.symlink_to(source)
+    except OSError:
+        link = None
+    if link is not None:
+        with pytest.raises(audit.AuditError):
+            audit.guard_file(link, (tmp_path,))
+    hard = tmp_path / "hard"
+    try:
+        hard.hardlink_to(source)
+    except OSError:
+        hard = None
+    if hard is not None:
+        with pytest.raises(audit.AuditError):
+            audit.guard_file(source, (tmp_path,))
+
+
+def test_compare_rows_is_order_schema_and_nan_exact() -> None:
+    audit.compare_rows([{"a": 1, "b": float("nan")}], [{"a": 1, "b": float("nan")}], "fixture")
+    with pytest.raises(audit.AuditError):
+        audit.compare_rows([{"b": 2, "a": 1}], [{"a": 1, "b": 2}], "fixture")
+
+
+def test_exact_output_map_rejects_wrong_path_rows_missing_extra_and_nested_keys(tmp_path: Path) -> None:
+    path = tmp_path / "data.jsonl"
+    path.write_text("{}\n", encoding="utf-8")
+    pin = audit.file_pin(path) | {"rows": 1}
+    audit.validate_output_map({path.name: pin}, tmp_path, {path.name: 1}, "fixture")
+    for bad in (
+        {path.name: pin | {"path": str(tmp_path / "other.jsonl")}},
+        {path.name: pin | {"rows": 2}},
+        {},
+        {path.name: pin, "extra": pin},
+        {path.name: pin | {"unexpected": 1}},
+    ):
+        with pytest.raises(audit.AuditError):
+            audit.validate_output_map(bad, tmp_path, {path.name: 1}, "fixture")
+
+
+def test_exact_top_keys_reject_missing_and_extra() -> None:
+    audit.require_keys({"a": 1}, {"a"}, "fixture")
+    with pytest.raises(audit.AuditError):
+        audit.require_keys({"a": 1, "b": 2}, {"a"}, "fixture")
+    with pytest.raises(audit.AuditError):
+        audit.require_keys({}, {"a"}, "fixture")
+
+
+def test_journal_unit_persists_error_and_does_not_swallow(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(audit, "resource_gate", lambda: {
+        "available_ram_bytes": 3_000_000_000, "free_commit_bytes": 3_000_000_000,
+        "disk_free_bytes": 3_000_000_000,
+    })
+    journal = audit.Journal(tmp_path / "journal.jsonl")
+    with pytest.raises(RuntimeError):
+        with journal.unit("CACHE_SPOT_PATH", "SPY:20260105", []):
+            raise RuntimeError("fixture")
+    rows = [json.loads(line) for line in (tmp_path / "journal.jsonl").read_text().splitlines()]
+    assert [row["event"] for row in rows] == ["STARTED", "ERROR"]
+
+
+def test_unit_started_is_fsynced_before_body_open(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(audit, "resource_gate", lambda: {
+        "available_ram_bytes": 3_000_000_000, "free_commit_bytes": 3_000_000_000,
+        "disk_free_bytes": 3_000_000_000,
+    })
+    journal = audit.Journal(tmp_path / "journal.jsonl")
+    with journal.unit("CACHE_SPOT_PATH", "SPY:20260105", []):
+        rows = [json.loads(line) for line in journal.path.read_text().splitlines()]
+        assert [row["event"] for row in rows] == ["STARTED"]
+
+
+def test_source_has_no_producer_or_spot_import_and_names_forbidden_sources() -> None:
+    source = Path(audit.__file__).read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    imports = {alias.name for node in ast.walk(tree) if isinstance(node, ast.Import) for alias in node.names}
+    imports |= {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
+    assert "build_weekly_zone_event_value_paths" not in imports
+    assert "weekly_zone_event_spot_paths" not in imports
+    for forbidden in ("candidates.jsonl", "context.jsonl", "state60", "features.npz"):
+        assert forbidden in source
+
+
+@pytest.mark.parametrize("name", ["candidates.jsonl", "outcomes.jsonl", "features.npz", "state60.npz"])
+def test_forbidden_path_fails_before_any_lstat(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, name: str) -> None:
+    called = False
+
+    def forbidden_lstat(self: Path):
+        nonlocal called
+        called = True
+        raise AssertionError("lstat/open must not occur")
+
+    monkeypatch.setattr(Path, "lstat", forbidden_lstat)
+    with pytest.raises(audit.AuditError, match="forbidden path"):
+        audit.guard_file(tmp_path / name, (tmp_path,))
+    assert called is False
+
+
+def test_full_producer_journal_lifecycle_and_source_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    gate = {"available_ram_bytes": 3_000_000_000, "free_commit_bytes": 3_000_000_000,
+            "disk_free_bytes": 3_000_000_000}
+    rows = []
+
+    fake_stat = {"exists": True, "bytes": 1, "mtime_ns": 7, "physical_id": [1, 2]}
+    monkeypatch.setattr(audit, "stat_record", lambda _path: dict(fake_stat))
+    monkeypatch.setattr(audit, "file_pin", lambda path: {"path": str(path), "bytes": 1, "sha256": "0" * 64})
+
+    def pair(kind: str, identity: str, details: dict[str, object] | None = None,
+             pin_path: str | None = None) -> None:
+        paths = [pin_path] if pin_path else []
+        rows.append({"kind": kind, "identity": identity, "event": "STARTED", "paths": paths, "gate": gate})
+        completed = {"kind": kind, "identity": identity, "event": "COMPLETED", "paths": paths,
+                     "gate": gate, "details": details or {}}
+        rows.append(completed)
+
+    for stage in ("ADMIT_AUTHORITIES", "ADMIT_OPTION_FOOTERS", "SELECT_1030",
+                  "STREAM_OPTION_PATHS", "WRITE_OUTPUTS", "CLOSING_REHASH"):
+        pair(stage, "ALL")
+    tickers = ("SPY", "QQQ", "SPXW")
+    selector_ids = {f"{tickers[index % 3]}:{20230101 + index:08d}":
+                    str((tmp_path / f"selector_{index}.parquet").absolute()) for index in range(1620)}
+    for identity, entry_path in selector_ids.items():
+        pair("SELECT_1030", identity, {"source_reads": 1, "before_stat": fake_stat, "after_stat": fake_stat,
+                                      "sha256_before": "0" * 64, "sha256_after": "0" * 64}, entry_path)
+    trajectory_ids = {str((tmp_path / f"source_{index}.parquet").absolute()) for index in range(2768)}
+    for identity in trajectory_ids:
+        pair("STREAM_OPTION_PATHS", identity, {"source_reads": 1, "before_stat": fake_stat,
+                                               "after_stat": fake_stat, "sha256_before": "0" * 64,
+                                               "sha256_after": "0" * 64}, identity)
+    missing = {
+        *(f"{ticker}:{day}" for ticker in ("QQQ", "SPY") for day in ("20260401", "20260409", "20260415")),
+        *(f"{ticker}:{day}" for ticker in ("QQQ", "SPY") for day in
+          ("20260701", "20260707", "20260710", "20260716", "20260826", "20260901")),
+    }
+    identities = list(missing)
+    identities.extend(f"SPXW:{20230000 + index:08d}" for index in range(2790 - len(identities)))
+    for identity in identities:
+        steps = ["DECLARED_MISSING"] if identity in missing else ["ADMIT_SPOT_METADATA", "LOAD_SPOT_TRIPLETS"]
+        pair("CACHE_SPOT_PATH", identity, {"substeps": steps})
+    journal = tmp_path / "journal.jsonl"
+    encode = lambda row: json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n"
+    journal.write_text("".join(encode(row) for row in rows), encoding="utf-8")
+    cache_ids = set(identities)
+    source_pins = {path: {"path": path, "bytes": 1, "sha256": "0" * 64}
+                   for path in {*selector_ids.values(), *trajectory_ids}}
+    result = audit.validate_producer_journal(
+        tmp_path / "exit.json", selector_ids, trajectory_ids, cache_ids, source_pins,
+    )
+    assert result["selector_source_contexts"] == 1620
+    assert result["trajectory_source_contexts"] == 2768
+    assert result["cache_contexts"] == 2790
+    original = next(iter(selector_ids))
+    for row in rows:
+        if row.get("kind") == "SELECT_1030" and row.get("identity") == original:
+            row["identity"] = "SPY:20991231"
+    journal.write_text("".join(encode(row) for row in rows), encoding="utf-8")
+    with pytest.raises(audit.AuditError, match="exact identity set"):
+        audit.validate_producer_journal(tmp_path / "exit.json", selector_ids, trajectory_ids, cache_ids, source_pins)
+    for row in rows:
+        if row.get("identity") == "SPY:20991231":
+            row["identity"] = original
+    completed_selector = next(row for row in rows if row.get("kind") == "SELECT_1030" and
+                              row.get("event") == "COMPLETED")
+    saved_paths = completed_selector["paths"]
+    wrong_path = str((tmp_path / "wrong_selector.parquet").absolute())
+    completed_selector["paths"] = [wrong_path]
+    journal.write_text("".join(encode(row) for row in rows), encoding="utf-8")
+    with pytest.raises(audit.AuditError, match="event path identity"):
+        audit.validate_producer_journal(tmp_path / "exit.json", selector_ids, trajectory_ids, cache_ids, source_pins)
+    completed_selector["paths"] = saved_paths
+    completed_source = next(row for row in rows if row.get("kind") == "STREAM_OPTION_PATHS" and
+                            row.get("event") == "COMPLETED")
+    completed_source["details"]["source_reads"] = 2
+    journal.write_text("".join(encode(row) for row in rows), encoding="utf-8")
+    with pytest.raises(audit.AuditError, match="source_reads"):
+        audit.validate_producer_journal(tmp_path / "exit.json", selector_ids, trajectory_ids, cache_ids, source_pins)
+    completed_source["details"]["source_reads"] = 1
+    rows.insert(-1, rows[-2])
+    journal.write_text("".join(encode(row) for row in rows), encoding="utf-8")
+    with pytest.raises(audit.AuditError):
+        audit.validate_producer_journal(tmp_path / "exit.json", selector_ids, trajectory_ids, cache_ids, source_pins)
+
+
+def test_cli_default_is_readiness_only(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    assert audit.main([]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "READY_NOT_EXECUTED"
+
+
+def test_expected_cardinality_is_parameterized_and_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(audit, "scan_option_source", lambda *args, **kwargs: (
+        [option_row() | {"strike_decimal": "500", "right_normalized": "CALL"}],
+        {"clock_basis": "NATIVE_STORED_TIMESTAMP", "gamma_column_present": True}, {},
+    ))
+    plan = {"status": "PLANNED", "entry_path": __file__, "ticker": "SPY", "date": "20260105",
+            "expiration": "20260109", "close_i": 390, "plan_id": "SPY:20260105", "source_authority": "H1"}
+    with pytest.raises(audit.AuditError, match="cardinality"):
+        audit.select_contracts([plan], expected=2)
+
+
+def test_spot_population_exact_h1_q3_full_short_without_runtime_monkeypatch() -> None:
+    rows = []
+    rows += [{"authority": "H1", "cache_status": "AVAILABLE", "session_kind": "FULL"}] * 2595
+    rows += [{"authority": "H1", "cache_status": "AVAILABLE", "session_kind": "SHORT"}] * 24
+    rows += [{"authority": "H1", "cache_status": "MISSING", "session_kind": "FULL"}] * 6
+    rows += [{"authority": "Q3", "cache_status": "AVAILABLE", "session_kind": "FULL"}] * 153
+    rows += [{"authority": "Q3", "cache_status": "MISSING", "session_kind": "FULL"}] * 12
+    audit.validate_cache_population(rows)
+    rows.pop()
+    with pytest.raises(audit.AuditError):
+        audit.validate_cache_population(rows)
+

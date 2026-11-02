@@ -1,0 +1,201 @@
+{
+  "child_created": false,
+  "cpu_affinity_mask": 1,
+  "cuda_visible_devices": "-1",
+  "disk_free_bytes": 26566119424,
+  "minimum_bytes": 2000000000,
+  "observed_utc": "2026-11-02T12:35:33.950741+00:00",
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": {
+      "bytes": 31463,
+      "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_AUDITOR_IMPLEMENTATION_REVIEW_20261102.md": {
+      "bytes": 2845,
+      "sha256": "b68373ba1726813410ba689c009e71468dfed7d822d3ecce3397d4af91623af0"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md": {
+      "bytes": 36466,
+      "sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md": {
+      "bytes": 2340,
+      "sha256": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_value_paths.py": {
+      "bytes": 96030,
+      "sha256": "ce068748eafe74fa65ee8173cad82aef833f85cdee0dd27f856abc32377aefc9"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_value_path_audit_fixtures_attempt03_20261102.py": {
+      "bytes": 21820,
+      "sha256": "19cc4fe49bc4ec6a0a61d8c9694bddd12285f60f0a2ac55850bcde8248aced11"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths.py": {
+      "bytes": 21237,
+      "sha256": "9a9a7aca9a05365c892d36be3dc5681e789c0df44daaed7294ea7b5da3da437f"
+    }
+  },
+  "preserved_prior_evidence": {
+    "attempt01": {
+      "WEEKLY_ZONE_EVENT_VALUE_PATH_AUDITOR_IMPLEMENTATION_REVIEW_20261102.md.before_test": {
+        "bytes": 1934,
+        "sha256": "de482951e3424b852dff3c422cbcc84e34faa9ccdab85e855b3a107523e00001"
+      },
+      "WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test": {
+        "bytes": 36466,
+        "sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9"
+      },
+      "WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test": {
+        "bytes": 2340,
+        "sha256": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185"
+      },
+      "audit_weekly_zone_event_value_paths.py.before_test": {
+        "bytes": 96050,
+        "sha256": "c5d522b8503af5b297564be6397481bae570320078f79cdfb917d52583ace4f3"
+      },
+      "compile_exit.json": {
+        "bytes": 742,
+        "sha256": "5b2a1dadcb85887f9cf08299dabbc467621871902ae4a6b0d5bc28c4e9f7d23c"
+      },
+      "compile_process.json": {
+        "bytes": 698,
+        "sha256": "c933c8d873c510b3bcec412da6240b0845ba8dfc032a8be9f19e76a48a842be8"
+      },
+      "compile_resource_observation.json": {
+        "bytes": 2832,
+        "sha256": "e10c47ceaee31e8365e74f9fe172321a8cda9e1b6a76c663cb206febc2d09a12"
+      },
+      "compile_stderr.txt": {
+        "bytes": 349,
+        "sha256": "ec3bb4df35e599fb17e2622b1e0c9b94b1233a2ecdc5f524d4082e073fe43020"
+      },
+      "compile_stdout.txt": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "failure_receipt.json": {
+        "bytes": 358,
+        "sha256": "cac2f01b56f9d25b44af0a1122604404a2beebe05640585aa44e1dd5e1e07b97"
+      },
+      "launch_monthly_test_index_v2_audit_20261024.py.before_test": {
+        "bytes": 31463,
+        "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+      },
+      "launch_weekly_zone_event_value_path_audit_fixtures_20261102.py.before_test": {
+        "bytes": 15491,
+        "sha256": "450dd7fd077038c728aa123972a5cc0683eec29470c708c35e8f70aef11f2d6c"
+      },
+      "preflight_resource_observation.json": {
+        "bytes": 2834,
+        "sha256": "cb14c5873ec6ed50c2ff33098433c85c87d48a1f643f3690f3e083832a46052d"
+      },
+      "test_audit_weekly_zone_event_value_paths.py.before_test": {
+        "bytes": 21221,
+        "sha256": "c7c8f79d0dc8359550ce0269ec79f1e6c21d302fe4047c2c0a7d0e5a305b3f2c"
+      }
+    },
+    "attempt02": {
+      "WEEKLY_ZONE_EVENT_VALUE_PATH_AUDITOR_IMPLEMENTATION_REVIEW_20261102.md.before_test": {
+        "bytes": 2373,
+        "sha256": "46515298e4b7930105f3235b2cd86a8ed5eb38ba2692537e4a07221a7d96ab42"
+      },
+      "WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test": {
+        "bytes": 36466,
+        "sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9"
+      },
+      "WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test": {
+        "bytes": 2340,
+        "sha256": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185"
+      },
+      "audit_weekly_zone_event_value_paths.py.before_test": {
+        "bytes": 96049,
+        "sha256": "0cb2a86bc3fb4de259798b874b0717dba9d6a0990738518fee814a338e446be7"
+      },
+      "compile_exit.json": {
+        "bytes": 743,
+        "sha256": "9c553b7511bc9a50351ba228ec4e0a0f79242b783448661a8f0ed8fe966cef86"
+      },
+      "compile_process.json": {
+        "bytes": 699,
+        "sha256": "5effcefa5bfe7470d6c2be5719556c3338f85c53d0e9eb45e40f1e26dd7be3ba"
+      },
+      "compile_resource_observation.json": {
+        "bytes": 5232,
+        "sha256": "f8a0ece72996e6dac1234217a6882bc0b0022236dd766bd2dd8cb96d170783d8"
+      },
+      "compile_stderr.txt": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "compile_stdout.txt": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "failure_receipt.json": {
+        "bytes": 416,
+        "sha256": "fb254c4e0b83e19cc0f8378ca6145afa92c43f24add0f03c5fa561efb2448023"
+      },
+      "launch_monthly_test_index_v2_audit_20261024.py.before_test": {
+        "bytes": 31463,
+        "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+      },
+      "launch_weekly_zone_event_value_path_audit_fixtures_attempt02_20261102.py.before_test": {
+        "bytes": 20152,
+        "sha256": "377323b9e8c52595dafd0b5ffc1b30cb6f9a5458e412e938150741889c8db7f9"
+      },
+      "preflight_resource_observation.json": {
+        "bytes": 5234,
+        "sha256": "d75a08955e30863779a0e4fdb313a39d403d120b9dc9473d959cbdd297295cb5"
+      },
+      "preserved_attempt01_snapshot.json": {
+        "bytes": 2250,
+        "sha256": "a9397955b061a626ed016d598c2d813e91990a715d6b3b528d5468aacc40cbd3"
+      },
+      "ruff_exit.json": {
+        "bytes": 750,
+        "sha256": "4d558f8fa8b277fb91dd154d813d7dd7db62da6c05e4a3ba5a8c44c84bd4246e"
+      },
+      "ruff_process.json": {
+        "bytes": 706,
+        "sha256": "c02d919a2cb6458a16520b273f993c5bde484257eac53ffbdc4a689047d58ea0"
+      },
+      "ruff_resource_observation.json": {
+        "bytes": 5229,
+        "sha256": "5c8010f865b0bf1d4e0515a1b0ab14ae5d23d7e0ecde1a1cadbce45ea70eb19f"
+      },
+      "ruff_stderr.txt": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "ruff_stdout.txt": {
+        "bytes": 2617,
+        "sha256": "9b9e36ed967a2d0e90c6e4576df3acbb5b2d46c46923610dde39ce02354d0ea5"
+      },
+      "test_audit_weekly_zone_event_value_paths.py.before_test": {
+        "bytes": 21221,
+        "sha256": "c7c8f79d0dc8359550ce0269ec79f1e6c21d302fe4047c2c0a7d0e5a305b3f2c"
+      }
+    },
+    "root_control": {
+      "bytes": 780,
+      "sha256": "28628cc1909f6d75248271807f54da2ce31d404418b24783d4fd9e0e1f58e7ef"
+    }
+  },
+  "resources": {
+    "available_ram_bytes": 10320797696,
+    "free_commit_bytes": 17254096896
+  },
+  "stage": "pytest",
+  "thread_variables": {
+    "ARROW_NUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1",
+    "TBB_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  }
+}

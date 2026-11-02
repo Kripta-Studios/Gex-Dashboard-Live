@@ -1,0 +1,24 @@
+{
+  "attempt": "attempt04",
+  "closing_pin_differences": [],
+  "completed": [
+    {
+      "exit_code": 0,
+      "stage": "compile"
+    },
+    {
+      "exit_code": 0,
+      "stage": "ruff"
+    },
+    {
+      "exit_code": 1,
+      "stage": "pytest"
+    }
+  ],
+  "exit_code": 1,
+  "real_value_audit_executed": false,
+  "recorded_utc": "2026-11-02T12:43:05.612423+00:00",
+  "retry": false,
+  "stage": "pytest",
+  "status": "FORMAL_AUDIT_FIXTURE_STAGE_FAILED"
+}

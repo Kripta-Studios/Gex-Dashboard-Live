@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "ruff",
+    "check",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_value_paths.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths.py"
+  ],
+  "cpu_affinity_mask": 1,
+  "creation_epoch": 1793624475.032402,
+  "end_utc": "2026-11-02T13:01:15.260436+00:00",
+  "exit_code": 0,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 20844,
+  "start_utc": "2026-11-02T13:01:15.029905+00:00"
+}

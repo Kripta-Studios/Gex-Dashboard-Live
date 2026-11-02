@@ -1,0 +1,17 @@
+{
+  "attempt02_observed_absent": true,
+  "extra_arguments": [
+    "--auditor-review-sha256",
+    "46515298e4b7930105f3235b2cd86a8ed5eb38ba2692537e4a07221a7d96ab42",
+    "--auditor-review-bytes",
+    "2373"
+  ],
+  "harness_sha256": "377323b9e8c52595dafd0b5ffc1b30cb6f9a5458e412e938150741889c8db7f9",
+  "phase": "ARGPARSE_BEFORE_ATTEMPT_CREATION",
+  "process_pid": null,
+  "recorded_utc": "2026-11-02T12:22:18.310763+00:00",
+  "root_correction": "Remove obsolete optional review arguments; reviewed attempt02 pins review internally.",
+  "scientific_child_created": false,
+  "tool_error": "unrecognized arguments: --auditor-review-sha256 46515298e4b7930105f3235b2cd86a8ed5eb38ba2692537e4a07221a7d96ab42 --auditor-review-bytes 2373",
+  "tool_reported_exit_code": 1
+}

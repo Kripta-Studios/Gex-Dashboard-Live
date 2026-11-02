@@ -1,0 +1,40 @@
+# Revisión estática e integración del auditor weekly
+
+Dictamen independiente `/root/daily_report_package`, materializado por root:
+**STATIC_PRE_SUITE CLEAR_INTEGRATION**, 2 de noviembre de 2026.
+
+- Auditor: 96049 bytes,
+  0cb2a86bc3fb4de259798b874b0717dba9d6a0990738518fee814a338e446be7.
+- Tests: 21221 bytes,
+  c7c8f79d0dc8359550ce0269ec79f1e6c21d302fe4047c2c0a7d0e5a305b3f2c.
+- Contrato: e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9.
+
+La revisión completa y focales verificaron reconstrucción independiente de
+3240 decisiones, observaciones por grupo de fuente, 9720 segmentos y 1086570
+filas spot, sin importar productor ni módulo spot. Compara tipos, nulabilidad,
+orden, valores/bits float y NaN, coverage, población y pins completos. Valida
+manifest/summary exactos, protocolos, cierre y prohibiciones de lectura.
+
+Root detectó que el primer dictamen no había comprobado la integración del
+journal con el productor. Quedó sustituido por este refresh: el formato real
+kind/identity/paths/gate/details, GLOBAL_PASS separado, conjuntos exactos de
+1620/2768/2790 unidades, source_reads=1 y stats/hash/bytes before/after se
+comprueban contra el productor b6528622 y spot0953d344. El helper del directorio
+hermano sólo se admite por su ruta/pin exactos. Fixtures usan esta forma real.
+
+El revisor rehasheó las 26 autoridades/helper compactas: cero diferencias.
+Los casos sintéticos incluyen cambios de pins, paths, contadores, outputs,
+schemas, duplicados no seleccionados y errores antes de apertura. Ningún
+resultado de esos tests se afirma todavía: no hubo compile/Ruff/pytest/imports
+científicos ejecutados ni lecturas raw, footer, arrays, candidatos o outcomes.
+
+La primera suite formal se detuvo en compile por el literal raw D: con barra
+final, antes de Ruff/pytest. Root cambió únicamente disk_usage("D:/"). El revisor
+comparó los 1574 renglones con el snapshot y confirmó ese único delta y tests
+intactos. Attempt01, PID7284/exit1 retenido y failure358B
+cac2f01b56f9d25b44af0a1122604404a2beebe05640585aa44e1dd5e1e07b97
+se conservan. No se ejecutó auditoría real. El CLEAR focal habilita preparar un
+intento nuevo con estos pins; no afirma PASS de suite ni runtime.
+
+El auditor real requiere además cierre del productor, nueva revisión final,
+binding y publicación, y un lanzamiento separado con handle/exit retenidos.

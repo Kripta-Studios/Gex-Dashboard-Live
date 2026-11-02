@@ -1,0 +1,16 @@
+{
+  "attempt": "attempt01",
+  "closing_pin_differences": [],
+  "completed": [
+    {
+      "exit_code": 1,
+      "stage": "compile"
+    }
+  ],
+  "exit_code": 1,
+  "real_value_audit_executed": false,
+  "recorded_utc": "2026-11-02T12:14:51.516032+00:00",
+  "retry": false,
+  "stage": "compile",
+  "status": "FORMAL_AUDIT_FIXTURE_STAGE_FAILED"
+}

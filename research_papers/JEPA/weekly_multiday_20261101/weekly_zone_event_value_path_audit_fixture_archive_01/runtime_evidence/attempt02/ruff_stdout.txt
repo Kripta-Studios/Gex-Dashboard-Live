@@ -1,0 +1,72 @@
+F401 [*] `datetime.time` imported but unused
+  --> audit_weekly_zone_event_value_paths.py:13:38
+   |
+11 | from collections import Counter, defaultdict
+12 | from contextlib import contextmanager
+13 | from datetime import date, datetime, time, timedelta, timezone
+   |                                      ^^^^
+14 | from decimal import Decimal, InvalidOperation
+15 | import hashlib
+   |
+help: Remove unused import: `datetime.time`
+
+F401 [*] `typing.Iterable` imported but unused
+  --> audit_weekly_zone_event_value_paths.py:25:25
+   |
+23 | import stat
+24 | import struct
+25 | from typing import Any, Iterable, Iterator, Mapping, Sequence
+   |                         ^^^^^^^^
+26 | from zoneinfo import ZoneInfo
+   |
+help: Remove unused import: `typing.Iterable`
+
+F841 Local variable `refs` is assigned to but never used
+    --> audit_weekly_zone_event_value_paths.py:1320:9
+     |
+1318 |         source = source_index.get(row["path"])
+1319 |         require(source is not None, "source admission unknown path")
+1320 |         refs = source["references"]
+     |         ^^^^
+1321 |         require(row["ticker"] == source["ticker"] and row["trade_date"] == source["trade_date"] and
+1322 |                 row["expiration"] == source["expiration"], "source admission identity")
+     |
+help: Remove assignment to unused variable `refs`
+
+F401 [*] `datetime.timezone` imported but unused
+ --> test_audit_weekly_zone_event_value_paths.py:4:38
+  |
+2 | from __future__ import annotations
+3 |
+4 | from datetime import date, datetime, timezone
+  |                                      ^^^^^^^^
+5 | import ast
+6 | import json
+  |
+help: Remove unused import: `datetime.timezone`
+
+F401 [*] `sys` imported but unused
+  --> test_audit_weekly_zone_event_value_paths.py:9:8
+   |
+ 7 | import math
+ 8 | from pathlib import Path
+ 9 | import sys
+   |        ^^^
+10 | from zoneinfo import ZoneInfo
+   |
+help: Remove unused import: `sys`
+
+E731 Do not assign a `lambda` expression, use a `def`
+   --> test_audit_weekly_zone_event_value_paths.py:359:5
+    |
+357 |         pair("CACHE_SPOT_PATH", identity, {"substeps": steps})
+358 |     journal = tmp_path / "journal.jsonl"
+359 |     encode = lambda row: json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n"
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+360 |     journal.write_text("".join(encode(row) for row in rows), encoding="utf-8")
+361 |     cache_ids = set(identities)
+    |
+help: Rewrite `encode` as a `def`
+
+Found 6 errors.
+[*] 4 fixable with the `--fix` option (2 hidden fixes can be enabled with the `--unsafe-fixes` option).
