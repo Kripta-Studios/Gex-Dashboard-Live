@@ -262,7 +262,7 @@ class ProducerLauncherFocusedTests(unittest.TestCase):
             root = Path(temporary)
             child_observer = root / "child_observer"
             code = ("from pathlib import Path; p=Path(r'%s'); p.mkdir(); "
-                    "(p/'process.json').write_text('{}\\n', encoding='utf-8')" % str(child_observer))
+                    "(p/'process.json').write_bytes(bytes([123,125,10]))" % str(child_observer))
             process_times = [
                 {"creation_epoch": 1.0, "exit_epoch": None, "kernel_seconds": 0.0, "user_seconds": 0.0},
                 {"creation_epoch": 1.0, "exit_epoch": 2.0, "kernel_seconds": 0.0, "user_seconds": 0.0},

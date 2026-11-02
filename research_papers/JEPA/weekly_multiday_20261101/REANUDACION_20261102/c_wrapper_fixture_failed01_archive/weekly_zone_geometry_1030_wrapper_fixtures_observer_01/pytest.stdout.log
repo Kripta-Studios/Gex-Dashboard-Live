@@ -1,0 +1,28 @@
+........F....                                                            [100%]
+================================== FAILURES ===================================
+_ ProducerLauncherFocusedTests.test_mirror_conflict_preserves_child_partial_and_wrapper_is_nonzero _
+
+self = <test_launch_weekly_zone_geometry_1030_producer_20261102.ProducerLauncherFocusedTests testMethod=test_mirror_conflict_preserves_child_partial_and_wrapper_is_nonzero>
+
+    def test_mirror_conflict_preserves_child_partial_and_wrapper_is_nonzero(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            child_observer = root / "child_observer"
+            code = ("from pathlib import Path; p=Path(r'%s'); p.mkdir(); "
+                    "(p/'process.json').write_text('{}\\n', encoding='utf-8')" % str(child_observer))
+            process_times = [
+                {"creation_epoch": 1.0, "exit_epoch": None, "kernel_seconds": 0.0, "user_seconds": 0.0},
+                {"creation_epoch": 1.0, "exit_epoch": 2.0, "kernel_seconds": 0.0, "user_seconds": 0.0},
+            ]
+            gates = [({"available_ram_bytes": launcher.MINIMUM_BYTES, "free_commit_bytes": launcher.MINIMUM_BYTES}, launcher.MINIMUM_BYTES)] * 2
+            with synthetic_run_environment(root, [sys.executable, "-c", code], gates, process_times) as (_output, child, observer):
+                with mock.patch.object(launcher, "affinity_mask", return_value=1):
+                    result = launcher.run(root / "plan.json", "a" * 64)
+            self.assertEqual(result, 5)
+>           self.assertEqual((child / "process.json").read_bytes(), b"{}\n")
+E           AssertionError: b'{}\r\n' != b'{}\n'
+
+test_launch_weekly_zone_geometry_1030_producer_20261102.py:275: AssertionError
+=========================== short test summary info ===========================
+FAILED test_launch_weekly_zone_geometry_1030_producer_20261102.py::ProducerLauncherFocusedTests::test_mirror_conflict_preserves_child_partial_and_wrapper_is_nonzero
+1 failed, 12 passed in 6.76s
