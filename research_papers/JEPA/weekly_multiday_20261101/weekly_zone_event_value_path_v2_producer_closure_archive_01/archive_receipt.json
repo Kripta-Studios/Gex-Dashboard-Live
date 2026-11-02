@@ -1,0 +1,18 @@
+{
+  "closed_utc": "2026-11-02T13:47:32.969038+00:00",
+  "git_used": false,
+  "manifest": {
+    "bytes": 8727,
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_producer_closure_archive_01\\archive_manifest.json",
+    "sha256": "2161419b29df6fff7cd2c3fccffc226070422ea4fff56f721f1f665f285d924c"
+  },
+  "observer_files": 9,
+  "parquet_copied": false,
+  "producer_files": 2,
+  "raw_option_data_opened": false,
+  "runtime_relaunched": false,
+  "schema": "weekly_zone_event_value_path_v2_producer_closure_archive_receipt_v1",
+  "source_file_count": 11,
+  "source_total_bytes": 33870659,
+  "status": "PASS_EXACT_COMPACT_PRODUCER_CLOSURE_ARCHIVE"
+}

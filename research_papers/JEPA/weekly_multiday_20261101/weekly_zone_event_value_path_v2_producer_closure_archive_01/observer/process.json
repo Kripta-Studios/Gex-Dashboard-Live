@@ -1,0 +1,27 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_event_value_paths_v2.py",
+    "--execute-reviewed-builder",
+    "--output-dir",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_02",
+    "--observer-dir",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_observer_02",
+    "--journal",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_observer_02\\journal.jsonl",
+    "--implementation-pins-json",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_observer_02\\implementation_pins.json"
+  ],
+  "cpu_affinity": [
+    0
+  ],
+  "creation_epoch": 1793625231.5946896,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 49484,
+  "start_utc": "2026-11-02T13:13:51.593184+00:00",
+  "wait_pending": true
+}
