@@ -1,0 +1,51 @@
+{
+  "schema": "weekly_zone_event_value_path_v2r3_fixture_failure_archive_receipt_v2",
+  "status": "PASS_EXACT_FIXTURE_FAILURE_ARCHIVE",
+  "closed_utc": "2026-11-02T17:29:00.6365557Z",
+  "source_file_count": 56,
+  "source_total_bytes": 14795879,
+  "source_copy_differences": 0,
+  "snapshot_count": 48,
+  "failure_stage": "compile",
+  "failure_kind": "CHILD_LAUNCH_OR_OBSERVATION",
+  "failure_utc": "2026-11-02T17:27:25.350517+00:00",
+  "child_pid": 66044,
+  "child_exit_code_file": 0,
+  "child_exit_code_adopted": false,
+  "child_identity_observed": false,
+  "creation_epoch": null,
+  "cpu_affinity_mask_child": null,
+  "metadata_error": "NoSuchProcess: process PID not found (pid=66044)",
+  "completed": [],
+  "compile_effective_pass": false,
+  "ruff_executed": false,
+  "pytest_executed": false,
+  "formal_suite_pass": false,
+  "real_value_audit_executed": false,
+  "retry": false,
+  "closing_pin_differences": [],
+  "parent_cpu_affinity_mask": 1,
+  "thread_variables_count": 10,
+  "thread_variables_all_one": true,
+  "cuda_visible_devices": "-1",
+  "gate_observations": {
+    "preflight": {
+      "available_ram_bytes": 4733984768,
+      "free_commit_bytes": 3669037056,
+      "disk_free_bytes": 24583675904
+    },
+    "compile": {
+      "available_ram_bytes": 4755591168,
+      "free_commit_bytes": 3681525760,
+      "disk_free_bytes": 24583659520
+    }
+  },
+  "future_handle_identity_harness_included": false,
+  "original_snapshots_immutable": true,
+  "raw_opened": false,
+  "git_used": false,
+  "manifest": {
+    "bytes": 40251,
+    "sha256": "6df6b2d6dbfe4a4c8b12c7d799f519edb2ae47c38c311788d73f9e0b6efac8ce"
+  }
+}

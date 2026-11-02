@@ -1,0 +1,11 @@
+{
+  "inventory.json": {
+    "bytes": 14721,
+    "sha256": "599ca400fecae12ce4098187a45af3ee0cf8c1b070e060d8c84e422ce92c6161"
+  },
+  "schema": "weekly_h2_boundary_bridge_inventory_manifest_v1",
+  "unified_calendar.json": {
+    "bytes": 232573,
+    "sha256": "be622bb24aca35448594743dfeb5236e6b2d08a4410109b20302891f8c1fa7d6"
+  }
+}

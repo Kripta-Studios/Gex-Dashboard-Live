@@ -1,0 +1,66 @@
+{
+  "entry_plans": {
+    "by_status": {
+      "HORIZON_OUTSIDE_CALENDAR": 6,
+      "NO_SERIES": 1164,
+      "PLANNED": 1620
+    },
+    "by_ticker": {
+      "QQQ": 930,
+      "SPXW": 930,
+      "SPY": 930
+    },
+    "by_year": {
+      "2023": 750,
+      "2024": 756,
+      "2025": 750,
+      "2026": 534
+    },
+    "total": 2790
+  },
+  "flags": {
+    "arrays_read": false,
+    "fit_performed": false,
+    "inference_performed": false,
+    "metadata_only": true,
+    "outcomes_read": false,
+    "parquet_footers_read": false,
+    "promotion_approved": false,
+    "raw_files_hashed": false,
+    "raw_values_read": false,
+    "replay_performed": false,
+    "selected_policy": null,
+    "technical_ready": false
+  },
+  "references": {
+    "by_role": {
+      "ENTRY_DAY": 1620,
+      "H2_DAY": 1620,
+      "INTERMEDIATE_DAY": 1620
+    },
+    "by_ticker": {
+      "QQQ": 1617,
+      "SPXW": 1626,
+      "SPY": 1617
+    },
+    "by_year": {
+      "2023": 1308,
+      "2024": 1326,
+      "2025": 1308,
+      "2026": 918
+    },
+    "total": 4860
+  },
+  "schema": "weekly_zone_event_source_plan_summary_v1",
+  "sources": {
+    "absent": 16,
+    "discrepancies": {},
+    "new_without_upstream_binding": 3,
+    "present": 2768,
+    "present_unique_bytes": 14110025838,
+    "unique": 2784,
+    "with_metadata_discrepancy": 0,
+    "with_upstream_binding": 2781
+  },
+  "status": "SOURCE_PLAN_NOT_VALUE_ADMISSION"
+}

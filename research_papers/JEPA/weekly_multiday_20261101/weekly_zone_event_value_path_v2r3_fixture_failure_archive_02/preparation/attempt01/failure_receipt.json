@@ -1,0 +1,12 @@
+{
+  "attempt": "attempt01",
+  "closing_pin_differences": [],
+  "completed": [],
+  "error": "RuntimeError: NoSuchProcess: process PID not found (pid=66044)",
+  "real_value_audit_executed": false,
+  "retry": false,
+  "stage": "compile",
+  "status": "AUDITOR_FIXTURE_CHILD_LAUNCH_OR_OBSERVATION_FAILED",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_value_path_v2r3_fixtures02_20261102.py\", line 398, in main\n    result = run_child(name, command)\n  File \"C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_value_path_v2r3_fixtures02_20261102.py\", line 345, in run_child\n    raise RuntimeError(metadata_error)\nRuntimeError: NoSuchProcess: process PID not found (pid=66044)\n",
+  "utc": "2026-11-02T17:27:25.350517+00:00"
+}
