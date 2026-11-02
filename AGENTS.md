@@ -1,5 +1,17 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov21:48UTC:D replay aúnWIP,sincompile/lint/pytest/runtime/PnL.
+Interfaz662147publicadaf212d5f9. Trace4288B27c5e083SHIPdocumental,publicarantes
+adopciónfinal; originalc041FIX_FIRSTpreservado. Auditorindependientedce9/tests
+cae7FIX_FIRSTcompleto: tipos/FSM/reserva/Decimal/cola/fixtures; snapshotsinmutables.
+Autorindependiente corrige2pyaislados, incidentelecturadedosinterfacesantiguas
+documentado(sinproductoralgoritmos). Helperaccounting913a/tests6493staticFIX_FIRST
+porfixturecoste/cobertura; autoracotadocorrige. Trasentregasproductorincompletas,
+rootasumeintegración/validation/FSM/coverage/tests conreviewSolindependiente;
+autoranteriorcesó, noeditar2py. Rutaauditparaesta integración,helperfullseparado.
+Rootintegróreplay_portfolio ycoverage/counts, pruebasproductoraúnporreescribir.
+B06mismo35709/PID8616activo704/2768a21:39,sinBfull/Creal/Dreal. Goalactivo.
+
 Checkpoint2-nov21:23UTC:D interfazpública19358B/66214786 revisadaSHIPdocumental.
 Tipos/FKs/39events47ledger19coverage/39counts, H2 yrearm explícitos; doscandidatos
 f83a/5377FIX_FIRSTpreservados. PublicarantesautorindependienteD.
