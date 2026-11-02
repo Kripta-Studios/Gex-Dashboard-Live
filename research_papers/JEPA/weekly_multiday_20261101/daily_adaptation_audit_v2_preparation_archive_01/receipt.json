@@ -1,0 +1,33 @@
+{
+  "api_read": false,
+  "attempt": "attempt01",
+  "broker_read": false,
+  "closed_utc": "2026-11-02T09:56:47.164775+00:00",
+  "closing_sha256": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\DAILY_ADAPTATION_AUDIT_FAILURE_AND_V2_CONTRACT_20261102.md": "bfd90a0610ab0ef90a06b9a16da246a0e205139887ab51312141ba3866ddab90",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\DAILY_ADAPTATION_AUDIT_V2_CONTRACT_REVIEW_20261102.md": "0c69a4c7486da02f8abcfcc533d354203a5f569aa4f085647a5b58e24482a4dc",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_daily_adaptation_v2.py": "d8813052412dbff001bae192f0d3c680808c78da458f1de54674e4331ef625a9",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_daily_adaptation_audit_v2_checks_20261102.py": "265795a141781599f285224351a7d28eb69c6da8b33a3df9d19ae510eef54405",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_daily_adaptation_v2.py": "6bc6d92dcbba460fa809527c41197c94a1d7409f85f2937a926efe08925d39d6"
+  },
+  "fit_performed": false,
+  "raw_read": false,
+  "retry": false,
+  "scientific_runtime_executed": false,
+  "stages": [
+    {
+      "exit_code": 0,
+      "stage": "compile"
+    },
+    {
+      "exit_code": 0,
+      "stage": "ruff"
+    },
+    {
+      "exit_code": 0,
+      "stage": "pytest"
+    }
+  ],
+  "status": "PASS_FORMAL_SYNTHETIC_DAILY_ADAPTATION_AUDIT_V2_FIXTURES"
+}
