@@ -1,0 +1,22 @@
+{
+  "audit_v2_child_exit_code": 0,
+  "changed_pins": [],
+  "cpu_affinity": [
+    0
+  ],
+  "creation_time": 1793613753.362223,
+  "elapsed_seconds": 10.667623800000001,
+  "exit_code": 0,
+  "files": {
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_02\\admission.json": "9653c9f4bfc93b1544a9b9ee294d505a1056d64b6c122fa356b28a23274edda1",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_02\\process.json": "8614a8681833ba906a6be9ce555feb02d6a8974fa6d73377c873a626ab82438b",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_02\\resource_observation.json": "35bb04937c67c1d637ce7037685d6fde2a9c24667f9175a6df89d433100588fa",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_02\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_02\\stdout.log": "f8f19de4d5ba98a5b4afc9fa64d9afd4e2626a0e654b00c191b224ba2ecca489"
+  },
+  "metadata_error": null,
+  "pid": 24780,
+  "retry": false,
+  "source": "subprocess.Popen.wait_retained_handle",
+  "utc": "2026-11-02T10:02:44.028522+00:00"
+}

@@ -1,0 +1,33 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_daily_adaptation_v2.py",
+    "--execute-reviewed-audit",
+    "--producer-root",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01",
+    "--producer-manifest-sha256",
+    "7decb3e2baf360d807fd849604013728f5fe05c48dcd3302c0b270a1440d2206",
+    "--producer-exit",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\exit.json",
+    "--producer-exit-sha256",
+    "54021b954d522e0c9535b237de45a63da14a39e91e12e71fe90546d351f9f0d0",
+    "--auditor-sha256",
+    "d8813052412dbff001bae192f0d3c680808c78da458f1de54674e4331ef625a9",
+    "--tests-sha256",
+    "6bc6d92dcbba460fa809527c41197c94a1d7409f85f2937a926efe08925d39d6",
+    "--output",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_02"
+  ],
+  "cpu_affinity": [
+    0
+  ],
+  "creation_time": 1793613753.362223,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 24780,
+  "utc": "2026-11-02T10:02:33.360912+00:00",
+  "wait_pending": true
+}

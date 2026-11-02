@@ -1,0 +1,73 @@
+{
+  "flags": {
+    "api_read": false,
+    "broker_read": false,
+    "fit_performed": false,
+    "inference_from_saved_weights": true,
+    "producer_imported": false,
+    "production_changed": false,
+    "promotion_approved": false,
+    "raw_read": false,
+    "seen_development": true
+  },
+  "inputs": {
+    "auditor": {
+      "bytes": 48908,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_daily_adaptation_v2.py",
+      "sha256": "d8813052412dbff001bae192f0d3c680808c78da458f1de54674e4331ef625a9"
+    },
+    "context_helper": {
+      "bytes": 61750,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_models.py",
+      "sha256": "3eb6b9795ad260971435259858f86d3c00111bcc141973faf986411d4a68ad99"
+    },
+    "contract": {
+      "bytes": 12317,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\DAILY_ADAPTATION_CONTRACT_20261101.md",
+      "sha256": "5d388e484435c8fe23d40476c02928887c6ab5487af62197e5e74f08c1fe0047"
+    },
+    "producer_exit": {
+      "bytes": 1262,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\exit.json",
+      "sha256": "54021b954d522e0c9535b237de45a63da14a39e91e12e71fe90546d351f9f0d0"
+    },
+    "producer_manifest": {
+      "bytes": 42358,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\manifest.json",
+      "sha256": "7decb3e2baf360d807fd849604013728f5fe05c48dcd3302c0b270a1440d2206"
+    },
+    "tests": {
+      "bytes": 28492,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_daily_adaptation_v2.py",
+      "sha256": "6bc6d92dcbba460fa809527c41197c94a1d7409f85f2937a926efe08925d39d6"
+    },
+    "v4_helper": {
+      "bytes": 82700,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_adaptation_v4.py",
+      "sha256": "0723696ae01dcc86af7c2af8e8fdc2e3b281ba913987a65d95bd4703c959aa9c"
+    }
+  },
+  "limitations": "Independent reconstruction given saved weights; sklearn training was not repeated.",
+  "numeric": {
+    "books": 8,
+    "daily_scores": 612,
+    "diagnostics": {
+      "candidate_rows": 612,
+      "state_rows": 178,
+      "top1_changed": 2
+    },
+    "journal": {
+      "fits": 136,
+      "rows": 272
+    },
+    "new_states": 136,
+    "plans": 178,
+    "reused_states": 42,
+    "saved_sklearn_version": "1.8.0",
+    "scores": 2448,
+    "sessions": 178,
+    "validated_states": 178
+  },
+  "schema": "weekly_daily_adaptation_audit_v1",
+  "status": "PASS_INDEPENDENT_DAILY_ADAPTATION_RECONSTRUCTION_GIVEN_SAVED_WEIGHTS_NOT_REFIT"
+}

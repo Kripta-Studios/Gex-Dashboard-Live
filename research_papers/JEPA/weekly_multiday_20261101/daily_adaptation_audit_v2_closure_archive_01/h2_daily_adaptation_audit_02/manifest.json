@@ -1,0 +1,8 @@
+{
+  "audit.json": {
+    "bytes": 2983,
+    "sha256": "383edce65b16b316dcf71f2197a716d71501495f704040e858cea9354511b2b9"
+  },
+  "schema": "weekly_daily_adaptation_audit_manifest_v1",
+  "status": "PASS_INDEPENDENT_DAILY_ADAPTATION_RECONSTRUCTION_GIVEN_SAVED_WEIGHTS_NOT_REFIT"
+}
