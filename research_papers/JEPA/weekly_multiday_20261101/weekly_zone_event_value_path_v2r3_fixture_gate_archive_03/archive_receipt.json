@@ -1,0 +1,49 @@
+{
+  "schema": "weekly_zone_event_value_path_v2r3_fixture_gate_archive_receipt_v3",
+  "status": "PASS_EXACT_PRE_CHILD_GATE_ARCHIVE",
+  "closed_utc": "2026-11-02T17:39:02.0495230Z",
+  "source_file_count": 53,
+  "source_total_bytes": 14799486,
+  "source_copy_differences": 0,
+  "snapshot_count": 49,
+  "failure_stage": "compile",
+  "failure_utc": "2026-11-02T17:35:38.985461+00:00",
+  "error": "ValueError: 2GB RAM/commit gate unmet",
+  "child_created": false,
+  "completed": [],
+  "compile_executed": false,
+  "ruff_executed": false,
+  "pytest_executed": false,
+  "formal_suite_pass": false,
+  "real_value_audit_executed": false,
+  "retry": false,
+  "closing_pin_differences": [],
+  "preflight_gate": {
+    "utc": "2026-11-02T17:35:38.190424+00:00",
+    "available_ram_bytes": 4700594176,
+    "free_commit_bytes": 2002718720,
+    "disk_free_bytes": 23867486208,
+    "passed": true
+  },
+  "compile_gate": {
+    "utc": "2026-11-02T17:35:38.977691+00:00",
+    "available_ram_bytes": 4677763072,
+    "free_commit_bytes": 1969106944,
+    "disk_free_bytes": 23865503744,
+    "passed": false
+  },
+  "minimum_bytes": 2000000000,
+  "cpu_affinity_mask": 1,
+  "thread_variables_count": 10,
+  "thread_variables_all_one": true,
+  "cuda_visible_devices": "-1",
+  "future_bounded_wait_harness04_included": false,
+  "old_attempt_unadoptable": true,
+  "original_snapshots_immutable": true,
+  "raw_opened": false,
+  "git_used": false,
+  "manifest": {
+    "bytes": 38866,
+    "sha256": "5dc3dd0eb71dc4e5c9fec35d6581bf8803ae5bdab084f4f785765f38bee610d8"
+  }
+}

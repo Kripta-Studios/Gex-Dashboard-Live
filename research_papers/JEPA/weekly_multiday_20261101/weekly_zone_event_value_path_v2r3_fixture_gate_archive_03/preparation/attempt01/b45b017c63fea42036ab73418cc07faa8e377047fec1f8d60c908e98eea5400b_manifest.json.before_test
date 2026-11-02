@@ -1,0 +1,124 @@
+{
+  "calendar_pin": {
+    "first_date": "20260701",
+    "json_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_calendar_01\\calendar.json",
+    "json_sha256": "ac9bd2569d91e9bd9b0475d6f5e2d5400b2816cc1d1d0d9ec98c69e4dbe2e72b",
+    "last_date": "20260917",
+    "last_eligible_entry": "20260915",
+    "parquet_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_calendar_01\\calendar.parquet",
+    "parquet_sha256": "e16ef041efadc0f6914585540e19e9c04fcb05f1597952137e4f5bcf06de8c78",
+    "row_count": 165,
+    "session_count": 55,
+    "ticker_count": 3
+  },
+  "created_utc": "2026-11-01T14:59:41.463324+00:00",
+  "files": {
+    "candidates.jsonl": {
+      "bytes": 236850,
+      "sha256": "c1aae6b9d45240fe712aabceb296b8d42506b12523465eb8755a8c6939045864"
+    },
+    "coverage.json": {
+      "bytes": 151653,
+      "sha256": "5ce9ac8fef25057fe867b46d4ff9ebf224391ae0b538527d402d3afa8607a5c5"
+    },
+    "inventory.json": {
+      "bytes": 327384,
+      "sha256": "f633d0ee192f28650698a4033ee7f6d2dc00dad07aa38239c40e9e2b5092ea5c"
+    },
+    "inventory_manifest.json": {
+      "bytes": 197,
+      "sha256": "5b39e0796599fa72b5d74d029885a24fd57fada207f12989576737aa46d75b2f"
+    }
+  },
+  "flags": {
+    "no_fit": true,
+    "no_recalibration": true,
+    "no_refit": true,
+    "no_selection": true,
+    "not_oos": true,
+    "not_promotion": true,
+    "not_technical_readiness": true
+  },
+  "implementation_pins": {
+    "builder_v2": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_dataset_v2.py",
+      "sha256": "ec19e2c9066f0bb6103526ccf30a5b156c69a25a96349220d9fd680a92822945"
+    },
+    "calendar_json": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_calendar_01\\calendar.json",
+      "sha256": "ac9bd2569d91e9bd9b0475d6f5e2d5400b2816cc1d1d0d9ec98c69e4dbe2e72b"
+    },
+    "calendar_manifest": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_calendar_01\\manifest.json",
+      "sha256": "5a530747f2c97704869d87c04d09bba3cc00125f38a8a78454c2d459a2ea502c"
+    },
+    "calendar_parquet": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_q3_partial_calendar_01\\calendar.parquet",
+      "sha256": "e16ef041efadc0f6914585540e19e9c04fcb05f1597952137e4f5bcf06de8c78"
+    },
+    "calibration_grid": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\calibration_grid.json",
+      "sha256": "0b587bedbabc1cb405c203f11910e5ed10d7ea025e529a98f4ebf2daa1049ed4"
+    },
+    "clock_amendment": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\H2_CLOCK_FILTER_V2_AMENDMENT.md",
+      "sha256": "9210c6e50094e5745f80c5e03f577f6bd673263f84d3c3ef764ad76b22ca56eb"
+    },
+    "conditional_means": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\conditional_means.json",
+      "sha256": "a8dc329233ce431b282c500e27cf91ac91d845cbb6a1fc752cee36026aef3f90"
+    },
+    "evaluator_v2": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_h2_ev_v2.py",
+      "sha256": "8a9e75855d542a12662e5c812583f2ef86042f5c3ae1bbbad73c16042e063476"
+    },
+    "extension_contract": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_H2_2026Q3_PARTIAL_EXTENSION_CONTRACT.md",
+      "sha256": "f18a57e196d73e5477b738c86ec9af658eb15cbdac659dcabf1ccce2cfe5ac7d"
+    },
+    "h1_dataset_manifest": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\manifest.json",
+      "sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8"
+    },
+    "h1_evaluation_manifest": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\manifest.json",
+      "sha256": "54dc2d6ced2bb625a71fdae39b8ab2e417a576482ea6a99047df4ce8b6b1ad96"
+    },
+    "h2_contract": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ECONOMIC_H2_CONTRACT.md",
+      "sha256": "245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5"
+    },
+    "model": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\model.json",
+      "sha256": "68712c7c326d2337a34f8401579ddc52a4dab0e3f505c8c4ff2f1b1d51c03fb4"
+    },
+    "source_pilot": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py",
+      "sha256": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878"
+    },
+    "transform": {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_ev_v2_01\\transform.json",
+      "sha256": "db4be1e1863ab825117fac6278023fe0b5036ba1454d44243266a5eeb3f9736b"
+    },
+    "wrapper": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_q3_partial_extension.py",
+      "sha256": "a29a72cbd6afeb5d87a05ef5b9908bd0c40514bd6eee0a17c736e5da103b97df"
+    }
+  },
+  "schema": "weekly_h2_q3_partial_dataset_manifest_v1",
+  "scope": {
+    "first_date": "20260701",
+    "last_date": "20260917",
+    "last_eligible_entry": "20260915",
+    "row_count": 165,
+    "session_count": 55,
+    "ticker_count": 3
+  },
+  "source_inventory": {
+    "bytes": 327384,
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\inventory.json",
+    "sha256": "f633d0ee192f28650698a4033ee7f6d2dc00dad07aa38239c40e9e2b5092ea5c"
+  },
+  "split": "Q3_PARTIAL_2026_SEEN_DEVELOPMENT",
+  "status": "COMPLETE_WEEKLY_H2_Q3_PARTIAL_DATASET_NOT_EVALUATED"
+}

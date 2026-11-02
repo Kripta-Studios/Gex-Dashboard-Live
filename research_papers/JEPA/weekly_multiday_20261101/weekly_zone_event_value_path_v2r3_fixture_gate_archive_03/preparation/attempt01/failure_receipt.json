@@ -1,0 +1,12 @@
+{
+  "attempt": "attempt01",
+  "child_created": false,
+  "closing_pin_differences": [],
+  "completed": [],
+  "error": "ValueError: 2GB RAM/commit gate unmet",
+  "real_value_audit_executed": false,
+  "retry": false,
+  "stage": "compile",
+  "status": "RESOURCE_OR_DISK_GATE_REJECTED_BEFORE_AUDITOR_FIXTURE_CHILD",
+  "utc": "2026-11-02T17:35:38.985461+00:00"
+}
