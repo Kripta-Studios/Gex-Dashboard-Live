@@ -1,0 +1,7 @@
+{
+  "inventory.json": {
+    "bytes": 5589855,
+    "sha256": "099dcf065a62705cbd88f2c1b90b2e4a9b99ff4d994ad703634101920c934b12"
+  },
+  "schema": "weekly_h2_inventory_manifest_v1"
+}

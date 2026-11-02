@@ -1,0 +1,103 @@
+{
+  "status": "PAUSED_BY_EXPLICIT_USER_ORDER",
+  "pause_tool_utc": "2026-11-02T18:01:52Z",
+  "observed_utc": "2026-11-02T18:02:52.4334434Z",
+  "goal_status": "paused",
+  "own_python_count": 0,
+  "own_python_processes": [],
+  "runtime06_roots": [
+    {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_06",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_observer_06",
+      "exists": false
+    },
+    {
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_06",
+      "exists": false
+    }
+  ],
+  "no_process_stopped": true,
+  "git_head": "344badb7b307f3d3b671901dfb60db31dfcaf5f3",
+  "staged_paths": [],
+  "pins": [
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_value_paths_audit06_20261102.py",
+      "bytes": 45860,
+      "sha256": "e051b1cfef41cbbff1e24f8b74e69940ae9869a3d207a9b8eea9ddd94364d0dc"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_B06_AUDIT_RUNTIME_BINDING_20261102.md",
+      "bytes": 4314,
+      "sha256": "a62ef18805190e0835b9388bef69a5974d26b61144c3d4a99ceafa384e60b54e"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2R3_FINAL_IMPLEMENTATION_REVIEW_20261102.md",
+      "bytes": 3153,
+      "sha256": "756a8e9321c7ea728e2e9692cba5be2c5b3a8001aef249d79a3cef8e14a6b57f"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_REVISIT_MECHANICAL_REPLAY_DRAFT_20261102.md",
+      "bytes": 14258,
+      "sha256": "4ea0fe7b149c04f8859ea1e3b7fa1058a2d826569b6b054fbefab10c5ba16dc7"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\bounded_resource_wait.py",
+      "bytes": 17926,
+      "sha256": "33873bfab0549f390cd3973ab3d9af07a19d5df643f44d483bd17c74140c07a9"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_value_paths_v2r3.py",
+      "bytes": 120016,
+      "sha256": "effc36ce5cc496698f9aca1ea496046c89ca0d8e0deabe3f354dd892a94a5643"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths_v2r3.py",
+      "bytes": 52481,
+      "sha256": "30686f927bfdd566ab1a355bd2c42ded7be181198320fe8ea51911d9d2966b83"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_bounded_resource_wait.py",
+      "bytes": 18115,
+      "sha256": "330727ae60bac42ca89b623a1064a50bc0fade8ce52f9d61ec709fa5d6bd2678"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_geometry_1030.py",
+      "bytes": 73030,
+      "sha256": "ebe7c8984e2e7eb3806193e7c891dbbb0d0449b19e13e0657d0b68cdbe0d1b01"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_geometry_1030.py",
+      "bytes": 93663,
+      "sha256": "f2d17a789bacf813be3b56652eab98fb4388afea8aaa4d691080e563cdc8b01e"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_build_weekly_zone_geometry_1030.py",
+      "bytes": 35739,
+      "sha256": "ec6aebc5c74d8dcc62e3a10a6ee2d4e722b1e6f58f84c4f56436abbd294dbcd5"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_geometry_1030.py",
+      "bytes": 55343,
+      "sha256": "e010c83e6891cf600b5ee6cee16cc5e2eb9a269b6bbd27270ffc3cdaa0f53848"
+    }
+  ],
+  "foreign_files_preserved": [
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\MASTER_KING_NODE_RECORD_V5.xlsx",
+      "sha256": "ef8c5a0ddf5a93d9ca763c34146674ff5b6e775e1ee0f95320443deab30bdabb"
+    },
+    {
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\live_king_node.py",
+      "sha256": "29a3264ebe7d6592aac63fb68a614cfef3fa328a5c92266f6113ef4b841d521e"
+    }
+  ],
+  "known_sessions_closed": [
+    94312,
+    40423,
+    49287
+  ],
+  "notes": "Only documentation and read-only stop verification after explicit pause. B06 never launched. Foreign processes untouched."
+}

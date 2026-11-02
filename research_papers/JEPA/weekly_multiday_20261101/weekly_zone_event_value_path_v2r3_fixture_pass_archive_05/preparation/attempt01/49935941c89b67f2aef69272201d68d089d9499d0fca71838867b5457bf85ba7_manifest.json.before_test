@@ -1,0 +1,157 @@
+{
+  "created_utc": "2026-11-02T10:55:41.156896+00:00",
+  "flags": {
+    "arrays_read": false,
+    "fit_performed": false,
+    "inference_performed": false,
+    "outcomes_read": false,
+    "parquet_footers_read": false,
+    "promotion_approved": false,
+    "raw_files_hashed": false,
+    "raw_values_read": false,
+    "replay_performed": false,
+    "selected_policy": null,
+    "technical_ready": false
+  },
+  "inputs": {
+    "auditor": {
+      "bytes": 41573,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_source_plan.py",
+      "sha256": "118a349f4ca44e25f5764e7082e0775010fdf6f6a35fe3876c972af223d2762c"
+    },
+    "auditor_tests": {
+      "bytes": 10098,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_source_plan.py",
+      "sha256": "289b00ca94cb4414b3f6db2cba70c1b7641e9e55a9f87f9b5a0ceb925a3da58e"
+    },
+    "contract": {
+      "bytes": 10032,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_CONTRACT_20261102.md",
+      "sha256": "c1891e794cab794d5f6570f99d838a888663a48b8ccededd4d96d27a63173d65"
+    },
+    "h2_boundary_bridge_01/inventory.json": {
+      "bytes": 14721,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\inventory.json",
+      "sha256": "599ca400fecae12ce4098187a45af3ee0cf8c1b070e060d8c84e422ce92c6161"
+    },
+    "h2_boundary_bridge_01/inventory_manifest.json": {
+      "bytes": 330,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\inventory_manifest.json",
+      "sha256": "0a7a5fab0f932d23fdf9a3140027f99eb85ccd958b79ef55152c53ab5ced70f2"
+    },
+    "h2_boundary_bridge_01/manifest.json": {
+      "bytes": 4748,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\manifest.json",
+      "sha256": "9d1455c601ac38224c4f56365f20c3fb31978e997f8652454dbc69807e0abb86"
+    },
+    "h2_boundary_bridge_01/unified_calendar.json": {
+      "bytes": 232573,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_boundary_bridge_01\\unified_calendar.json",
+      "sha256": "be622bb24aca35448594743dfeb5236e6b2d08a4410109b20302891f8c1fa7d6"
+    },
+    "h2_dataset_v2_01/inventory.json": {
+      "bytes": 5589855,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\inventory.json",
+      "sha256": "099dcf065a62705cbd88f2c1b90b2e4a9b99ff4d994ad703634101920c934b12"
+    },
+    "h2_dataset_v2_01/inventory_manifest.json": {
+      "bytes": 187,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\inventory_manifest.json",
+      "sha256": "c417e67f3499522d4ebd4a21bf28d1cba8ce249ef2d38a1352001216714bb899"
+    },
+    "h2_dataset_v2_01/manifest.json": {
+      "bytes": 1541,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\manifest.json",
+      "sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8"
+    },
+    "h2_dataset_v2_extension_2026q3_partial_01/inventory.json": {
+      "bytes": 327384,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\inventory.json",
+      "sha256": "f633d0ee192f28650698a4033ee7f6d2dc00dad07aa38239c40e9e2b5092ea5c"
+    },
+    "h2_dataset_v2_extension_2026q3_partial_01/inventory_manifest.json": {
+      "bytes": 197,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\inventory_manifest.json",
+      "sha256": "5b39e0796599fa72b5d74d029885a24fd57fada207f12989576737aa46d75b2f"
+    },
+    "h2_dataset_v2_extension_2026q3_partial_01/manifest.json": {
+      "bytes": 6184,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\manifest.json",
+      "sha256": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b"
+    },
+    "producer/entry_plan.jsonl": {
+      "bytes": 1018910,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_01\\entry_plan.jsonl",
+      "sha256": "0db0065f2dcdd254122a4c4575ecb9c752318cab3a90666ad8215aef922d91bb"
+    },
+    "producer/exit.json": {
+      "bytes": 1307,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\exit.json",
+      "sha256": "b8f34b02dccf570f0f3ebaaa4a120fbaded81e5d76645ac7f1f68de688bf1a9b"
+    },
+    "producer/manifest.json": {
+      "bytes": 5094,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_01\\manifest.json",
+      "sha256": "a0a9d330992d7f5768550c5b60401a701e1c1b02caec4a0967de50b7c7f13161"
+    },
+    "producer/summary.json": {
+      "bytes": 1398,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_01\\summary.json",
+      "sha256": "612ecf1abf18f973656aeda347f21efe563f5c84b9cc06f96e22383ed19b3b39"
+    },
+    "producer/weekly_sources.jsonl": {
+      "bytes": 2367532,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_01\\weekly_sources.jsonl",
+      "sha256": "59081a049d11a0403204ca06e62ef4661bb6de3cd042548e081c10f8eaddd1f7"
+    },
+    "producer_implementation/builder": {
+      "bytes": 43609,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_event_source_plan.py",
+      "sha256": "9a412a3ad4b1ae6d527c92c7b1307dfceecb2aec1b4d81cfff70acf8e71c1270"
+    },
+    "producer_implementation/contract": {
+      "bytes": 10032,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_CONTRACT_20261102.md",
+      "sha256": "c1891e794cab794d5f6570f99d838a888663a48b8ccededd4d96d27a63173d65"
+    },
+    "producer_implementation/tests": {
+      "bytes": 16225,
+      "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_build_weekly_zone_event_source_plan.py",
+      "sha256": "ed4de57a2e4ff53f4f5f490377aa2a1338dba8aaf9b2939a028e9fad902e4121"
+    },
+    "producer_observer/D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\admission.json": {
+      "bytes": 6713,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\admission.json",
+      "sha256": "b49b4908907ff6441e0e141594ec9830da0fc516ea328960092133b13cbb69a5"
+    },
+    "producer_observer/D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\process.json": {
+      "bytes": 825,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\process.json",
+      "sha256": "61239dbfafecf9f2a01e3d75d2e03f6c477e01b0e52ef0ea75339b2b017ad85f"
+    },
+    "producer_observer/D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\resource_observation.json": {
+      "bytes": 5973,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\resource_observation.json",
+      "sha256": "dee6c5b8468a5bfd4eed208c6becadbe1f01bf026caa31394abffa70197bf1f7"
+    },
+    "producer_observer/D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\stderr.log": {
+      "bytes": 0,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "producer_observer/D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\stdout.log": {
+      "bytes": 0,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "outputs": {
+    "audit.json": {
+      "bytes": 9071,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_audit_01\\audit.json",
+      "sha256": "1b71077525d146cd7e2166076f987afd315fe46e27c15e51c4f7555be06299cd"
+    }
+  },
+  "schema": "weekly_zone_event_source_plan_audit_manifest_v1",
+  "status": "PASS_INDEPENDENT_WEEKLY_ZONE_EVENT_SOURCE_PLAN_METADATA_AUDIT"
+}

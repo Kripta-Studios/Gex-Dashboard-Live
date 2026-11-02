@@ -1,0 +1,26 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "-q",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_bounded_resource_wait.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths_v2r3.py"
+  ],
+  "cpu_affinity_mask": 1,
+  "creation_epoch": 1793642174.1411319,
+  "end_utc": "2026-11-02T17:56:29.491377+00:00",
+  "exit_code": 0,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 38108,
+  "process_times": {
+    "creation_epoch": 1793642174.1411319,
+    "exit_epoch": 1793642189.4537957,
+    "kernel_seconds": 4.25,
+    "user_seconds": 8.109375
+  },
+  "start_utc": "2026-11-02T17:56:14.140017+00:00"
+}

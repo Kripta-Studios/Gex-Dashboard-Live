@@ -1,0 +1,111 @@
+{
+  "authority_pins": {
+    "h1_candidates": {
+      "bytes": 4047694,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\candidates.jsonl",
+      "sha256": "c98f232a97a8a6f9221b5d3452424d71bec3684a6b037b258c8a5b0f8fb9d5ad"
+    },
+    "h1_coverage": {
+      "bytes": 2640341,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\coverage.json",
+      "sha256": "83ebf5704cb4f1c9ca7c2aff4cca749592f2e30b55978172ec1413a85cec6209"
+    },
+    "h1_manifest": {
+      "bytes": 1541,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\manifest.json",
+      "sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8"
+    },
+    "q3_candidates": {
+      "bytes": 236850,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\candidates.jsonl",
+      "sha256": "c1aae6b9d45240fe712aabceb296b8d42506b12523465eb8755a8c6939045864"
+    },
+    "q3_coverage": {
+      "bytes": 151653,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\coverage.json",
+      "sha256": "5ce9ac8fef25057fe867b46d4ff9ebf224391ae0b538527d402d3afa8607a5c5"
+    },
+    "q3_manifest": {
+      "bytes": 6184,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\manifest.json",
+      "sha256": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b"
+    }
+  },
+  "created_utc": "2026-11-01T18:00:31.700540+00:00",
+  "files": {
+    "candidates.jsonl": {
+      "bytes": 7567,
+      "sha256": "68aa06e7395d933a3e72e594455057305e1619557f0fe26de49a00ed96c15755"
+    },
+    "coverage_overlay.json": {
+      "bytes": 4798,
+      "sha256": "9d5ce1f71918b31938645fdfc5116ec481684c406bbde79f544612430338a0b8"
+    },
+    "inventory.json": {
+      "bytes": 14721,
+      "sha256": "599ca400fecae12ce4098187a45af3ee0cf8c1b070e060d8c84e422ce92c6161"
+    },
+    "inventory_manifest.json": {
+      "bytes": 330,
+      "sha256": "0a7a5fab0f932d23fdf9a3140027f99eb85ccd958b79ef55152c53ab5ced70f2"
+    },
+    "unified_calendar.json": {
+      "bytes": 232573,
+      "sha256": "be622bb24aca35448594743dfeb5236e6b2d08a4410109b20302891f8c1fa7d6"
+    }
+  },
+  "flags": {
+    "development_seen": true,
+    "economic_evaluation_performed": false,
+    "fit_performed": false,
+    "not_oos": true,
+    "originals_modified": false,
+    "promotion_approved": false
+  },
+  "implementation_pins": {
+    "bridge_contract": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+    },
+    "builder_v2": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_dataset_v2.py",
+      "sha256": "ec19e2c9066f0bb6103526ccf30a5b156c69a25a96349220d9fd680a92822945"
+    },
+    "clock_amendment": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\H2_CLOCK_FILTER_V2_AMENDMENT.md",
+      "sha256": "9210c6e50094e5745f80c5e03f577f6bd673263f84d3c3ef764ad76b22ca56eb"
+    },
+    "h2_contract": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ECONOMIC_H2_CONTRACT.md",
+      "sha256": "245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5"
+    },
+    "source_pilot": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py",
+      "sha256": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878"
+    },
+    "wrapper": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_boundary_bridge.py",
+      "sha256": "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2"
+    }
+  },
+  "new_candidate_id_count": 6,
+  "old_candidate_id_count": 3234,
+  "schema": "weekly_h2_boundary_bridge_manifest_v1",
+  "scope": {
+    "entry_dates": [
+      "20260629",
+      "20260630"
+    ],
+    "nominal_source_count": 6,
+    "plan_count": 6,
+    "segment_dates": [
+      "20260629",
+      "20260630",
+      "20260701",
+      "20260702"
+    ],
+    "ticker_count": 3
+  },
+  "split": "H1_Q3_BOUNDARY_2026_SEEN_DEVELOPMENT",
+  "status": "COMPLETE_WEEKLY_H2_BOUNDARY_BRIDGE_NOT_EVALUATED"
+}
