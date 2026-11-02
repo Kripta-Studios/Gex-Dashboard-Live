@@ -1,0 +1,35 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_source_plan.py",
+    "--execute-reviewed-audit",
+    "--producer-manifest-sha256",
+    "a0a9d330992d7f5768550c5b60401a701e1c1b02caec4a0967de50b7c7f13161",
+    "--producer-exit-path",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\exit.json",
+    "--producer-exit-sha256",
+    "b8f34b02dccf570f0f3ebaaa4a120fbaded81e5d76645ac7f1f68de688bf1a9b",
+    "--producer-builder-sha256",
+    "9a412a3ad4b1ae6d527c92c7b1307dfceecb2aec1b4d81cfff70acf8e71c1270",
+    "--producer-tests-sha256",
+    "ed4de57a2e4ff53f4f5f490377aa2a1338dba8aaf9b2939a028e9fad902e4121",
+    "--auditor-sha256",
+    "118a349f4ca44e25f5764e7082e0775010fdf6f6a35fe3876c972af223d2762c",
+    "--auditor-tests-sha256",
+    "289b00ca94cb4414b3f6db2cba70c1b7641e9e55a9f87f9b5a0ceb925a3da58e",
+    "--contract-sha256",
+    "c1891e794cab794d5f6570f99d838a888663a48b8ccededd4d96d27a63173d65"
+  ],
+  "cpu_affinity": [
+    0
+  ],
+  "creation_time": 1793616938.6076891,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 24408,
+  "utc": "2026-11-02T10:55:38.606772+00:00",
+  "wait_pending": true
+}

@@ -1,0 +1,81 @@
+{
+  "schema": "weekly_zone_event_source_plan_audit_closure_archive_receipt_v1",
+  "status": "ARCHIVED_CLOSED_AUDIT_AND_OBSERVER_BYTE_EXACT",
+  "source_roots": {
+    "audit": "D:/GexResearchArtifacts/weekly_multiday_20261101/weekly_zone_event_source_plan_audit_01",
+    "observer": "D:/GexResearchArtifacts/weekly_multiday_20261101/weekly_zone_event_source_plan_audit_observer_01"
+  },
+  "destination_root": "C:/Users/Álvaro Schwiedop/Desktop/KriptaStudios/Gex-Dashboard-Live/research_papers/JEPA/weekly_multiday_20261101/weekly_zone_event_source_plan_audit_closure_archive_01",
+  "files": [
+    {
+      "source": "audit/audit.json",
+      "destination": "audit/audit.json",
+      "bytes": 9071,
+      "sha256": "1b71077525d146cd7e2166076f987afd315fe46e27c15e51c4f7555be06299cd"
+    },
+    {
+      "source": "audit/manifest.json",
+      "destination": "audit/manifest.json",
+      "bytes": 8945,
+      "sha256": "49935941c89b67f2aef69272201d68d089d9499d0fca71838867b5457bf85ba7"
+    },
+    {
+      "source": "observer/admission.json",
+      "destination": "observer/admission.json",
+      "bytes": 9001,
+      "sha256": "a8e6225b841ae4f0019ee7efd35ddf7ce7fabdacbf6ce422ae6b736c0b43105e"
+    },
+    {
+      "source": "observer/exit.json",
+      "destination": "observer/exit.json",
+      "bytes": 1337,
+      "sha256": "bfdf36bfb7f636f27a391ad0b0ed38be5306e69b0c5be144d0c0599de9d65362"
+    },
+    {
+      "source": "observer/process.json",
+      "destination": "observer/process.json",
+      "bytes": 1401,
+      "sha256": "eb51777635716b5b88a817cae1678c27efdf9483ee34801588f8bac6fde7e9cf"
+    },
+    {
+      "source": "observer/resource_observation.json",
+      "destination": "observer/resource_observation.json",
+      "bytes": 7674,
+      "sha256": "991874ff338bfb9bcd3b2a28d036cfc78b1329abf63dddc31a66df63573c6916"
+    },
+    {
+      "source": "observer/stderr.log",
+      "destination": "observer/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "observer/stdout.log",
+      "destination": "observer/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "payload_totals": {
+    "file_count": 8,
+    "total_bytes": 37429,
+    "audit_files": 2,
+    "observer_files": 6
+  },
+  "compact_pin_verification": {
+    "audit_sha256": "1b71077525d146cd7e2166076f987afd315fe46e27c15e51c4f7555be06299cd",
+    "manifest_sha256": "49935941c89b67f2aef69272201d68d089d9499d0fca71838867b5457bf85ba7",
+    "manifest_input_pins_rehashed": 26,
+    "manifest_output_pins_rehashed": 1,
+    "observer_exit_sha256": "bfdf36bfb7f636f27a391ad0b0ed38be5306e69b0c5be144d0c0599de9d65362",
+    "observer_exit_listed_files_rehashed": 5,
+    "observer_exit_rehashed": true,
+    "zero_differences": true
+  },
+  "scope": {
+    "raw_market_files_opened": false,
+    "raw_market_files_statted": false,
+    "tests_or_runtime_repeated": false,
+    "git_used": false
+  }
+}
