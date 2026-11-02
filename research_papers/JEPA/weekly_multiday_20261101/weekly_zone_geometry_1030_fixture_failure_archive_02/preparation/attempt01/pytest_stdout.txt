@@ -1,0 +1,106 @@
+F....FF......................................................F.E......   [100%]
+=================================== ERRORS ====================================
+___________________ ERROR at setup of test_authority_units ____________________
+file C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\test_audit_weekly_zone_geometry_1030.py, line 727
+  def test_authority_units(inputs: dict[str, audit.Pin]) -> dict[str, audit.Pin]:
+E       fixture 'inputs' not found
+>       available fixtures: anyio_backend, anyio_backend_name, anyio_backend_options, cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, engines, free_tcp_port, free_tcp_port_factory, free_udp_port, free_udp_port_factory, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\test_audit_weekly_zone_geometry_1030.py:727
+================================== FAILURES ===================================
+________________ test_exact_schema_names_types_and_nullability ________________
+
+producer = <module 'c_geometry_producer_under_test' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_geometry_1030.py'>
+
+    def test_exact_schema_names_types_and_nullability(producer):
+        states = producer.states_schema()
+        levels = producer.levels_schema()
+        assert len(states) == 39 and len(levels) == 20
+        assert states.names == list(producer.SEMANTIC_STATE_COLUMNS) + [
+            "cache_metadata_path", "cache_metadata_sha256", "cache_npz_path",
+            "cache_npz_sha256", "clock_basis", "oi_clock_basis",
+            "oi_assumed_availability", "clock_delay_applied", "receipt_status",
+        ]
+        assert levels.names == list(producer.SEMANTIC_LEVEL_COLUMNS) + [
+            "provenance_components_json", "cache_npz_path", "cache_npz_sha256",
+            "clock_basis", "oi_clock_basis", "receipt_status",
+        ]
+        assert [field.nullable for field in states][:9] == [False] * 8 + [True]
+        assert all(not field.nullable for field in levels)
+        assert str(states.field("trade_date").type) == "date32[day]"
+        assert str(states.field("state_clock_local").type) == "timestamp[ns]"
+>       assert str(levels.field("source_mask").type) == "uint8"
+E       AssertionError: assert 'int16' == 'uint8'
+E         
+E         - uint8
+E         + int16
+
+test_build_weekly_zone_geometry_1030.py:105: AssertionError
+___________________ test_gamma_full_short_is_tau_sensitive ____________________
+
+producer = <module 'c_geometry_producer_under_test' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_geometry_1030.py'>
+engines = (<module 'c_geometry_pinned_engines.session_level_engine' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\G...chwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\session_clock.py'>)
+
+    def test_gamma_full_short_is_tau_sensitive(producer, engines):
+        engine, clocks = engines
+        units = []
+        for close_i in (390, 210):
+            calendar, admission, metadata, cache = artificial_unit(producer, close_i)
+            _state, levels = producer.compute_identity_geometry(calendar, admission, metadata, cache, engine, clocks)
+            weights = [
+                component["weight_f64"]
+                for level in levels
+                for component in json.loads(level["semantic_components_json"])
+                if component["kind"] == "WALL" and component["name"] == "BS_GAMMA_PROXY"
+            ]
+            units.append(weights)
+>       assert units[0] and units[1] and units[0] != units[1]
+E       assert ([])
+
+test_build_weekly_zone_geometry_1030.py:179: AssertionError
+_________ test_clustering_is_non_chaining_and_oi_tie_breaks_by_strike _________
+
+producer = <module 'c_geometry_producer_under_test' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_geometry_1030.py'>
+engines = (<module 'c_geometry_pinned_engines.session_level_engine' from 'C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\G...chwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\session_clock.py'>)
+
+    def test_clustering_is_non_chaining_and_oi_tie_breaks_by_strike(producer, engines):
+        engine, clocks = engines
+        raw = [
+            {"center": 0.0, "source_mask": 1, "name": "A"},
+            {"center": 1.5, "source_mask": 2, "name": "B"},
+            {"center": 3.0, "source_mask": 4, "name": "C"},
+        ]
+        clustered = engine.deduplicate_levels(raw, .75)
+        assert [row["n_components"] for row in clustered] == [2, 1]
+        _calendar, _admission, _metadata, cache = artificial_unit(producer)
+        cache["oi_value"][:] = 100
+        oi = engine.available_oi_matrix(cache, clocks.FULL)[60]
+        levels = engine.causal_levels(cache, oi, 60, 100.0, 102.0, .1, clocks.FULL)
+        call_oi = [
+            item for level in levels for item in json.loads(level["components_json"])
+            if item["name"] == "OI" and item["source_mask"] == 2
+        ]
+>       assert [item["center"] for item in call_oi] == [95.0, 100.0, 105.0]
+E       assert [] == [95.0, 100.0, 105.0]
+E         
+E         Right contains 3 more items, first extra item: 95.0
+E         Use -v to get more diff
+
+test_build_weekly_zone_geometry_1030.py:199: AssertionError
+__________________ test_coverage_exact_keyset_and_equations ___________________
+
+    def test_coverage_exact_keyset_and_equations() -> None:
+        coverage = audit.coverage_from_states(state_rows_for_coverage(), 12345)
+>       assert len(coverage) == 21 and coverage["available_sources"] == 2772
+E       AssertionError: assert (18 == 21)
+E        +  where 18 = len({'available_sources': 2772, 'calendar_rows': 2790, 'data_scope': 'SEEN_DEVELOPMENT', 'entry_frozen_supported': True, ...})
+
+test_audit_weekly_zone_geometry_1030.py:659: AssertionError
+=========================== short test summary info ===========================
+FAILED test_build_weekly_zone_geometry_1030.py::test_exact_schema_names_types_and_nullability
+FAILED test_build_weekly_zone_geometry_1030.py::test_gamma_full_short_is_tau_sensitive
+FAILED test_build_weekly_zone_geometry_1030.py::test_clustering_is_non_chaining_and_oi_tie_breaks_by_strike
+FAILED test_audit_weekly_zone_geometry_1030.py::test_coverage_exact_keyset_and_equations
+ERROR test_audit_weekly_zone_geometry_1030.py::test_authority_units
+4 failed, 65 passed, 1 error in 7.14s

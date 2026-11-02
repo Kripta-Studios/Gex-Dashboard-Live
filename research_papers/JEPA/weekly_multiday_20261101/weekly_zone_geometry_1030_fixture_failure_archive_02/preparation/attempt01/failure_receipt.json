@@ -1,0 +1,24 @@
+{
+  "attempt": "attempt01",
+  "closing_pin_differences": [],
+  "completed": [
+    {
+      "exit_code": 0,
+      "stage": "compile"
+    },
+    {
+      "exit_code": 0,
+      "stage": "ruff"
+    },
+    {
+      "exit_code": 1,
+      "stage": "pytest"
+    }
+  ],
+  "exit_code": 1,
+  "real_geometry_runtime_executed": false,
+  "retry": false,
+  "stage": "pytest",
+  "status": "FORMAL_GEOMETRY_FIXTURE_STAGE_FAILED",
+  "utc": "2026-11-02T16:56:54.373661+00:00"
+}

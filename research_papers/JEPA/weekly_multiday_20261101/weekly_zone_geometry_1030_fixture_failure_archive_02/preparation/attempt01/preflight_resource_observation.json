@@ -1,0 +1,107 @@
+{
+  "child_created": false,
+  "cpu_affinity_mask": 1,
+  "cuda_visible_devices": "-1",
+  "disk_free_bytes": 25073741824,
+  "minimum_bytes": 2000000000,
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\build_cache.py": {
+      "bytes": 18248,
+      "sha256": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": {
+      "bytes": 31463,
+      "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\level_engine.py": {
+      "bytes": 27435,
+      "sha256": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\session_cache.py": {
+      "bytes": 2371,
+      "sha256": "6300a7f8e5c6c99101d32d642081f4b8dec170d3c40f2751c27f1642d55466f1"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\session_clock.py": {
+      "bytes": 1046,
+      "sha256": "1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\session_level_engine.py": {
+      "bytes": 21874,
+      "sha256": "f93d3be334a2326dbec5d742e217bce63449e1beaf46b35fa46be83f25548883"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\C_GEOMETRY_1030_ADMISSION_CONTRACT_20261102.md": {
+      "bytes": 14617,
+      "sha256": "c28572543c1658ab87b1083d60bfdfbdc059c57960c5240c54f98bef5cdd8027"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\C_GEOMETRY_1030_BINDING_FEASIBILITY_20261102.md": {
+      "bytes": 8652,
+      "sha256": "149fb9f9ddd3a01be24af1fd5f461a9ed7e0abad84d417837f11aff562d2f88a"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\C_GEOMETRY_1030_OPERATIONAL_DRAFT_20261102.md": {
+      "bytes": 20544,
+      "sha256": "88f76551957e73e37c5dd816b00ec17d035132186df5071be10a5c534368cb3f"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\C_GEOMETRY_AUDITOR_STATIC_REVIEW_20261102.md": {
+      "bytes": 2720,
+      "sha256": "b0985eb963eac2cd21d9562b28afe1153322664609d86c405e2b6704f8f13b5c"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\C_GEOMETRY_FIXTURE_LINT_CORRECTION_REVIEW_20261102.md": {
+      "bytes": 2176,
+      "sha256": "49c5c63ce7303c3305b8d3e01b41838e7e54f937844e26c63bed191ee159b8d9"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\C_GEOMETRY_PARALLEL_PREPARATION_AMENDMENT_20261102.md": {
+      "bytes": 3761,
+      "sha256": "f32d3bb23a830c9c67197926ab9defa847e5b347422b90fcf1d54d5bdb09b237"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\C_GEOMETRY_PARALLEL_PREPARATION_REVIEW_20261102.md": {
+      "bytes": 1212,
+      "sha256": "b3b056d2d447e407902a99d8567b437479ce1ee99e7efc7f62146e47c1fa2580"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\C_GEOMETRY_PRODUCER_STATIC_REVIEW_20261102.md": {
+      "bytes": 2679,
+      "sha256": "226123c6da553ecffbf14744d036d50d71e09c8a641c9a79f22c4cc283a1f1b6"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\C_GEOMETRY_WINDOWS_PUBLICATION_FEASIBILITY_20261102.md": {
+      "bytes": 5695,
+      "sha256": "f16d1a1c418fb51b5c5b180719c7a762ba338817a183c6006d472bc34ce13f31"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_geometry_1030.py": {
+      "bytes": 93663,
+      "sha256": "f2d17a789bacf813be3b56652eab98fb4388afea8aaa4d691080e563cdc8b01e"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_geometry_1030.py": {
+      "bytes": 73030,
+      "sha256": "ebe7c8984e2e7eb3806193e7c891dbbb0d0449b19e13e0657d0b68cdbe0d1b01"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_geometry_1030_fixtures02_20261102.py": {
+      "bytes": 16810,
+      "sha256": "8605b4a90455d9aed1671ccb20efe5d502462e5f3faf1c8a01a7aaf941648d39"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_geometry_1030.py": {
+      "bytes": 54939,
+      "sha256": "dfbf98cbb8b55f4c3f8a54b718e70e03eb1e0757546b30be9675bad596a26626"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_build_weekly_zone_geometry_1030.py": {
+      "bytes": 34454,
+      "sha256": "61725fe6d0b1c9f66c3c9541e07cb3f5e08029eef38e587b3d60c2229ab88e10"
+    }
+  },
+  "resources": {
+    "available_ram_bytes": 6070091776,
+    "free_commit_bytes": 3047796736
+  },
+  "stage": "preflight",
+  "thread_variables": {
+    "ARROW_NUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1",
+    "TBB_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "utc": "2026-11-02T16:56:45.736961+00:00"
+}

@@ -656,7 +656,14 @@ def state_rows_for_coverage() -> list[dict[str, object]]:
 
 def test_coverage_exact_keyset_and_equations() -> None:
     coverage = audit.coverage_from_states(state_rows_for_coverage(), 12345)
-    assert len(coverage) == 21 and coverage["available_sources"] == 2772
+    assert set(coverage) == {
+        "status", "calendar_rows", "available_sources", "missing_sources",
+        "h1_full_available", "h1_short_available", "q3_available", "h1_missing",
+        "q3_missing", "geometry_available", "invalid_ib", "invalid_state60",
+        "state_rows", "level_rows", "entry_frozen_supported",
+        "session_1030_reset_supported", "event_rules_adopted", "data_scope",
+    }
+    assert len(coverage) == 18 and coverage["available_sources"] == 2772
     assert coverage["h1_full_available"] == 2595 and coverage["h1_short_available"] == 24
     assert coverage["q3_available"] == 153 and coverage["h1_missing"] == 6
     assert coverage["q3_missing"] == 12 and coverage["level_rows"] == 12345
@@ -724,7 +731,7 @@ def test_manifest_exact_authorities_counts_outputs_and_scope(tmp_path: Path,
             audit.validate_manifest(changed, coverage, tmp_path, binding, inputs)
 
 
-def test_authority_units(inputs: dict[str, audit.Pin]) -> dict[str, audit.Pin]:
+def authority_units_for(inputs: dict[str, audit.Pin]) -> dict[str, audit.Pin]:
     authorities = {"binding_bundle", "binding_review", "calendar", "cache_admission",
                    "implementation", "resource_helper"}
     authorities.update(f"contract:{name}" for name in (
@@ -753,7 +760,7 @@ def closing_journal(identities: list[dict[str, object]], inputs: dict[str, audit
                          "gate": dict(gate),
                          "details": deepcopy(details) if phase == "COMPLETE" and details else {}})
             seq += 1
-    authority_units = test_authority_units(inputs)
+    authority_units = authority_units_for(inputs)
     admitted = next(iter(inputs.values()))
     admitted_info = Path(admitted.path).stat()
     authority_details = {"before": admitted.__dict__, "after": admitted.__dict__,
@@ -825,7 +832,7 @@ def test_journal_exact_lifecycles_identities_and_closing_pins(tmp_path: Path) ->
         writer.append(row["kind"], row["identity"], row["phase"], row["paths"], row["gate"], row["details"])
     writer.close()
     rows = audit.parse_jsonl(journal_path)
-    authority_units = test_authority_units(inputs)
+    authority_units = authority_units_for(inputs)
     audit.validate_producer_journal(rows, identities, inputs, outputs, producer_root, authority_units)
     changed = deepcopy(rows)
     completed = next(row for row in changed if row["kind"] == "CLOSING_INPUT" and row["phase"] == "COMPLETE")
@@ -867,7 +874,7 @@ def test_journal_available_identity_proves_exact_opened_arrays(tmp_path: Path) -
     outputs = {name: audit.Pin(str(producer_root / name), 2, "2" * 64) for name in
                ("geometry_states_1030.parquet", "geometry_levels_1030.parquet", "coverage.json", "manifest.json")}
     rows = closing_journal([identity], inputs, outputs, producer_root)
-    authority_units = test_authority_units(inputs)
+    authority_units = authority_units_for(inputs)
     audit.validate_producer_journal(rows, [identity], inputs, outputs, producer_root, authority_units)
     changed = deepcopy(rows)
     completed = next(row for row in changed if row["kind"] == "GEOMETRY_IDENTITY" and row["phase"] == "COMPLETE")

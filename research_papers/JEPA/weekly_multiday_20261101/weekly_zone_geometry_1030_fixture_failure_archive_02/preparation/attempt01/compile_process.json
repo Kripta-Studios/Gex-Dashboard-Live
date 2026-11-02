@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "py_compile",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_geometry_1030.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_build_weekly_zone_geometry_1030.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_geometry_1030.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_geometry_1030.py"
+  ],
+  "cpu_affinity_mask": 1,
+  "creation_epoch": 1793638605.7517197,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 36940,
+  "start_utc": "2026-11-02T16:56:45.750677+00:00",
+  "wait_pending": true
+}

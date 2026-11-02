@@ -102,9 +102,10 @@ def test_exact_schema_names_types_and_nullability(producer):
     assert all(not field.nullable for field in levels)
     assert str(states.field("trade_date").type) == "date32[day]"
     assert str(states.field("state_clock_local").type) == "timestamp[ns]"
-    assert str(levels.field("source_mask").type) == "uint8"
-    with pytest.raises((TypeError, ValueError, OverflowError)):
-        producer.pa.array([-1], type=levels.field("source_mask").type)
+    assert str(levels.field("source_mask").type) == "int16"
+    mask_values = producer.pa.array([1, 2, 4, 8, 16, 31],
+                                    type=levels.field("source_mask").type)
+    assert mask_values.to_pylist() == [1, 2, 4, 8, 16, 31]
     nan_values = producer.pa.array([float("nan")], type=levels.field("center").type)
     assert np.isnan(nan_values[0].as_py())
 
@@ -168,15 +169,38 @@ def test_gamma_full_short_is_tau_sensitive(producer, engines):
     units = []
     for close_i in (390, 210):
         calendar, admission, metadata, cache = artificial_unit(producer, close_i)
-        _state, levels = producer.compute_identity_geometry(calendar, admission, metadata, cache, engine, clocks)
-        weights = [
-            component["weight_f64"]
+        cache["spot"][:61] = np.linspace(100.0, 102.0, 61, dtype=np.float64)
+        state, levels = producer.compute_identity_geometry(
+            calendar, admission, metadata, cache, engine, clocks,
+        )
+        gamma_components = [
+            component
             for level in levels
             for component in json.loads(level["semantic_components_json"])
-            if component["kind"] == "WALL" and component["name"] == "BS_GAMMA_PROXY"
+            if component["kind"] == "WALL"
+            and component["name"] in {"CALL_BS_GAMMA_PROXY", "PUT_BS_GAMMA_PROXY"}
         ]
-        units.append(weights)
-    assert units[0] and units[1] and units[0] != units[1]
+        assert len(gamma_components) == 6
+        assert {component["name"] for component in gamma_components} == {
+            "CALL_BS_GAMMA_PROXY", "PUT_BS_GAMMA_PROXY",
+        }
+        assert {component["source_mask"] for component in gamma_components} == {8, 16}
+        gamma_by_strike = {
+            (component["name"], float.fromhex(component["strike_f64"])):
+                float.fromhex(component["weight_f64"])
+            for component in gamma_components
+        }
+        units.append((state, gamma_by_strike))
+    full_state, full_gamma = units[0]
+    short_state, short_gamma = units[1]
+    assert (full_state["spot_1030"], full_state["ib_low"], full_state["ib_high"]) == (
+        short_state["spot_1030"], short_state["ib_low"], short_state["ib_high"],
+    )
+    assert full_state["tau_years"] == 330 * 60 / (365 * 86400)
+    assert short_state["tau_years"] == 150 * 60 / (365 * 86400)
+    assert set(full_gamma) == set(short_gamma)
+    assert all(weight > 0 for weight in (*full_gamma.values(), *short_gamma.values()))
+    assert all(full_gamma[key] != short_gamma[key] for key in full_gamma)
 
 
 def test_clustering_is_non_chaining_and_oi_tie_breaks_by_strike(producer, engines):
@@ -194,9 +218,10 @@ def test_clustering_is_non_chaining_and_oi_tie_breaks_by_strike(producer, engine
     levels = engine.causal_levels(cache, oi, 60, 100.0, 102.0, .1, clocks.FULL)
     call_oi = [
         item for level in levels for item in json.loads(level["components_json"])
-        if item["name"] == "OI" and item["source_mask"] == 2
+        if item["name"] == "CALL_OI" and item["source_mask"] == 2
     ]
     assert [item["center"] for item in call_oi] == [95.0, 100.0, 105.0]
+    assert all(item["weight"] == 100.0 for item in call_oi)
 
 
 def test_oi_new_invalid_record_does_not_backfill(producer, engines):
