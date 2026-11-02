@@ -1,0 +1,98 @@
+{
+  "entries": [
+    {
+      "bytes": 5421626,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\audit_observer\\journal.jsonl",
+      "destination_sha256": "60fd1841fa621d82ecefdf8eebc7fd7472884c38839ab68be9cc142d3174ed98",
+      "relative_path_posix": "audit_observer/journal.jsonl",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_observer_04\\journal.jsonl",
+      "source_sha256_after": "60fd1841fa621d82ecefdf8eebc7fd7472884c38839ab68be9cc142d3174ed98",
+      "source_sha256_before": "60fd1841fa621d82ecefdf8eebc7fd7472884c38839ab68be9cc142d3174ed98"
+    },
+    {
+      "bytes": 23948,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\launcher_observer\\admission.json",
+      "destination_sha256": "d348b9ab7962dc1943bf8f52befa9e472c737e7dc8387a90eb5e49bff8c90357",
+      "relative_path_posix": "launcher_observer/admission.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_04\\admission.json",
+      "source_sha256_after": "d348b9ab7962dc1943bf8f52befa9e472c737e7dc8387a90eb5e49bff8c90357",
+      "source_sha256_before": "d348b9ab7962dc1943bf8f52befa9e472c737e7dc8387a90eb5e49bff8c90357"
+    },
+    {
+      "bytes": 358,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\launcher_observer\\exit.json",
+      "destination_sha256": "f1ac99c69196d1d0dac865763feacecc3561ad8c14bad8b3282010cbb1bb6505",
+      "relative_path_posix": "launcher_observer/exit.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_04\\exit.json",
+      "source_sha256_after": "f1ac99c69196d1d0dac865763feacecc3561ad8c14bad8b3282010cbb1bb6505",
+      "source_sha256_before": "f1ac99c69196d1d0dac865763feacecc3561ad8c14bad8b3282010cbb1bb6505"
+    },
+    {
+      "bytes": 305,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\launcher_observer\\failure_receipt.json",
+      "destination_sha256": "3f7dd8276e868a212d01dcce38e904084256e9b3fb9cef9dfb8e01559bb4d445",
+      "relative_path_posix": "launcher_observer/failure_receipt.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_04\\failure_receipt.json",
+      "source_sha256_after": "3f7dd8276e868a212d01dcce38e904084256e9b3fb9cef9dfb8e01559bb4d445",
+      "source_sha256_before": "3f7dd8276e868a212d01dcce38e904084256e9b3fb9cef9dfb8e01559bb4d445"
+    },
+    {
+      "bytes": 3257,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\launcher_observer\\implementation_pins.json",
+      "destination_sha256": "feccec1196d7d62a9015b8573c1c8b1441e0a2b952bf2c8155bb4a5f531e334d",
+      "relative_path_posix": "launcher_observer/implementation_pins.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_04\\implementation_pins.json",
+      "source_sha256_after": "feccec1196d7d62a9015b8573c1c8b1441e0a2b952bf2c8155bb4a5f531e334d",
+      "source_sha256_before": "feccec1196d7d62a9015b8573c1c8b1441e0a2b952bf2c8155bb4a5f531e334d"
+    },
+    {
+      "bytes": 20621,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\launcher_observer\\pre_child_observation.json",
+      "destination_sha256": "1dabf84a8ac1f4368d107c618b350dc932b2211a63365f763cf52a64e3813af1",
+      "relative_path_posix": "launcher_observer/pre_child_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_04\\pre_child_observation.json",
+      "source_sha256_after": "1dabf84a8ac1f4368d107c618b350dc932b2211a63365f763cf52a64e3813af1",
+      "source_sha256_before": "1dabf84a8ac1f4368d107c618b350dc932b2211a63365f763cf52a64e3813af1"
+    },
+    {
+      "bytes": 2548,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\launcher_observer\\process.json",
+      "destination_sha256": "5733f7aae7a35ebf0fa1a42851f1ee6496a2b331ea9314492d76a99815323053",
+      "relative_path_posix": "launcher_observer/process.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_04\\process.json",
+      "source_sha256_after": "5733f7aae7a35ebf0fa1a42851f1ee6496a2b331ea9314492d76a99815323053",
+      "source_sha256_before": "5733f7aae7a35ebf0fa1a42851f1ee6496a2b331ea9314492d76a99815323053"
+    },
+    {
+      "bytes": 20474,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\launcher_observer\\resource_observation.json",
+      "destination_sha256": "025e854b036b367b128f8d92885c0440054d272f096e6791cceb941d9602f2c0",
+      "relative_path_posix": "launcher_observer/resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_04\\resource_observation.json",
+      "source_sha256_after": "025e854b036b367b128f8d92885c0440054d272f096e6791cceb941d9602f2c0",
+      "source_sha256_before": "025e854b036b367b128f8d92885c0440054d272f096e6791cceb941d9602f2c0"
+    },
+    {
+      "bytes": 2506,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\launcher_observer\\stderr.log",
+      "destination_sha256": "69634eff2a5b3ffad51495472f0e3d50ce3207941e5aa57a5d09500390b6bc92",
+      "relative_path_posix": "launcher_observer/stderr.log",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_04\\stderr.log",
+      "source_sha256_after": "69634eff2a5b3ffad51495472f0e3d50ce3207941e5aa57a5d09500390b6bc92",
+      "source_sha256_before": "69634eff2a5b3ffad51495472f0e3d50ce3207941e5aa57a5d09500390b6bc92"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_failure_archive_01\\launcher_observer\\stdout.log",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "launcher_observer/stdout.log",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_launcher_observer_04\\stdout.log",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "ordering": "ascending namespaced POSIX relative path by Python Unicode code-point tuple",
+  "schema": "weekly_zone_event_value_path_v2r2_audit_failure_archive_manifest_v1",
+  "source_file_count": 10,
+  "source_total_bytes": 5495643
+}

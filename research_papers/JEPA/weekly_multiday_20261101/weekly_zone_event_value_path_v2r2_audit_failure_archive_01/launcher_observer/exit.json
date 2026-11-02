@@ -1,0 +1,15 @@
+{
+  "changed_pins": [],
+  "cpu_affinity": [
+    0
+  ],
+  "creation_epoch": 1793631146.1299548,
+  "elapsed_seconds": 1674.8142599999992,
+  "exit_code": 1,
+  "metadata_error": null,
+  "pid": 20676,
+  "retry": false,
+  "source": "subprocess.Popen.wait_retained_handle",
+  "utc": "2026-11-02T15:20:20.941352+00:00",
+  "value_child_exit_code": 1
+}
