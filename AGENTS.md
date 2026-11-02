@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov20:40UTC:D mecánica sintética paralela predeclarada/revisadaSHIP.
+Enmienda D_REVISIT_PARALLEL_MECHANICS_PREPARATION_AMENDMENT_20261102.md
+7109B/d5a6be66 yreviewCLEAR_DOCUMENTARY_D_PARALLEL_SYNTHETIC_PREPARATION.
+Tras publicación permite módulos stdlib sóloenmemoria yfixturesartificiales
+de productor/auditorindependientes; noadaptadorreal/Arrow/binding/rootsD.
+Reemplaza sóloordenqueprohibíatodocódigo, cienciaD4ea0/c567intacta.
+B06 sigueactivo mismoPID8616/root35709; datosreales D sólo trasBfull/Cfull,
+admisiones/bindings/reviews/publicación/gates. C69/R3136/wrappers13+12cerrados.
+Sinreplayreal/PnLnuevo/selección/promoción. Goalactivo.
+
 Checkpoint2-nov20:33UTC:Cauditorwrapper CERRADO12PASS+3subtests1.35s/compile0/Ruff0.
 Fixture01desde7c17d2c4,root5b8ff1exit0sinIDsesión; PID48544creation1793651411.27061,
 exit1793651414.0355227,metadataerrornull/pins[]/CPU0/TEN1/gatesPASS.
