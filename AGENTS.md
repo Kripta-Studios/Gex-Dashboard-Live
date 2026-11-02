@@ -1,5 +1,17 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov21:23UTC:D interfazpública19358B/66214786 revisadaSHIPdocumental.
+Tipos/FKs/39events47ledger19coverage/39counts, H2 yrearm explícitos; doscandidatos
+f83a/5377FIX_FIRSTpreservados. PublicarantesautorindependienteD.
+Primerproductor93b7/tests5951RECHAZADOestático: faltacola/capital/lockout,
+lookaheadprecancelación,Herróneo/esquemas/cobertura; copiasinmutables,informe
+D_REVISIT_MECHANICS_STATIC_FAILURE01_20261102.md. NOsuiteD niPNLnuevo.
+Nuevoautorúnico /root/d_mechanics_producer_complete corrige2pyenmemoria;
+autorprevio /root/c_producer_launcher cesó. Auditorindependiente sóloleyó
+contratospúblicos; esperainterfazpublicada antescrear2pyseparados, jamásleer
+productor/tests. B06mismoPID8616/root35709vivo,606/2768streama21:20,
+stderr0/exit ausente. C69/R3136/wrappers13+12intactos. Goalactivo.
+
 Checkpoint2-nov20:59UTC:D aclaración causal pre-outcome revisadaSHIP.
 D_REVISIT_CAUSAL_TERMINAL_CLARIFICATION_20261102.md6230B/de8fb6b4:
 H2original10:35 tercera sesión, soporte porplan<=H2; postH2no cambia terminales.
