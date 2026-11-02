@@ -1,0 +1,1 @@
+{"status":"FAILED_CLOSED_ARCHIVED","payload_files":19,"payload_bytes":260640,"manifest_sha256":"8d42d49055ef6920c585f6d46a5b23eb3b7265a79cb33dbc8fdbf89503e3ee4d","root_retained_exit_code":1,"root_exit_chunk":"ea4127","stage":"ruff","diagnostic":"F841 unused h","compile_exit_code":0,"pytest_executed":false,"source_pins":11,"market_pnl_produced":false}

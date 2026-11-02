@@ -1,0 +1,13 @@
+F841 Local variable `h` is assigned to but never used
+   --> audit_weekly_zone_revisit_mechanics.py:504:5
+    |
+503 | def _apply_candidate(row, plan, anchor, all_anchors, fsm, spot_map):
+504 |     h, confirm, side = plan["horizon_end_local_ns"], fsm["confirmation"], fsm["dep_side"]
+    |     ^
+505 |     row["confirmation_time"] = row["confirmation_time_local_ns"] = confirm
+506 |     row["event_session_date"] = _date_at(confirm)
+    |
+help: Remove assignment to unused variable `h`
+
+Found 1 error.
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).

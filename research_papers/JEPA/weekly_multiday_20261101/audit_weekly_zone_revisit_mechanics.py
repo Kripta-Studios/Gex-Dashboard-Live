@@ -501,7 +501,7 @@ def _terminal_trace(fsm, row, kind, label_time, reason, spot=None):
 
 
 def _apply_candidate(row, plan, anchor, all_anchors, fsm, spot_map):
-    h, confirm, side = plan["horizon_end_local_ns"], fsm["confirmation"], fsm["dep_side"]
+    confirm, side = fsm["confirmation"], fsm["dep_side"]
     row["confirmation_time"] = row["confirmation_time_local_ns"] = confirm
     row["event_session_date"] = _date_at(confirm)
     row["event_id"] = _digest({"schema": "D_EVENT_V1", "revisit_id": row["revisit_id"], "confirmation_time_local_ns": confirm, "departure_side": side})
