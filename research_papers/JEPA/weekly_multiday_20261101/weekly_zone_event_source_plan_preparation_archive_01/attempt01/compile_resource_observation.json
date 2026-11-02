@@ -1,0 +1,53 @@
+{
+  "child_created": false,
+  "minimum_free_commit_bytes": 2000000000,
+  "observed_utc": "2026-11-02T10:39:19.725614+00:00",
+  "parent_cpu_affinity_mask": 1,
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": {
+      "bytes": 31463,
+      "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_CONTRACT_20261102.md": {
+      "bytes": 10032,
+      "sha256": "c1891e794cab794d5f6570f99d838a888663a48b8ccededd4d96d27a63173d65"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_CONTRACT_REVIEW_20261102.md": {
+      "bytes": 1279,
+      "sha256": "e7c0b2a2ec27afa79bab63776eefb767a5db912289ebffb1879887ab5fa19167"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_IMPLEMENTATION_REVIEW_20261102.md": {
+      "bytes": 1993,
+      "sha256": "3f1b7f7e46051ce1b80a653638f60512d1c0623dd7e430c23f80445687dbaaf4"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_event_source_plan.py": {
+      "bytes": 43609,
+      "sha256": "9a412a3ad4b1ae6d527c92c7b1307dfceecb2aec1b4d81cfff70acf8e71c1270"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_source_plan_checks_20261102.py": {
+      "bytes": 13529,
+      "sha256": "b9c943491112a286644e94a5fbfb86960e348754c01062d2559bcf80e4f443ba"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_build_weekly_zone_event_source_plan.py": {
+      "bytes": 16141,
+      "sha256": "dd497fc87548b5009c54d43603e13b099756a69183eff519920b6bd0446f4dbf"
+    }
+  },
+  "resources": {
+    "available_ram_bytes": 11629637632,
+    "free_commit_bytes": 23316619264
+  },
+  "stage": "compile",
+  "thread_variables": {
+    "ARROW_NUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1",
+    "TBB_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  }
+}

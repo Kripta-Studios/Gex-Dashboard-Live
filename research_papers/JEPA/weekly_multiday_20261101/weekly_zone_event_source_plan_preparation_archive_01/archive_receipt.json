@@ -1,0 +1,55 @@
+{
+  "schema": "weekly_zone_event_source_plan_preparation_archive_receipt_v1",
+  "status": "ARCHIVED_ATTEMPT01_FAILURE_AND_ATTEMPT02_PASS_BYTE_EXACT",
+  "source_root": "D:/GexResearchArtifacts/weekly_multiday_20261101/weekly_zone_event_source_plan_preparation_01",
+  "destination_root": "C:/Users/Álvaro Schwiedop/Desktop/KriptaStudios/Gex-Dashboard-Live/research_papers/JEPA/weekly_multiday_20261101/weekly_zone_event_source_plan_preparation_archive_01",
+  "tree_hash_algorithm": "SHA256 of UTF-8 concatenation of sorted lines: relative_path<TAB>bytes<TAB>lowercase_sha256<LF>",
+  "copied_attempts": [
+    {
+      "source_relative_path": "attempt01",
+      "destination_relative_path": "attempt01",
+      "file_count": 25,
+      "total_bytes": 136666,
+      "tree_sha256": "c7aabab920357bae12d0b965f155bbdcd8574229e2b05cf225914bb851ca521d"
+    },
+    {
+      "source_relative_path": "attempt02",
+      "destination_relative_path": "attempt02",
+      "file_count": 25,
+      "total_bytes": 136272,
+      "tree_sha256": "774978a5714b4b6841905f63180a723c890cae9cbecc875016df9fe5e7c2a381"
+    }
+  ],
+  "root_binding_receipt": {
+    "source_relative_path": "attempt02/receipt.json",
+    "destination_relative_path": "receipt.json",
+    "bytes": 2573,
+    "sha256": "5e56ec66c3f12e29635e4d3fe95709aa70a03cd59c4b0f80b6650344a7120ea3"
+  },
+  "preserved_receipt_pins": {
+    "attempt01/failure_receipt.json": {
+      "bytes": 440,
+      "sha256": "cc1be6299d5da75e716235705b8ab6bc28b0ebbb1f5019da7cd5fc49195eeb8a"
+    },
+    "attempt02/receipt.json": {
+      "bytes": 2573,
+      "sha256": "5e56ec66c3f12e29635e4d3fe95709aa70a03cd59c4b0f80b6650344a7120ea3"
+    },
+    "receipt.json": {
+      "bytes": 2573,
+      "sha256": "5e56ec66c3f12e29635e4d3fe95709aa70a03cd59c4b0f80b6650344a7120ea3"
+    }
+  },
+  "payload_totals_including_root_binding_copy": {
+    "file_count": 51,
+    "total_bytes": 275511
+  },
+  "verification": {
+    "source_rehashed": true,
+    "destination_rehashed": true,
+    "all_source_destination_pairs_equal": true,
+    "attempt01_preserved_complete": true,
+    "attempt02_preserved_complete": true,
+    "root_receipt_is_exact_attempt02_receipt_copy": true
+  }
+}

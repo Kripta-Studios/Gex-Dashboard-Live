@@ -1,0 +1,38 @@
+{
+  "api_read": false,
+  "arrays_read": false,
+  "attempt": "attempt02",
+  "broker_read": false,
+  "closed_utc": "2026-11-02T10:43:57.845460+00:00",
+  "closing_sha256": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_CONTRACT_20261102.md": "c1891e794cab794d5f6570f99d838a888663a48b8ccededd4d96d27a63173d65",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_CONTRACT_REVIEW_20261102.md": "e7c0b2a2ec27afa79bab63776eefb767a5db912289ebffb1879887ab5fa19167",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_FIXTURE_CORRECTION_REVIEW_20261102.md": "d6160abc4518d917f8fdc3fe11c6e8742aafd0653a47b9f872877eefdeb93c18",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_event_source_plan.py": "9a412a3ad4b1ae6d527c92c7b1307dfceecb2aec1b4d81cfff70acf8e71c1270",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_source_plan_checks_02_20261102.py": "7476b6df12660e364c5c463e44d99a24dddd810583a4cf2663b7c4d82c06b26b",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_build_weekly_zone_event_source_plan.py": "ed4de57a2e4ff53f4f5f490377aa2a1338dba8aaf9b2939a028e9fad902e4121"
+  },
+  "fit_performed": false,
+  "outcomes_read": false,
+  "parquet_footers_read": false,
+  "planner_runtime_executed": false,
+  "preserved_attempt01": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_preparation_01\\attempt01",
+  "raw_market_files_opened": false,
+  "retry": false,
+  "stages": [
+    {
+      "exit_code": 0,
+      "stage": "compile"
+    },
+    {
+      "exit_code": 0,
+      "stage": "ruff"
+    },
+    {
+      "exit_code": 0,
+      "stage": "pytest"
+    }
+  ],
+  "status": "PASS_FORMAL_SYNTHETIC_WEEKLY_ZONE_EVENT_SOURCE_PLAN_FIXTURES"
+}

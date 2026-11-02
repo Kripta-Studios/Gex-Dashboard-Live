@@ -1,0 +1,23 @@
+{
+  "attempt": "attempt01",
+  "completed": [
+    {
+      "exit_code": 0,
+      "stage": "compile"
+    },
+    {
+      "exit_code": 0,
+      "stage": "ruff"
+    },
+    {
+      "exit_code": 1,
+      "stage": "pytest"
+    }
+  ],
+  "exit_code": 1,
+  "planner_runtime_executed": false,
+  "recorded_utc": "2026-11-02T10:39:37.784397+00:00",
+  "retry": false,
+  "stage": "pytest",
+  "status": "FORMAL_FIXTURE_STAGE_FAILED"
+}

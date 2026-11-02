@@ -1,0 +1,50 @@
+.........F............                                                   [100%]
+================================== FAILURES ===================================
+_______________ test_upstream_entry_and_h2_paths_cannot_change ________________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7538/test_upstream_entry_and_h2_pat0')
+
+    def test_upstream_entry_and_h2_paths_cannot_change(tmp_path: Path) -> None:
+        rows = calendar_rows()
+        dates, calendar = planner.validate_calendar(rows, rows[:6], rows[6:], SMALL)
+        h1, q3, bridge = artificial_bundle(tmp_path)
+        bridge[0]["entry_path"] = str(tmp_path / "wrong.parquet")
+        with pytest.raises(planner.PlanError, match="entry path altered"):
+>           planner.build_entry_plan(h1, q3, bridge, dates, calendar, tmp_path, SMALL)
+
+test_build_weekly_zone_event_source_plan.py:202: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+build_weekly_zone_event_source_plan.py:606: in build_entry_plan
+    parse_nominal_source(Path(row["entry_path"]), source_root)
+build_weekly_zone_event_source_plan.py:476: in parse_nominal_source
+    require(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+condition = False, message = 'source traversal/outside options root'
+
+    def require(condition: bool, message: str) -> None:
+        if not condition:
+>           raise PlanError(message)
+E           build_weekly_zone_event_source_plan.PlanError: source traversal/outside options root
+
+build_weekly_zone_event_source_plan.py:88: PlanError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7538/test_upstream_entry_and_h2_pat0')
+
+    def test_upstream_entry_and_h2_paths_cannot_change(tmp_path: Path) -> None:
+        rows = calendar_rows()
+        dates, calendar = planner.validate_calendar(rows, rows[:6], rows[6:], SMALL)
+        h1, q3, bridge = artificial_bundle(tmp_path)
+        bridge[0]["entry_path"] = str(tmp_path / "wrong.parquet")
+>       with pytest.raises(planner.PlanError, match="entry path altered"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'entry path altered'
+E         Actual message: 'source traversal/outside options root'
+
+test_build_weekly_zone_event_source_plan.py:201: AssertionError
+=========================== short test summary info ===========================
+FAILED test_build_weekly_zone_event_source_plan.py::test_upstream_entry_and_h2_paths_cannot_change
+1 failed, 21 passed in 0.28s

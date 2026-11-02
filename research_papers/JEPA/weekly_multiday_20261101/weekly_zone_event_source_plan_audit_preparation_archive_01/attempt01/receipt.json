@@ -1,0 +1,37 @@
+{
+  "api_read": false,
+  "arrays_read": false,
+  "attempt": "attempt01",
+  "auditor_runtime_executed": false,
+  "broker_read": false,
+  "closed_utc": "2026-11-02T10:41:48.490667+00:00",
+  "closing_sha256": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_AUDITOR_STATIC_REVIEW_20261102.md": "eb9f696cb85a02a62ab9caf9cd7335b25f621c7dfca37e6a3356365e125d2ca1",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_CONTRACT_20261102.md": "c1891e794cab794d5f6570f99d838a888663a48b8ccededd4d96d27a63173d65",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SOURCE_PLAN_CONTRACT_REVIEW_20261102.md": "e7c0b2a2ec27afa79bab63776eefb767a5db912289ebffb1879887ab5fa19167",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_source_plan.py": "118a349f4ca44e25f5764e7082e0775010fdf6f6a35fe3876c972af223d2762c",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_source_plan_audit_checks_20261102.py": "f11b40cff26d030635d1898665d74b8d8ff3fa1ccffe07793d28c66862f8c76f",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_source_plan.py": "289b00ca94cb4414b3f6db2cba70c1b7641e9e55a9f87f9b5a0ceb925a3da58e"
+  },
+  "fit_performed": false,
+  "outcomes_read": false,
+  "parquet_footers_read": false,
+  "raw_market_files_opened": false,
+  "retry": false,
+  "stages": [
+    {
+      "exit_code": 0,
+      "stage": "compile"
+    },
+    {
+      "exit_code": 0,
+      "stage": "ruff"
+    },
+    {
+      "exit_code": 0,
+      "stage": "pytest"
+    }
+  ],
+  "status": "PASS_FORMAL_SYNTHETIC_WEEKLY_ZONE_EVENT_SOURCE_PLAN_AUDITOR_FIXTURES"
+}

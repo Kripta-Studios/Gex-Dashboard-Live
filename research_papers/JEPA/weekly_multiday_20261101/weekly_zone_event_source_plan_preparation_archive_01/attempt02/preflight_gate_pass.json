@@ -1,0 +1,8 @@
+{
+  "resources": {
+    "available_ram_bytes": 13144674304,
+    "free_commit_bytes": 25201676288
+  },
+  "status": "PASS_RESOURCE_GATE",
+  "utc": "2026-11-02T10:43:56.370122+00:00"
+}
