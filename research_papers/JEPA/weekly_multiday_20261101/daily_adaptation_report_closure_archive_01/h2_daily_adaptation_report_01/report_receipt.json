@@ -1,0 +1,943 @@
+{
+  "flags": {
+    "api_read": false,
+    "broker_read": false,
+    "fit_run": false,
+    "inference_run": false,
+    "promotion_approved": false,
+    "raw_read": false,
+    "replay_run": false,
+    "seen_development": true,
+    "technical_ready": false,
+    "winner_selected": false
+  },
+  "inputs": {
+    "audit": {
+      "bytes": 2983,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_02\\audit.json",
+      "sha256": "383edce65b16b316dcf71f2197a716d71501495f704040e858cea9354511b2b9"
+    },
+    "audit_exit": {
+      "bytes": 1289,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_02\\exit.json",
+      "sha256": "6c9e236906de004c9da015021424e690b1dc8d1ed06514533fdcbfc4c3a524e8"
+    },
+    "audit_input:auditor": {
+      "bytes": 48908,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_daily_adaptation_v2.py",
+      "sha256": "d8813052412dbff001bae192f0d3c680808c78da458f1de54674e4331ef625a9"
+    },
+    "audit_input:context_helper": {
+      "bytes": 61750,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_models.py",
+      "sha256": "3eb6b9795ad260971435259858f86d3c00111bcc141973faf986411d4a68ad99"
+    },
+    "audit_input:contract": {
+      "bytes": 12317,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\DAILY_ADAPTATION_CONTRACT_20261101.md",
+      "sha256": "5d388e484435c8fe23d40476c02928887c6ab5487af62197e5e74f08c1fe0047"
+    },
+    "audit_input:producer_exit": {
+      "bytes": 1262,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\exit.json",
+      "sha256": "54021b954d522e0c9535b237de45a63da14a39e91e12e71fe90546d351f9f0d0"
+    },
+    "audit_input:producer_manifest": {
+      "bytes": 42358,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\manifest.json",
+      "sha256": "7decb3e2baf360d807fd849604013728f5fe05c48dcd3302c0b270a1440d2206"
+    },
+    "audit_input:tests": {
+      "bytes": 28492,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_daily_adaptation_v2.py",
+      "sha256": "6bc6d92dcbba460fa809527c41197c94a1d7409f85f2937a926efe08925d39d6"
+    },
+    "audit_input:v4_helper": {
+      "bytes": 82700,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_context_adaptation_v4.py",
+      "sha256": "0723696ae01dcc86af7c2af8e8fdc2e3b281ba913987a65d95bd4703c959aa9c"
+    },
+    "producer:candidate_scores.jsonl": {
+      "bytes": 1225026,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\candidate_scores.jsonl",
+      "sha256": "5ceb1f5654663c2c0900a49271968c2c752eaad61130ae7b4db94e194ecfbf57"
+    },
+    "producer:daily_fit_plans.json": {
+      "bytes": 20057895,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\daily_fit_plans.json",
+      "sha256": "f5a7ce66f2789f477e5fb54b5dceee962627bda31e03e1369b48098f241bbeec"
+    },
+    "producer:daily_schedule.json": {
+      "bytes": 36665,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\daily_schedule.json",
+      "sha256": "b7d244230739960477880c3e77a3e011b20a2e9495d0dc837677d5ddd67f8876"
+    },
+    "producer:daily_states_new.jsonl": {
+      "bytes": 17067439,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\daily_states_new.jsonl",
+      "sha256": "72ff5ec4044fcf2a48444d9eafdbfb6bf7f035742af3b8122b231e9a90b03448"
+    },
+    "producer:daily_vs_weekly.jsonl": {
+      "bytes": 296820,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\daily_vs_weekly.jsonl",
+      "sha256": "8f949ac8adb7fdfe8b21e45da62a49df37bb1db2d691426bbb424af613d746ed"
+    },
+    "producer:fit_journal.jsonl": {
+      "bytes": 77656,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_journal.jsonl",
+      "sha256": "981cee9258029592b6296d52fc15d7283929b3d63705d39057c924981a31cb0d"
+    },
+    "producer:fit_state_CONTEXT182_20260106.json": {
+      "bytes": 148066,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260106.json",
+      "sha256": "12762000493ccba114a0633215daa35c8ed1dda7c5c12824970013c8834fc0b4"
+    },
+    "producer:fit_state_CONTEXT182_20260107.json": {
+      "bytes": 148189,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260107.json",
+      "sha256": "efbf6cb5fc845431eb857f1eafe0abd994098b74b76ef956d19847d4d03eed71"
+    },
+    "producer:fit_state_CONTEXT182_20260108.json": {
+      "bytes": 148394,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260108.json",
+      "sha256": "953222dd3ec888293154c39e3c75a75f565d559836eab313de7502056dc5b1a8"
+    },
+    "producer:fit_state_CONTEXT182_20260109.json": {
+      "bytes": 148596,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260109.json",
+      "sha256": "94afc81d16b264bd075a61e27b829540efd63cf19e4da7d1c992c64d483aae1a"
+    },
+    "producer:fit_state_CONTEXT182_20260113.json": {
+      "bytes": 148659,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260113.json",
+      "sha256": "e6a6222d1a892a2e8848c89b07a7b6bd95460544c9e0c5ea14fd5076912087ea"
+    },
+    "producer:fit_state_CONTEXT182_20260114.json": {
+      "bytes": 148837,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260114.json",
+      "sha256": "d0d9f1e990f96a296d33001caf615700cca4fa54e2ae48d0a1fbab3f4824a49c"
+    },
+    "producer:fit_state_CONTEXT182_20260115.json": {
+      "bytes": 149045,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260115.json",
+      "sha256": "f27cc32896e5bfcc39545d14111a6a04ae3cb01f78c80f297797122279d70121"
+    },
+    "producer:fit_state_CONTEXT182_20260116.json": {
+      "bytes": 151756,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260116.json",
+      "sha256": "92d14a4de53cabe20e8613027f23d65ded866dab2c6dc50bd2eb8c4f11bdb409"
+    },
+    "producer:fit_state_CONTEXT182_20260121.json": {
+      "bytes": 151869,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260121.json",
+      "sha256": "198af9b996037418c01525138fafc1a937f8233877367a4026bdbcb7b97a08cd"
+    },
+    "producer:fit_state_CONTEXT182_20260122.json": {
+      "bytes": 149457,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260122.json",
+      "sha256": "883c4c0ab5bccc38c3977d1180240ea4b29a3c374a11716d7d09769a22d8d299"
+    },
+    "producer:fit_state_CONTEXT182_20260123.json": {
+      "bytes": 152319,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260123.json",
+      "sha256": "c45e01628c0ddbf5b090fa999500a5423656a4fac65d01a48b4d40bb2bf3108f"
+    },
+    "producer:fit_state_CONTEXT182_20260127.json": {
+      "bytes": 149568,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260127.json",
+      "sha256": "a84351132d1359463b5d418e73d13868e36c53a11608c88a60ecc4a21abd1e86"
+    },
+    "producer:fit_state_CONTEXT182_20260128.json": {
+      "bytes": 149781,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260128.json",
+      "sha256": "f137af6a3e0fd0c65a81a776a069923c2433c9c0c726fed850658d3b6e2f9a01"
+    },
+    "producer:fit_state_CONTEXT182_20260129.json": {
+      "bytes": 150051,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260129.json",
+      "sha256": "9083fb4410accd8f8175f233f132eb6209fcefdc561eb3130e3d082f0dca64f9"
+    },
+    "producer:fit_state_CONTEXT182_20260130.json": {
+      "bytes": 150255,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260130.json",
+      "sha256": "be4d4fee5d09ef44d0fd707a14835af2a55f5dde119d3f836b584362c2bddcd6"
+    },
+    "producer:fit_state_CONTEXT182_20260203.json": {
+      "bytes": 150273,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260203.json",
+      "sha256": "b0eff1443d669945d960db785b5c2fda07012960d8b00831fce0f1e1b1a13849"
+    },
+    "producer:fit_state_CONTEXT182_20260204.json": {
+      "bytes": 150432,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260204.json",
+      "sha256": "5370ec9478b4c8f3c93021227340f9a32c31a32d3e3d36c5bb0df3942478230c"
+    },
+    "producer:fit_state_CONTEXT182_20260205.json": {
+      "bytes": 150625,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260205.json",
+      "sha256": "2f1832ace65c09543df8f7e20c3f4c134ae8b642bf92d47ee5005ce1d43d866c"
+    },
+    "producer:fit_state_CONTEXT182_20260206.json": {
+      "bytes": 150831,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260206.json",
+      "sha256": "c0a8434d99a232fa2ef09199db8a2d19eb0bf8447b364f1358d40ba083dfff43"
+    },
+    "producer:fit_state_CONTEXT182_20260210.json": {
+      "bytes": 150887,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260210.json",
+      "sha256": "99f9b52c9e578fd4d6a498d98a04875c76e77fa14b771c8be11abfd724a43f71"
+    },
+    "producer:fit_state_CONTEXT182_20260211.json": {
+      "bytes": 151052,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260211.json",
+      "sha256": "2c0bd240ad0e87503d17364904eb9edf0a6be4fa70e2c097e495ee8ae6bc4f3b"
+    },
+    "producer:fit_state_CONTEXT182_20260212.json": {
+      "bytes": 151245,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260212.json",
+      "sha256": "1f724d34749a6f71e68914a0b775f9154f66322724fec6160cc6c779933e4e98"
+    },
+    "producer:fit_state_CONTEXT182_20260213.json": {
+      "bytes": 154196,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260213.json",
+      "sha256": "3a0a96f951de895897bf2c23eb238254125b452c84c6f656fcb46e2e7f5f8042"
+    },
+    "producer:fit_state_CONTEXT182_20260218.json": {
+      "bytes": 151433,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260218.json",
+      "sha256": "53e7c732f9ba36454201f9aeb8e18cfc3070b6fa81b88f963f39c6fa5cf4e0cc"
+    },
+    "producer:fit_state_CONTEXT182_20260219.json": {
+      "bytes": 151649,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260219.json",
+      "sha256": "dbff384c5b11068ec508cb550aad114e54e5cd6b6be97490cabb561e454a666a"
+    },
+    "producer:fit_state_CONTEXT182_20260220.json": {
+      "bytes": 151910,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260220.json",
+      "sha256": "857410171019d29b1014bd1055c2cde3b72887ea276320243a2a81eace127fda"
+    },
+    "producer:fit_state_CONTEXT182_20260224.json": {
+      "bytes": 154540,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260224.json",
+      "sha256": "4e37647e46c71e7355caa1f0c0a58974794ba962cbcf495b6f50c25337ce6abd"
+    },
+    "producer:fit_state_CONTEXT182_20260225.json": {
+      "bytes": 154723,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260225.json",
+      "sha256": "f246bb9797c3e624bfdf069a7f1c5b06595939b4758a065acbad52331e44d66e"
+    },
+    "producer:fit_state_CONTEXT182_20260226.json": {
+      "bytes": 154924,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260226.json",
+      "sha256": "11bf8fb664dd9753d2971908be5c04d510dd918b38c8576917568220a887269d"
+    },
+    "producer:fit_state_CONTEXT182_20260227.json": {
+      "bytes": 152487,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260227.json",
+      "sha256": "09410737c70a5ac34d81c5f269ca87a305725b9ff817bc8f9b1e202fa477189f"
+    },
+    "producer:fit_state_CONTEXT182_20260303.json": {
+      "bytes": 153446,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260303.json",
+      "sha256": "ba0fc19c860b50ccd3a89408ebe417f4e99b831dc01895d82112015706a4fab0"
+    },
+    "producer:fit_state_CONTEXT182_20260304.json": {
+      "bytes": 155254,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260304.json",
+      "sha256": "b6e282ad88b33b8d7b4d6a335f762664b44a5dbba1a7f7efba62d67a052dc6f0"
+    },
+    "producer:fit_state_CONTEXT182_20260305.json": {
+      "bytes": 152879,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260305.json",
+      "sha256": "f851f057688f63843da453c2a0f3cd7d3ee00e510a2db55645d2ce119e0cb6bf"
+    },
+    "producer:fit_state_CONTEXT182_20260306.json": {
+      "bytes": 153080,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260306.json",
+      "sha256": "85456faf670eaa34ce1799735243311fae9fd1fb14a033e01afec54f0ece2a40"
+    },
+    "producer:fit_state_CONTEXT182_20260310.json": {
+      "bytes": 153073,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260310.json",
+      "sha256": "6fefb46ac5f629dd2c05c479164d5f0f5b841e47629346e597d8f700b8727bcd"
+    },
+    "producer:fit_state_CONTEXT182_20260311.json": {
+      "bytes": 153302,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260311.json",
+      "sha256": "c7534e2177fd01f9b008520d901583741d4e7f0c0fd448de85d409857490718a"
+    },
+    "producer:fit_state_CONTEXT182_20260312.json": {
+      "bytes": 153553,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260312.json",
+      "sha256": "b2a9d99440d229ddfa601c2058c8cf2275b4becd4db935d7fb69577d9afdadec"
+    },
+    "producer:fit_state_CONTEXT182_20260313.json": {
+      "bytes": 156247,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260313.json",
+      "sha256": "fbd1fbd36732ffdaaba1c02850db333543bee1dcdcb4d717ef0ffac8585ddacf"
+    },
+    "producer:fit_state_CONTEXT182_20260317.json": {
+      "bytes": 153677,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260317.json",
+      "sha256": "15afbfc10dcc76709f3680a5f513693df3f50f7c87f915988394fe76e701429c"
+    },
+    "producer:fit_state_CONTEXT182_20260318.json": {
+      "bytes": 153932,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260318.json",
+      "sha256": "e6b69ede3e4528449b01f8d306e65670d7b06d9e91d3efe3c109a5de82829053"
+    },
+    "producer:fit_state_CONTEXT182_20260319.json": {
+      "bytes": 154081,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260319.json",
+      "sha256": "103e2311d9a0e0c2158863e4fb0a67d79f87e0298bb5e07af34fb61798495ea1"
+    },
+    "producer:fit_state_CONTEXT182_20260320.json": {
+      "bytes": 156891,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260320.json",
+      "sha256": "a8f518134270d711e6a9c89595f9443b304aaea002ba8a195d0d73dc7ca08af3"
+    },
+    "producer:fit_state_CONTEXT182_20260324.json": {
+      "bytes": 156820,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260324.json",
+      "sha256": "fd06280280e464a9dbd38deaa66f4c172bf0c6e6a2434c97b7d30a31d86485e4"
+    },
+    "producer:fit_state_CONTEXT182_20260325.json": {
+      "bytes": 154482,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260325.json",
+      "sha256": "28c54b5606ba08a99e0147780e0c6166cd1550a7a8fd6c7abcd49da96704a1ba"
+    },
+    "producer:fit_state_CONTEXT182_20260326.json": {
+      "bytes": 154739,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260326.json",
+      "sha256": "0786446d696aff840ed7a0c7ffd888d44c3b8574ab520a9aefa2c60e7c1ec5b1"
+    },
+    "producer:fit_state_CONTEXT182_20260327.json": {
+      "bytes": 154943,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260327.json",
+      "sha256": "b914d095f06208efc3428158588bef7680237ded46fe1f6df08df5adbdd5c66c"
+    },
+    "producer:fit_state_CONTEXT182_20260331.json": {
+      "bytes": 154976,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260331.json",
+      "sha256": "cad9314ff987e269221c88875fdf4634144f7bb8b5d57dd8aa8d07526f89013b"
+    },
+    "producer:fit_state_CONTEXT182_20260402.json": {
+      "bytes": 155373,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260402.json",
+      "sha256": "dbe8d8b0042d938d57894902be3642963def4f3fee193a31da60eea9e0239d40"
+    },
+    "producer:fit_state_CONTEXT182_20260407.json": {
+      "bytes": 155289,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260407.json",
+      "sha256": "e28a70e4b82a2c9ea83d97d503e3166a68ef900b373cb59417be882e45506532"
+    },
+    "producer:fit_state_CONTEXT182_20260408.json": {
+      "bytes": 155601,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260408.json",
+      "sha256": "c0491cbfc5e9b0b8d573b5120b6c37f9916a6318554899d420acee65d9e3175a"
+    },
+    "producer:fit_state_CONTEXT182_20260409.json": {
+      "bytes": 155802,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260409.json",
+      "sha256": "e15832e007b7850650780830947fdea07ed0028ebc194598cbbba15583661f31"
+    },
+    "producer:fit_state_CONTEXT182_20260410.json": {
+      "bytes": 156007,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260410.json",
+      "sha256": "2a3d6715b70e5e0d446da2b8677d447ce1f4d21b90c004edad6e889c6436595a"
+    },
+    "producer:fit_state_CONTEXT182_20260414.json": {
+      "bytes": 156019,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260414.json",
+      "sha256": "9612dace11217a09b82b5d86c48efb79024cf634eb708d9b3ccfd6baf30a7529"
+    },
+    "producer:fit_state_CONTEXT182_20260415.json": {
+      "bytes": 156150,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260415.json",
+      "sha256": "da067cf6443fdeb6fb3a0c2a8b15f99e07ee6fdc6dc60edd3a506e7428388e01"
+    },
+    "producer:fit_state_CONTEXT182_20260416.json": {
+      "bytes": 156355,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260416.json",
+      "sha256": "66cc1b50a1ab7d178abff5325bd2d4a2dfe9c4f0bdee27af86561a8955884622"
+    },
+    "producer:fit_state_CONTEXT182_20260417.json": {
+      "bytes": 156556,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260417.json",
+      "sha256": "93f68ca1e6a0e65c552e94448a6e8a8162396a0c95a7547d43305e2a832d8d22"
+    },
+    "producer:fit_state_CONTEXT182_20260421.json": {
+      "bytes": 156545,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260421.json",
+      "sha256": "a69cfb481fe6458b5655a8590a0398c225e4cc932d052e2ae6f55aa55ca4c61d"
+    },
+    "producer:fit_state_CONTEXT182_20260422.json": {
+      "bytes": 156787,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260422.json",
+      "sha256": "b85b3d7a2af3cb796811f23593ff7b89a3dbbac43d7c467698961a17260d3ed3"
+    },
+    "producer:fit_state_CONTEXT182_20260423.json": {
+      "bytes": 156996,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260423.json",
+      "sha256": "0b89d2b23952f44750f92e371d84a95fcfaa8dae4fbcd4964faf51c152740270"
+    },
+    "producer:fit_state_CONTEXT182_20260424.json": {
+      "bytes": 157200,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260424.json",
+      "sha256": "125850f6005967caaafc18f67b9c3858c78eedb131fcbf44e5edd7e775242690"
+    },
+    "producer:fit_state_CONTEXT182_20260428.json": {
+      "bytes": 157201,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260428.json",
+      "sha256": "d48742ae2103f73f80da040eba4ab99297eddd9bd375ecf0168c81cd11132ffd"
+    },
+    "producer:fit_state_CONTEXT182_20260429.json": {
+      "bytes": 157408,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260429.json",
+      "sha256": "ecf58af8183a0347079795462f948f9aa3adbc2e1abcd7029f10d975874091cf"
+    },
+    "producer:fit_state_CONTEXT182_20260430.json": {
+      "bytes": 157611,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260430.json",
+      "sha256": "0503981925da213fdc229780e8dbb3230c5ae210f791b59ed2c3f3b67f1dd671"
+    },
+    "producer:fit_state_CONTEXT182_20260505.json": {
+      "bytes": 157814,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260505.json",
+      "sha256": "ecb89a891b74cf43c236f14496c1f58a8b054450c77c764f678ca818de826d9e"
+    },
+    "producer:fit_state_CONTEXT182_20260506.json": {
+      "bytes": 158023,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260506.json",
+      "sha256": "96f27d4e31d51323361d4b7cb6531812190989cfee3c0b55920da2db2b5c5bfe"
+    },
+    "producer:fit_state_CONTEXT182_20260507.json": {
+      "bytes": 158222,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260507.json",
+      "sha256": "8812f62a0fe4ba4c1c605c23229c53c4d50e51c0977c98553af6dac35655020b"
+    },
+    "producer:fit_state_CONTEXT182_20260508.json": {
+      "bytes": 158337,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260508.json",
+      "sha256": "fad6be687b70655cc2443a6f49c2823e28876666ed169cf2577771756b5905dd"
+    },
+    "producer:fit_state_CONTEXT182_20260512.json": {
+      "bytes": 158350,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260512.json",
+      "sha256": "81795569366d3ac100710e7ee31c5328f147935b4c027cec4cc5d15b4d90e0ce"
+    },
+    "producer:fit_state_CONTEXT182_20260513.json": {
+      "bytes": 161166,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260513.json",
+      "sha256": "51dffcf98dc41dad063e797baadad1c5d7b04d8552d5c4a8cc74d2fb46a314c2"
+    },
+    "producer:fit_state_CONTEXT182_20260514.json": {
+      "bytes": 161417,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260514.json",
+      "sha256": "052e7f241c664594797547f1553aa8c0b6fce0f9ec5fe0419ee4b0f866a242ff"
+    },
+    "producer:fit_state_CONTEXT182_20260515.json": {
+      "bytes": 161560,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260515.json",
+      "sha256": "8917977afc5f165ef43db30a60585a6008408578b616b3276bd45e333656f597"
+    },
+    "producer:fit_state_CONTEXT182_20260519.json": {
+      "bytes": 158976,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260519.json",
+      "sha256": "180d7bb63f63bc0ad1908c23135323b6826790ed0994f22d947632e478d1cdd5"
+    },
+    "producer:fit_state_CONTEXT182_20260520.json": {
+      "bytes": 161762,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260520.json",
+      "sha256": "012d073f8a709dfaab82e6a75a22a86e65e40c12deb02ae3c19adaa1434c2582"
+    },
+    "producer:fit_state_CONTEXT182_20260521.json": {
+      "bytes": 160307,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260521.json",
+      "sha256": "b740a9aba702b2346b597e1d4df74a0f2f28ad9a72d8fbe42d4cd947151d552e"
+    },
+    "producer:fit_state_CONTEXT182_20260522.json": {
+      "bytes": 162281,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260522.json",
+      "sha256": "7b5c4e729792480df2388e9905a4f0f3d151f448e5ac2184836bbe1304a05d54"
+    },
+    "producer:fit_state_CONTEXT182_20260527.json": {
+      "bytes": 162220,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260527.json",
+      "sha256": "e4a7764a3267da780a65ea3b3489a15578930a9b49421c2761d6c5e0859c0534"
+    },
+    "producer:fit_state_CONTEXT182_20260528.json": {
+      "bytes": 162542,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260528.json",
+      "sha256": "e3cf4bec8e6839ab2d532343f5e8d94a9f993574bb0e724f6c02b210a31dd358"
+    },
+    "producer:fit_state_CONTEXT182_20260529.json": {
+      "bytes": 162670,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260529.json",
+      "sha256": "3aa09270d6254e355a76fb9cbd11a14d34b8ffaa8897da628035db3dd844fbf8"
+    },
+    "producer:fit_state_CONTEXT182_20260602.json": {
+      "bytes": 159963,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260602.json",
+      "sha256": "302ee8cb47164f8180bea5011141ea265c22db03cb5122bc078feb87efa92369"
+    },
+    "producer:fit_state_CONTEXT182_20260603.json": {
+      "bytes": 160168,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260603.json",
+      "sha256": "cc67f01b5ec60dd6fac774c5bfa0e807aad0d0f6fb0fc6772eea34f0a8a7fb14"
+    },
+    "producer:fit_state_CONTEXT182_20260604.json": {
+      "bytes": 163076,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260604.json",
+      "sha256": "a970db0376eac20c7db430df383399625bc9381ca9443ed37a25dd0b3f656489"
+    },
+    "producer:fit_state_CONTEXT182_20260605.json": {
+      "bytes": 161728,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260605.json",
+      "sha256": "5d047375fad4ad8bbf714940fad72c7981a9bff2867f35f53289e4efe6a42483"
+    },
+    "producer:fit_state_CONTEXT182_20260609.json": {
+      "bytes": 160753,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260609.json",
+      "sha256": "9e9d87a94e6cabb4fcdc6fc4a1324ecf1024013c69cbab0ea576d2fe1b2dced9"
+    },
+    "producer:fit_state_CONTEXT182_20260610.json": {
+      "bytes": 160959,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260610.json",
+      "sha256": "4426ad01d63d7f9f04664de7718c5b361921edb85f5fb3d6ece2f7d730f9c008"
+    },
+    "producer:fit_state_CONTEXT182_20260611.json": {
+      "bytes": 163674,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260611.json",
+      "sha256": "cae63c7c1822211e85451eeabce618737a312dea5a4e63d1abfe46e9b461ca6b"
+    },
+    "producer:fit_state_CONTEXT182_20260612.json": {
+      "bytes": 163928,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260612.json",
+      "sha256": "01d0796a4fef5d5d2db21de8300a39a60c415cbdd07ac1692260c42947d7326c"
+    },
+    "producer:fit_state_CONTEXT182_20260616.json": {
+      "bytes": 161396,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260616.json",
+      "sha256": "ae4f21fe02354e4ac70cf7a90376a2b088af4b9e8e8681cdfde5f1ab936b447b"
+    },
+    "producer:fit_state_CONTEXT182_20260617.json": {
+      "bytes": 164132,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260617.json",
+      "sha256": "659ce63646202f61be9adb39f952d3671c39e62dc374ecdaf185fe7222b5c83d"
+    },
+    "producer:fit_state_CONTEXT182_20260618.json": {
+      "bytes": 162680,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260618.json",
+      "sha256": "fa8fc65c08e00651989114608f4fe4a2137d9125ce969c34060661d358705c8c"
+    },
+    "producer:fit_state_CONTEXT182_20260623.json": {
+      "bytes": 164285,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260623.json",
+      "sha256": "9630d5627071353369658cec0927c99dfc9bea587480262eabbc42cce885efd1"
+    },
+    "producer:fit_state_CONTEXT182_20260624.json": {
+      "bytes": 161951,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260624.json",
+      "sha256": "e3d1d76089d61c92c35b96e52497c11175623c59eb96fe0ab467ec9292992db4"
+    },
+    "producer:fit_state_CONTEXT182_20260625.json": {
+      "bytes": 164681,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260625.json",
+      "sha256": "c721fdece4cde3501cdf5925937ad3f424707a71bff9b9ba538cee6c4338f700"
+    },
+    "producer:fit_state_CONTEXT182_20260626.json": {
+      "bytes": 163243,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260626.json",
+      "sha256": "e2844f412fb17f9a082a0593fcf7bdd13321e3386686da08c9e85f6ac78af4c3"
+    },
+    "producer:fit_state_CONTEXT182_20260630.json": {
+      "bytes": 164913,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260630.json",
+      "sha256": "d2e0def0430c06ed015bc6fc7045be46945c20fa49bf193b353e017e0b4dcd24"
+    },
+    "producer:fit_state_CONTEXT182_20260702.json": {
+      "bytes": 165294,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260702.json",
+      "sha256": "588f71c01d3b91a1de798eb49aace4704dd9747dde7334d3edfff76b5f958e88"
+    },
+    "producer:fit_state_CONTEXT182_20260707.json": {
+      "bytes": 162729,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260707.json",
+      "sha256": "34aff18388e9e27e60d5627d69f715ab062f5211baf92402f0dc84519346e975"
+    },
+    "producer:fit_state_CONTEXT182_20260708.json": {
+      "bytes": 162982,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260708.json",
+      "sha256": "96b0d065681a8f20ff5cfa09845b5e2632b7e7db083a9455a67a2425ae85edfd"
+    },
+    "producer:fit_state_CONTEXT182_20260709.json": {
+      "bytes": 165679,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260709.json",
+      "sha256": "3c52c391646fedea463409d06262c5a19361dff92a234e3f95046459b47a12b1"
+    },
+    "producer:fit_state_CONTEXT182_20260710.json": {
+      "bytes": 165748,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260710.json",
+      "sha256": "42f812b0001a3ac29698b5943f3ee0ee1915dd8f7c60c9270c10b8c1437114ec"
+    },
+    "producer:fit_state_CONTEXT182_20260714.json": {
+      "bytes": 163237,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260714.json",
+      "sha256": "5d1da12c8799a91119a9635b23489ccba6152bac90bad24a9057586020245719"
+    },
+    "producer:fit_state_CONTEXT182_20260715.json": {
+      "bytes": 163357,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260715.json",
+      "sha256": "b77d7b9e0767b2f3ebea0cd0ce9944dd18d08ed0c10ab08e8f2504af846c1594"
+    },
+    "producer:fit_state_CONTEXT182_20260716.json": {
+      "bytes": 163562,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260716.json",
+      "sha256": "30e8d6bc0150c38bd8f248935c3bfad1162281adc84c50c5c03ee920cb319798"
+    },
+    "producer:fit_state_CONTEXT182_20260717.json": {
+      "bytes": 163764,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260717.json",
+      "sha256": "c99be4ce9b398bcf3e8adba753f3f3c165d7945963bd8f1278b64b1d7b5c1a41"
+    },
+    "producer:fit_state_CONTEXT182_20260721.json": {
+      "bytes": 163755,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260721.json",
+      "sha256": "1dc340ffe33895e0ed0dd3c69848d1cc2e84f78f0557046298d29c4d4a7b635d"
+    },
+    "producer:fit_state_CONTEXT182_20260722.json": {
+      "bytes": 163922,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260722.json",
+      "sha256": "d64faff9e6a773c939c872e84d982e511c8936488fbec9f3d35f6e1563749455"
+    },
+    "producer:fit_state_CONTEXT182_20260723.json": {
+      "bytes": 166683,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260723.json",
+      "sha256": "a8f915802d0f8f9f7b9d5108f35661ff37792a7a2343b660dba124ffa6931473"
+    },
+    "producer:fit_state_CONTEXT182_20260724.json": {
+      "bytes": 165337,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260724.json",
+      "sha256": "d29973f654e6b2b9751029bdb03ea7e910afd4b5f2752d55b952d79c6e1f2a34"
+    },
+    "producer:fit_state_CONTEXT182_20260728.json": {
+      "bytes": 164378,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260728.json",
+      "sha256": "0655fb173bbf7ad87f77fa41f85eb3ee8fee2e214bacf8e23e7bd1f9d7fa46bb"
+    },
+    "producer:fit_state_CONTEXT182_20260729.json": {
+      "bytes": 164587,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260729.json",
+      "sha256": "e018f3f9d2451a067609d4142bb636caaaf63594b91617d9b621742f415094ed"
+    },
+    "producer:fit_state_CONTEXT182_20260730.json": {
+      "bytes": 164794,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260730.json",
+      "sha256": "0a770b2cb1484c0a413a806efc829a58a227480a7d89df397c7bee7da37afa9c"
+    },
+    "producer:fit_state_CONTEXT182_20260731.json": {
+      "bytes": 164997,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260731.json",
+      "sha256": "e54ad1dbd835ac205e242a957ab7606e0f6d9ed3999b30a1ff02836c53045536"
+    },
+    "producer:fit_state_CONTEXT182_20260804.json": {
+      "bytes": 164956,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260804.json",
+      "sha256": "86893fe985b525c1bfed8e2cdc80aa18b03030a8d4fa61055624868e8e3bd7bd"
+    },
+    "producer:fit_state_CONTEXT182_20260805.json": {
+      "bytes": 165223,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260805.json",
+      "sha256": "d857d6fd1963357aae3fd9e9b9a87639989b3da65ce36d416e3ad88ab8e6a92a"
+    },
+    "producer:fit_state_CONTEXT182_20260806.json": {
+      "bytes": 168016,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260806.json",
+      "sha256": "39e112593163105bb40b4540ba7a339a987e2fe238bac08f9d48b08e02098d5e"
+    },
+    "producer:fit_state_CONTEXT182_20260807.json": {
+      "bytes": 168222,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260807.json",
+      "sha256": "18f3d5d9e04ba468fae4d96df971a059cb46b6c45191e3264ada2e7740a1a915"
+    },
+    "producer:fit_state_CONTEXT182_20260811.json": {
+      "bytes": 165621,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260811.json",
+      "sha256": "f369c9c9fd04504a58616e2846c0a482ede5c8874c6d557f09fdc548b7fb2cf2"
+    },
+    "producer:fit_state_CONTEXT182_20260812.json": {
+      "bytes": 165745,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260812.json",
+      "sha256": "30878b48dd0160c3bc8ccc4f512dcd4c36e1f93432bcf8ecf535ea1efc99ce25"
+    },
+    "producer:fit_state_CONTEXT182_20260813.json": {
+      "bytes": 168676,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260813.json",
+      "sha256": "3030cfc1ecac28a0f5857d56e47489331e7031d4bb585665003e07ada0196c64"
+    },
+    "producer:fit_state_CONTEXT182_20260814.json": {
+      "bytes": 168881,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260814.json",
+      "sha256": "5f8088d391325df9fbb768262dc5ac0e645be19c667b65ce1deefddd0cc4785e"
+    },
+    "producer:fit_state_CONTEXT182_20260818.json": {
+      "bytes": 166145,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260818.json",
+      "sha256": "ba0ad69578bc711777363ef87e17144c8f88279cf7605e3e8beaf4d06e0c1e00"
+    },
+    "producer:fit_state_CONTEXT182_20260819.json": {
+      "bytes": 166428,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260819.json",
+      "sha256": "8bfc3cc6ece536685a08b2cacb2e19b54f14fa8424c4533f6d5f7694d2ca9d54"
+    },
+    "producer:fit_state_CONTEXT182_20260820.json": {
+      "bytes": 169053,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260820.json",
+      "sha256": "d56d04b380cc83c3984b2291738636b902dd0f87475145433a6fa0f1f3c1fc08"
+    },
+    "producer:fit_state_CONTEXT182_20260821.json": {
+      "bytes": 167739,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260821.json",
+      "sha256": "9293e2c4b71fdf56facbcf2c03449d090bc44de2de780d98f621654eac528cef"
+    },
+    "producer:fit_state_CONTEXT182_20260825.json": {
+      "bytes": 169488,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260825.json",
+      "sha256": "069f743ba05ef806aec93e745693e762daa3c9cd7c3ba848443a16b2939d38ea"
+    },
+    "producer:fit_state_CONTEXT182_20260826.json": {
+      "bytes": 166970,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260826.json",
+      "sha256": "24daaf05dfe2ce243e6c9ec28864eb0d8e2b0210acbc2197aeacaa88750deee6"
+    },
+    "producer:fit_state_CONTEXT182_20260827.json": {
+      "bytes": 167176,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260827.json",
+      "sha256": "d4cd131bff6531970f142239aad00b2402f616d9bc60330dc69ad0a5eb78d0eb"
+    },
+    "producer:fit_state_CONTEXT182_20260828.json": {
+      "bytes": 167381,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260828.json",
+      "sha256": "a714b020578afb27aeefd3d2ed7d54f54603fa3024d373a3665712f5897b7c8b"
+    },
+    "producer:fit_state_CONTEXT182_20260902.json": {
+      "bytes": 167562,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260902.json",
+      "sha256": "e8ce762804d9717bcd0b5a1e9ba2033a27c84a0918eedab58570cefbabacf241"
+    },
+    "producer:fit_state_CONTEXT182_20260903.json": {
+      "bytes": 167766,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260903.json",
+      "sha256": "97f472f2977c61f06dbc6f2a2d048659f6edd5d6883db2f949e3e706e9e9a82b"
+    },
+    "producer:fit_state_CONTEXT182_20260904.json": {
+      "bytes": 167843,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260904.json",
+      "sha256": "b74bf03d8d34a374220b89cab1fb2b34ae9bbe02e7fe98c0c77dd4b083690de5"
+    },
+    "producer:fit_state_CONTEXT182_20260909.json": {
+      "bytes": 167837,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260909.json",
+      "sha256": "049467f589d242d456056c701eeae17fa802fe9722bd263b71d7f3df3e26ca7d"
+    },
+    "producer:fit_state_CONTEXT182_20260910.json": {
+      "bytes": 170630,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260910.json",
+      "sha256": "492c6bb2673198fa966b327d7a794f68dca14a8fe56ceeecd15c398efa8896c0"
+    },
+    "producer:fit_state_CONTEXT182_20260911.json": {
+      "bytes": 170928,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260911.json",
+      "sha256": "0f275a4f4028bf5abf8ccd9107db9f5ba029c14206e980ea79db9dd026eb4e2c"
+    },
+    "producer:fit_state_CONTEXT182_20260915.json": {
+      "bytes": 168278,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260915.json",
+      "sha256": "d7782db64cce943021f5ebbd615b15de9f3f5ab50aace74180bae96f8124d0de"
+    },
+    "producer:fit_state_CONTEXT182_20260916.json": {
+      "bytes": 168439,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260916.json",
+      "sha256": "86503885943423234d2bfb7efc9197d2b82763e783dfb334d3b8e48fd06b48d1"
+    },
+    "producer:fit_state_CONTEXT182_20260917.json": {
+      "bytes": 168645,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_state_CONTEXT182_20260917.json",
+      "sha256": "8f6204d4a2312710389f9676ddd3fbdeb9dd81aaf4ac7d35b0a3d9fd53112f6b"
+    },
+    "producer:ledger_daily_raw_adverse.jsonl": {
+      "bytes": 160555,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_daily_raw_adverse.jsonl",
+      "sha256": "5be07e66d6b28df0c8bf38f790929acf5e53393166df0cdddd8741269b1a39e3"
+    },
+    "producer:ledger_daily_raw_base.jsonl": {
+      "bytes": 158459,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_daily_raw_base.jsonl",
+      "sha256": "53e0dfec52b476eee6158f6b0308828f92e1239fa790a94f7dec7f434aa5e1e7"
+    },
+    "producer:ledger_frozen_context182_adverse.jsonl": {
+      "bytes": 223636,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_frozen_context182_adverse.jsonl",
+      "sha256": "17ba6ce12c9b531ab88693ebea70987b9a46d8a35aa7d73cc2344ae7ed6ffce2"
+    },
+    "producer:ledger_frozen_context182_base.jsonl": {
+      "bytes": 223415,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_frozen_context182_base.jsonl",
+      "sha256": "b08f1e2b56051d86b71326e927cd44f0e0e4928a4dbf4edf2b51c75d6920b692"
+    },
+    "producer:ledger_monthly_raw_adverse.jsonl": {
+      "bytes": 180911,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_monthly_raw_adverse.jsonl",
+      "sha256": "87024b9b3cf7274fe25d3639858132cd9b76f4dc64c9b3c21198abb98410995f"
+    },
+    "producer:ledger_monthly_raw_base.jsonl": {
+      "bytes": 178466,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_monthly_raw_base.jsonl",
+      "sha256": "e5b784381566a2cd23e8e3f7629f04a25fbf194926c21a7710c05825a483c4da"
+    },
+    "producer:ledger_weekly_raw_adverse.jsonl": {
+      "bytes": 174233,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_weekly_raw_adverse.jsonl",
+      "sha256": "3029a1e7fdcfd1de435dcfc91210df25fa2a32d437ab77d1dfebb0be6f20fa58"
+    },
+    "producer:ledger_weekly_raw_base.jsonl": {
+      "bytes": 172114,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_weekly_raw_base.jsonl",
+      "sha256": "0a57a116abb7eda55bee04a1fc21b95b823951468a35f65758a1d3553383a22d"
+    },
+    "producer:state_diagnostics.jsonl": {
+      "bytes": 56801,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\state_diagnostics.jsonl",
+      "sha256": "885fd89b8251fd5436e3cca1ea163593d70b3936d6fda1bb417ed96e2a1b7a77"
+    },
+    "producer:summary.json": {
+      "bytes": 153765,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\summary.json",
+      "sha256": "6774831265818d979455eab0d42ba1711fec39f5f50137caf80027f06d12293c"
+    },
+    "producer_manifest": {
+      "bytes": 42358,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\manifest.json",
+      "sha256": "7decb3e2baf360d807fd849604013728f5fe05c48dcd3302c0b270a1440d2206"
+    },
+    "reporter": {
+      "bytes": 34271,
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\render_weekly_daily_adaptation_result.py",
+      "sha256": "d0672f7d4723fa96f7df4745a0f7e922833e22b0b17deae2528c15b09fed3698"
+    }
+  },
+  "ledger_event_counts": {
+    "DAILY_RAW:adverse": {
+      "CAPITAL_BLOCKED": 0,
+      "ENTRY": 83,
+      "EXIT": 83,
+      "NO_FILL": 21,
+      "NO_OPPORTUNITY": 196,
+      "WAIT": 228
+    },
+    "DAILY_RAW:base": {
+      "CAPITAL_BLOCKED": 0,
+      "ENTRY": 83,
+      "EXIT": 83,
+      "NO_FILL": 21,
+      "NO_OPPORTUNITY": 196,
+      "WAIT": 228
+    },
+    "FROZEN_CONTEXT182:adverse": {
+      "CAPITAL_BLOCKED": 0,
+      "ENTRY": 124,
+      "EXIT": 124,
+      "NO_FILL": 29,
+      "NO_OPPORTUNITY": 185,
+      "WAIT": 190
+    },
+    "FROZEN_CONTEXT182:base": {
+      "CAPITAL_BLOCKED": 0,
+      "ENTRY": 124,
+      "EXIT": 124,
+      "NO_FILL": 29,
+      "NO_OPPORTUNITY": 185,
+      "WAIT": 190
+    },
+    "MONTHLY_RAW:adverse": {
+      "CAPITAL_BLOCKED": 0,
+      "ENTRY": 89,
+      "EXIT": 89,
+      "NO_FILL": 21,
+      "NO_OPPORTUNITY": 192,
+      "WAIT": 226
+    },
+    "MONTHLY_RAW:base": {
+      "CAPITAL_BLOCKED": 0,
+      "ENTRY": 89,
+      "EXIT": 89,
+      "NO_FILL": 21,
+      "NO_OPPORTUNITY": 192,
+      "WAIT": 226
+    },
+    "WEEKLY_RAW:adverse": {
+      "CAPITAL_BLOCKED": 0,
+      "ENTRY": 83,
+      "EXIT": 83,
+      "NO_FILL": 22,
+      "NO_OPPORTUNITY": 196,
+      "WAIT": 227
+    },
+    "WEEKLY_RAW:base": {
+      "CAPITAL_BLOCKED": 0,
+      "ENTRY": 83,
+      "EXIT": 83,
+      "NO_FILL": 22,
+      "NO_OPPORTUNITY": 196,
+      "WAIT": 227
+    }
+  },
+  "outputs": {
+    "DAILY_ADAPTATION_RESULT_20261101.md": {
+      "bytes": 8926,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_report_01\\DAILY_ADAPTATION_RESULT_20261101.md",
+      "sha256": "c4d11bfbb690693b3d4452a185164c84f50a9fbc444551b3ff56e28797b38216"
+    },
+    "daily_adaptation_monthly.png": {
+      "bytes": 102136,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_report_01\\daily_adaptation_monthly.png",
+      "sha256": "5f7eb7808edd6c6f75371b5a755b578ee27e966b3da2fa2c37e7302aa78dc6b5"
+    },
+    "daily_adaptation_monthly.svg": {
+      "bytes": 87320,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_report_01\\daily_adaptation_monthly.svg",
+      "sha256": "ca02587fa50971b7ce2123d39eb8c5c87d1782d0181f701de0dcb238e814a9b9"
+    }
+  },
+  "runtime_gate": {
+    "available_ram": 15236739072,
+    "cpu_affinity": [
+      0
+    ],
+    "free_commit": 30677581824,
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "TBB_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    }
+  },
+  "schedule": {
+    "candidate_diagnostic_rows": 612,
+    "journal_events": 272,
+    "new": 136,
+    "reused": 42,
+    "sessions": 178,
+    "state_diagnostic_rows": 178,
+    "terminal_unused": 2,
+    "top1_changed": 2
+  },
+  "schema": "weekly_daily_adaptation_report_receipt_v1",
+  "status": "COMPLETE_DESCRIPTIVE_REPORT_GIVEN_INDEPENDENT_AUDIT_PASS"
+}

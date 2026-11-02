@@ -1,0 +1,1148 @@
+{
+  "checks": {
+    "diagnostic_rows": 612,
+    "ledgers": 8,
+    "monthly_values": 72,
+    "report_monthly_values": 72,
+    "top1_changed": 2,
+    "top1_changed_corresponding_to_any_fill": 1
+  },
+  "daily_vs_weekly": {
+    "adverse": {
+      "common_filled_ids": 82,
+      "daily_only": {
+        "entry": {
+          "candidate_id": "SPXW:20260706:20260710:CALL",
+          "cash": 128141.30000000009,
+          "cost": "adverse",
+          "date": "20260706",
+          "decision_budget_used_cents": 362460,
+          "decision_unit_risk_cents": 362460,
+          "entry_budget_used_cents": 348460,
+          "entry_unit_risk_cents": 348460,
+          "equity_realized": 136135.3000000001,
+          "ev_adverse": 200.01039448194192,
+          "ev_base": 203.76786162744386,
+          "event": "ENTRY",
+          "exit_date": "20260708",
+          "exit_fee_obligation": 16.899999999999995,
+          "model_id": "CONTEXT182_20260706",
+          "policy": "DAILY_RAW",
+          "premium_reserved": 7994.0,
+          "principal": 3482.0,
+          "quantity": 1,
+          "realized_delta": -1.3,
+          "right": "CALL",
+          "selection_reason": "EV_TOP1",
+          "ticker": "SPXW"
+        },
+        "exit": {
+          "candidate_id": "SPXW:20260706:20260710:CALL",
+          "cash": 130046.40000000008,
+          "cost": "adverse",
+          "date": "20260708",
+          "decision_unit_risk_cents": 362460,
+          "entry_date": "20260706",
+          "entry_unit_risk_cents": 348460,
+          "equity_realized": 130046.40000000008,
+          "event": "EXIT",
+          "exit_fee_obligation": -6.439293542825908e-15,
+          "model_id": "CONTEXT182_20260706",
+          "net_usd": -2666.5999999999995,
+          "policy": "DAILY_RAW",
+          "premium_reserved": 0.0,
+          "principal": 3482.0,
+          "quantity": 1,
+          "realized_delta": -2665.2999999999993,
+          "right": "CALL",
+          "status": "OBSERVED_EXIT",
+          "ticker": "SPXW"
+        }
+      },
+      "daily_trades": 83,
+      "monthly_delta_daily_minus_weekly": {
+        "202601": 0.0,
+        "202602": 0.0,
+        "202603": 0.0,
+        "202604": 0.0,
+        "202605": 0.0,
+        "202606": 0.0,
+        "202607": -200.0,
+        "202608": 0.0,
+        "202609": 0.0
+      },
+      "net_delta_daily_minus_weekly": -200.0,
+      "weekly_only": {
+        "entry": {
+          "candidate_id": "SPXW:20260702:20260710:CALL",
+          "cash": 131308.9000000001,
+          "cost": "adverse",
+          "date": "20260702",
+          "decision_budget_used_cents": 470460,
+          "decision_unit_risk_cents": 470460,
+          "entry_budget_used_cents": 484460,
+          "entry_unit_risk_cents": 484460,
+          "equity_realized": 136150.9000000001,
+          "ev_adverse": 22.1151999152827,
+          "ev_base": 27.036113026227653,
+          "event": "ENTRY",
+          "exit_date": "20260707",
+          "exit_fee_obligation": 1.2999999999999947,
+          "model_id": "CONTEXT182_20260629",
+          "policy": "WEEKLY_RAW",
+          "premium_reserved": 4842.0,
+          "principal": 4842.0,
+          "quantity": 1,
+          "realized_delta": -1.3,
+          "right": "CALL",
+          "selection_reason": "EV_TOP1",
+          "ticker": "SPXW"
+        },
+        "exit": {
+          "candidate_id": "SPXW:20260702:20260710:CALL",
+          "cash": 129158.0000000001,
+          "cost": "adverse",
+          "date": "20260707",
+          "decision_unit_risk_cents": 470460,
+          "entry_date": "20260702",
+          "entry_unit_risk_cents": 484460,
+          "equity_realized": 133670.00000000012,
+          "event": "EXIT",
+          "exit_fee_obligation": 15.599999999999994,
+          "model_id": "CONTEXT182_20260629",
+          "net_usd": -2466.5999999999995,
+          "policy": "WEEKLY_RAW",
+          "premium_reserved": 4512.0,
+          "principal": 4842.0,
+          "quantity": 1,
+          "realized_delta": -2465.2999999999993,
+          "right": "CALL",
+          "status": "OBSERVED_EXIT",
+          "ticker": "SPXW"
+        }
+      },
+      "weekly_trades": 83
+    },
+    "base": {
+      "common_filled_ids": 82,
+      "daily_only": {
+        "entry": {
+          "candidate_id": "SPXW:20260706:20260710:CALL",
+          "cash": 128838.30000000009,
+          "cost": "base",
+          "date": "20260706",
+          "decision_budget_used_cents": 362460,
+          "decision_unit_risk_cents": 362460,
+          "entry_budget_used_cents": 348460,
+          "entry_unit_risk_cents": 348460,
+          "equity_realized": 136819.3000000001,
+          "ev_adverse": 200.01039448194192,
+          "ev_base": 203.76786162744386,
+          "event": "ENTRY",
+          "exit_date": "20260708",
+          "exit_fee_obligation": 16.899999999999995,
+          "model_id": "CONTEXT182_20260706",
+          "policy": "DAILY_RAW",
+          "premium_reserved": 7981.000000000002,
+          "principal": 3480.9999999999995,
+          "quantity": 1,
+          "realized_delta": -1.3,
+          "right": "CALL",
+          "selection_reason": "EV_TOP1",
+          "ticker": "SPXW"
+        },
+        "exit": {
+          "candidate_id": "SPXW:20260706:20260710:CALL",
+          "cash": 130756.40000000008,
+          "cost": "base",
+          "date": "20260708",
+          "decision_unit_risk_cents": 362460,
+          "entry_date": "20260706",
+          "entry_unit_risk_cents": 348460,
+          "equity_realized": 130756.40000000008,
+          "event": "EXIT",
+          "exit_fee_obligation": -6.439293542825908e-15,
+          "model_id": "CONTEXT182_20260706",
+          "net_usd": -2664.6,
+          "policy": "DAILY_RAW",
+          "premium_reserved": 2.2737367544323206e-12,
+          "principal": 3480.9999999999995,
+          "quantity": 1,
+          "realized_delta": -2663.2999999999997,
+          "right": "CALL",
+          "status": "OBSERVED_EXIT",
+          "ticker": "SPXW"
+        }
+      },
+      "daily_trades": 83,
+      "monthly_delta_daily_minus_weekly": {
+        "202601": 0.0,
+        "202602": 0.0,
+        "202603": 0.0,
+        "202604": 0.0,
+        "202605": 0.0,
+        "202606": 0.0,
+        "202607": -200.0,
+        "202608": 0.0,
+        "202609": 0.0
+      },
+      "net_delta_daily_minus_weekly": -200.0,
+      "weekly_only": {
+        "entry": {
+          "candidate_id": "SPXW:20260702:20260710:CALL",
+          "cash": 131993.9000000001,
+          "cost": "base",
+          "date": "20260702",
+          "decision_budget_used_cents": 470460,
+          "decision_unit_risk_cents": 470460,
+          "entry_budget_used_cents": 484460,
+          "entry_unit_risk_cents": 484460,
+          "equity_realized": 136834.9000000001,
+          "ev_adverse": 22.1151999152827,
+          "ev_base": 27.036113026227653,
+          "event": "ENTRY",
+          "exit_date": "20260707",
+          "exit_fee_obligation": 1.2999999999999947,
+          "model_id": "CONTEXT182_20260629",
+          "policy": "WEEKLY_RAW",
+          "premium_reserved": 4841.000000000002,
+          "principal": 4841.0,
+          "quantity": 1,
+          "realized_delta": -1.3,
+          "right": "CALL",
+          "selection_reason": "EV_TOP1",
+          "ticker": "SPXW"
+        },
+        "exit": {
+          "candidate_id": "SPXW:20260702:20260710:CALL",
+          "cash": 129856.0000000001,
+          "cost": "base",
+          "date": "20260707",
+          "decision_unit_risk_cents": 470460,
+          "entry_date": "20260702",
+          "entry_unit_risk_cents": 484460,
+          "equity_realized": 134356.00000000012,
+          "event": "EXIT",
+          "exit_fee_obligation": 15.599999999999994,
+          "model_id": "CONTEXT182_20260629",
+          "net_usd": -2464.6,
+          "policy": "WEEKLY_RAW",
+          "premium_reserved": 4500.000000000002,
+          "principal": 4841.0,
+          "quantity": 1,
+          "realized_delta": -2463.2999999999997,
+          "right": "CALL",
+          "status": "OBSERVED_EXIT",
+          "ticker": "SPXW"
+        }
+      },
+      "weekly_trades": 83
+    }
+  },
+  "diagnostic_difference_distribution": {
+    "daily_top1": 140,
+    "distinct_daily_weekly_model_ids": 384,
+    "ev_adverse_diff": {
+      "max_absolute": 216.25569414079814,
+      "mean_absolute": 6.8800333448809265,
+      "median_absolute": 0.6801184506068756,
+      "rows_absolute_le_25": 569
+    },
+    "ev_base_diff": {
+      "max_absolute": 216.3496296198632,
+      "mean_absolute": 6.881479679778976,
+      "median_absolute": 0.6830551422708533,
+      "rows_absolute_le_25": 570
+    },
+    "p_cal_diff": {
+      "max_component": 0.09253091143502412,
+      "max_l1": 0.18506182287004824,
+      "mean_l1": 0.010866432088627908,
+      "mean_max_component": 0.004945623447996558,
+      "median_l1": 0.0033682542925478716,
+      "rows_max_component_le_0_01": 526
+    },
+    "p_model_diff": {
+      "max_component": 0.1915664812777358,
+      "max_l1": 0.3831329625554717,
+      "mean_l1": 0.013070885234478732,
+      "mean_max_component": 0.006195583021883711,
+      "median_l1": 0.006402944602150929,
+      "rows_max_component_le_0_01": 505
+    },
+    "top1_changed": 2,
+    "weekly_top1": 142
+  },
+  "pins_before_and_after": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\daily_vs_weekly.jsonl": "8f949ac8adb7fdfe8b21e45da62a49df37bb1db2d691426bbb424af613d746ed",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_daily_raw_adverse.jsonl": "5be07e66d6b28df0c8bf38f790929acf5e53393166df0cdddd8741269b1a39e3",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_daily_raw_base.jsonl": "53e0dfec52b476eee6158f6b0308828f92e1239fa790a94f7dec7f434aa5e1e7",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_frozen_context182_adverse.jsonl": "17ba6ce12c9b531ab88693ebea70987b9a46d8a35aa7d73cc2344ae7ed6ffce2",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_frozen_context182_base.jsonl": "b08f1e2b56051d86b71326e927cd44f0e0e4928a4dbf4edf2b51c75d6920b692",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_monthly_raw_adverse.jsonl": "87024b9b3cf7274fe25d3639858132cd9b76f4dc64c9b3c21198abb98410995f",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_monthly_raw_base.jsonl": "e5b784381566a2cd23e8e3f7629f04a25fbf194926c21a7710c05825a483c4da",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_weekly_raw_adverse.jsonl": "3029a1e7fdcfd1de435dcfc91210df25fa2a32d437ab77d1dfebb0be6f20fa58",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\ledger_weekly_raw_base.jsonl": "0a57a116abb7eda55bee04a1fc21b95b823951468a35f65758a1d3553383a22d",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\summary.json": "6774831265818d979455eab0d42ba1711fec39f5f50137caf80027f06d12293c",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_02\\audit.json": "383edce65b16b316dcf71f2197a716d71501495f704040e858cea9354511b2b9",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_02\\exit.json": "6c9e236906de004c9da015021424e690b1dc8d1ed06514533fdcbfc4c3a524e8",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_report_01\\DAILY_ADAPTATION_RESULT_20261101.md": "c4d11bfbb690693b3d4452a185164c84f50a9fbc444551b3ff56e28797b38216"
+  },
+  "reconstructed": {
+    "DAILY_RAW": {
+      "adverse": {
+        "event_counts": {
+          "ENTRY": 83,
+          "EXIT": 83,
+          "NO_FILL": 21,
+          "NO_OPPORTUNITY": 196,
+          "WAIT": 228
+        },
+        "largest_month_by_absolute_net": "202604",
+        "largest_trade": {
+          "candidate_id": "QQQ:20260414:20260417:CALL",
+          "date": "20260416",
+          "model_id": "CONTEXT182_20260414",
+          "net_usd": 12232.800000000003,
+          "right": "CALL",
+          "ticker": "QQQ"
+        },
+        "monthly_net_usd": {
+          "202601": -3792.7999999999993,
+          "202602": 2517.000000000001,
+          "202603": -14878.799999999997,
+          "202604": 37076.00000000001,
+          "202605": 25355.200000000008,
+          "202606": -10124.399999999994,
+          "202607": -10458.800000000001,
+          "202608": -20442.4,
+          "202609": -2757.2
+        },
+        "net_usd": 2493.800000000014,
+        "net_without_largest_month": -34582.19999999998,
+        "net_without_largest_trade": -9738.999999999989,
+        "no_fill_by_reason": {
+          "ENTRY_QUOTE": 10,
+          "ENTRY_RISK_BUDGET": 11
+        },
+        "no_opportunity": 196,
+        "positive_months": 3,
+        "profit_factor": 1.0238980065509173,
+        "quantity_max": 14,
+        "quantity_median": 6,
+        "quantity_total": 482,
+        "realized_max_drawdown_usd": 47060.79999999996,
+        "side_net": {
+          "CALL": 16533.20000000002,
+          "PUT": -14039.4
+        },
+        "ticker_net_usd": {
+          "QQQ": 15411.600000000006,
+          "SPXW": 1458.4000000000083,
+          "SPY": -14376.199999999995
+        },
+        "trades": 83,
+        "wait": 228
+      },
+      "base": {
+        "event_counts": {
+          "ENTRY": 83,
+          "EXIT": 83,
+          "NO_FILL": 21,
+          "NO_OPPORTUNITY": 196,
+          "WAIT": 228
+        },
+        "largest_month_by_absolute_net": "202604",
+        "largest_trade": {
+          "candidate_id": "QQQ:20260414:20260417:CALL",
+          "date": "20260416",
+          "model_id": "CONTEXT182_20260414",
+          "net_usd": 12256.8,
+          "right": "CALL",
+          "ticker": "QQQ"
+        },
+        "monthly_net_usd": {
+          "202601": -3726.799999999999,
+          "202602": 2547.0000000000005,
+          "202603": -14757.8,
+          "202604": 37259.0,
+          "202605": 25491.2,
+          "202606": -9976.399999999998,
+          "202607": -10322.800000000001,
+          "202608": -20354.4,
+          "202609": -2713.1999999999994
+        },
+        "net_usd": 3445.8000000000065,
+        "net_without_largest_month": -33813.2,
+        "net_without_largest_trade": -8810.999999999993,
+        "no_fill_by_reason": {
+          "ENTRY_QUOTE": 10,
+          "ENTRY_RISK_BUDGET": 11
+        },
+        "no_opportunity": 196,
+        "positive_months": 3,
+        "profit_factor": 1.0332388649127309,
+        "quantity_max": 14,
+        "quantity_median": 6,
+        "quantity_total": 482,
+        "realized_max_drawdown_usd": 46587.70000000001,
+        "side_net": {
+          "CALL": 17327.200000000033,
+          "PUT": -13881.399999999996
+        },
+        "ticker_net_usd": {
+          "QQQ": 15737.599999999995,
+          "SPXW": 1510.4000000000008,
+          "SPY": -13802.199999999992
+        },
+        "trades": 83,
+        "wait": 228
+      }
+    },
+    "FROZEN_CONTEXT182": {
+      "adverse": {
+        "event_counts": {
+          "ENTRY": 124,
+          "EXIT": 124,
+          "NO_FILL": 29,
+          "NO_OPPORTUNITY": 185,
+          "WAIT": 190
+        },
+        "largest_month_by_absolute_net": "202604",
+        "largest_trade": {
+          "candidate_id": "QQQ:20260414:20260417:CALL",
+          "date": "20260416",
+          "model_id": "FROZEN_CONTEXT182_H1",
+          "net_usd": 12232.800000000003,
+          "right": "CALL",
+          "ticker": "QQQ"
+        },
+        "monthly_net_usd": {
+          "202601": -11721.2,
+          "202602": 8324.800000000005,
+          "202603": -3644.7999999999965,
+          "202604": 44379.200000000004,
+          "202605": 16881.40000000001,
+          "202606": -12348.399999999998,
+          "202607": -23007.2,
+          "202608": -25602.999999999996,
+          "202609": -13465.000000000002
+        },
+        "net_usd": -20204.199999999983,
+        "net_without_largest_month": -64583.39999999998,
+        "net_without_largest_trade": -32436.999999999985,
+        "no_fill_by_reason": {
+          "ENTRY_QUOTE": 14,
+          "ENTRY_RISK_BUDGET": 15
+        },
+        "no_opportunity": 185,
+        "positive_months": 3,
+        "profit_factor": 0.8874041462327241,
+        "quantity_max": 14,
+        "quantity_median": 6.5,
+        "quantity_total": 742,
+        "realized_max_drawdown_usd": 77701.59999999992,
+        "side_net": {
+          "CALL": -12003.39999999996,
+          "PUT": -8200.799999999996
+        },
+        "ticker_net_usd": {
+          "QQQ": -16870.599999999988,
+          "SPXW": -6190.799999999989,
+          "SPY": 2857.200000000014
+        },
+        "trades": 124,
+        "wait": 190
+      },
+      "base": {
+        "event_counts": {
+          "ENTRY": 124,
+          "EXIT": 124,
+          "NO_FILL": 29,
+          "NO_OPPORTUNITY": 185,
+          "WAIT": 190
+        },
+        "largest_month_by_absolute_net": "202604",
+        "largest_trade": {
+          "candidate_id": "QQQ:20260414:20260417:CALL",
+          "date": "20260416",
+          "model_id": "FROZEN_CONTEXT182_H1",
+          "net_usd": 12256.8,
+          "right": "CALL",
+          "ticker": "QQQ"
+        },
+        "monthly_net_usd": {
+          "202601": -11557.199999999997,
+          "202602": 8488.800000000001,
+          "202603": -3493.7999999999984,
+          "202604": 44558.2,
+          "202605": 17033.400000000005,
+          "202606": -12200.399999999996,
+          "202607": -22878.199999999997,
+          "202608": -25353.0,
+          "202609": -13345.0
+        },
+        "net_usd": -18747.199999999986,
+        "net_without_largest_month": -63305.39999999998,
+        "net_without_largest_trade": -31003.999999999985,
+        "no_fill_by_reason": {
+          "ENTRY_QUOTE": 14,
+          "ENTRY_RISK_BUDGET": 15
+        },
+        "no_opportunity": 185,
+        "positive_months": 3,
+        "profit_factor": 0.8949483629109533,
+        "quantity_max": 14,
+        "quantity_median": 6.5,
+        "quantity_total": 742,
+        "realized_max_drawdown_usd": 76997.49999999997,
+        "side_net": {
+          "CALL": -10892.399999999969,
+          "PUT": -7854.799999999995
+        },
+        "ticker_net_usd": {
+          "QQQ": -16325.599999999995,
+          "SPXW": -6114.799999999997,
+          "SPY": 3693.2000000000066
+        },
+        "trades": 124,
+        "wait": 190
+      }
+    },
+    "MONTHLY_RAW": {
+      "adverse": {
+        "event_counts": {
+          "ENTRY": 89,
+          "EXIT": 89,
+          "NO_FILL": 21,
+          "NO_OPPORTUNITY": 192,
+          "WAIT": 226
+        },
+        "largest_month_by_absolute_net": "202604",
+        "largest_trade": {
+          "candidate_id": "QQQ:20260414:20260417:CALL",
+          "date": "20260416",
+          "model_id": "CONTEXT182_20260401",
+          "net_usd": 12232.800000000003,
+          "right": "CALL",
+          "ticker": "QQQ"
+        },
+        "monthly_net_usd": {
+          "202601": -9641.4,
+          "202602": 0.0,
+          "202603": -1630.1999999999944,
+          "202604": 37076.00000000001,
+          "202605": 24568.800000000007,
+          "202606": -14277.999999999996,
+          "202607": -16639.8,
+          "202608": -30619.0,
+          "202609": -1461.7999999999997
+        },
+        "net_usd": -12625.399999999985,
+        "net_without_largest_month": -49701.39999999998,
+        "net_without_largest_trade": -24858.19999999999,
+        "no_fill_by_reason": {
+          "ENTRY_QUOTE": 10,
+          "ENTRY_RISK_BUDGET": 11
+        },
+        "no_opportunity": 192,
+        "positive_months": 2,
+        "profit_factor": 0.8964195527435439,
+        "quantity_max": 15,
+        "quantity_median": 6,
+        "quantity_total": 539,
+        "realized_max_drawdown_usd": 68767.89999999995,
+        "side_net": {
+          "CALL": -12261.799999999981,
+          "PUT": -363.5999999999965
+        },
+        "ticker_net_usd": {
+          "QQQ": 1428.6000000000126,
+          "SPXW": 2581.8000000000025,
+          "SPY": -16635.799999999996
+        },
+        "trades": 89,
+        "wait": 226
+      },
+      "base": {
+        "event_counts": {
+          "ENTRY": 89,
+          "EXIT": 89,
+          "NO_FILL": 21,
+          "NO_OPPORTUNITY": 192,
+          "WAIT": 226
+        },
+        "largest_month_by_absolute_net": "202604",
+        "largest_trade": {
+          "candidate_id": "QQQ:20260414:20260417:CALL",
+          "date": "20260416",
+          "model_id": "CONTEXT182_20260401",
+          "net_usd": 12256.8,
+          "right": "CALL",
+          "ticker": "QQQ"
+        },
+        "monthly_net_usd": {
+          "202601": -9523.399999999998,
+          "202602": 0.0,
+          "202603": -1491.1999999999964,
+          "202604": 37259.0,
+          "202605": 24672.8,
+          "202606": -14137.999999999998,
+          "202607": -16483.800000000003,
+          "202608": -30469.0,
+          "202609": -1385.7999999999993
+        },
+        "net_usd": -11559.399999999992,
+        "net_without_largest_month": -48818.399999999994,
+        "net_without_largest_trade": -23816.19999999999,
+        "no_fill_by_reason": {
+          "ENTRY_QUOTE": 10,
+          "ENTRY_RISK_BUDGET": 11
+        },
+        "no_opportunity": 192,
+        "positive_months": 2,
+        "profit_factor": 0.9045669873800628,
+        "quantity_max": 15,
+        "quantity_median": 6,
+        "quantity_total": 539,
+        "realized_max_drawdown_usd": 68201.89999999995,
+        "side_net": {
+          "CALL": -11367.79999999998,
+          "PUT": -191.59999999999638
+        },
+        "ticker_net_usd": {
+          "QQQ": 1834.6000000000022,
+          "SPXW": 2635.8000000000056,
+          "SPY": -16029.79999999999
+        },
+        "trades": 89,
+        "wait": 226
+      }
+    },
+    "WEEKLY_RAW": {
+      "adverse": {
+        "event_counts": {
+          "ENTRY": 83,
+          "EXIT": 83,
+          "NO_FILL": 22,
+          "NO_OPPORTUNITY": 196,
+          "WAIT": 227
+        },
+        "largest_month_by_absolute_net": "202604",
+        "largest_trade": {
+          "candidate_id": "QQQ:20260414:20260417:CALL",
+          "date": "20260416",
+          "model_id": "CONTEXT182_20260413",
+          "net_usd": 12232.800000000003,
+          "right": "CALL",
+          "ticker": "QQQ"
+        },
+        "monthly_net_usd": {
+          "202601": -3792.7999999999993,
+          "202602": 2517.000000000001,
+          "202603": -14878.799999999997,
+          "202604": 37076.00000000001,
+          "202605": 25355.200000000008,
+          "202606": -10124.399999999994,
+          "202607": -10258.800000000001,
+          "202608": -20442.4,
+          "202609": -2757.2
+        },
+        "net_usd": 2693.800000000014,
+        "net_without_largest_month": -34382.19999999998,
+        "net_without_largest_trade": -9538.999999999989,
+        "no_fill_by_reason": {
+          "ENTRY_QUOTE": 10,
+          "ENTRY_RISK_BUDGET": 12
+        },
+        "no_opportunity": 196,
+        "positive_months": 3,
+        "profit_factor": 1.0258641713345331,
+        "quantity_max": 14,
+        "quantity_median": 6,
+        "quantity_total": 482,
+        "realized_max_drawdown_usd": 46860.799999999945,
+        "side_net": {
+          "CALL": 16733.200000000026,
+          "PUT": -14039.4
+        },
+        "ticker_net_usd": {
+          "QQQ": 15411.600000000006,
+          "SPXW": 1658.4000000000065,
+          "SPY": -14376.199999999995
+        },
+        "trades": 83,
+        "wait": 227
+      },
+      "base": {
+        "event_counts": {
+          "ENTRY": 83,
+          "EXIT": 83,
+          "NO_FILL": 22,
+          "NO_OPPORTUNITY": 196,
+          "WAIT": 227
+        },
+        "largest_month_by_absolute_net": "202604",
+        "largest_trade": {
+          "candidate_id": "QQQ:20260414:20260417:CALL",
+          "date": "20260416",
+          "model_id": "CONTEXT182_20260413",
+          "net_usd": 12256.8,
+          "right": "CALL",
+          "ticker": "QQQ"
+        },
+        "monthly_net_usd": {
+          "202601": -3726.799999999999,
+          "202602": 2547.0000000000005,
+          "202603": -14757.8,
+          "202604": 37259.0,
+          "202605": 25491.2,
+          "202606": -9976.399999999998,
+          "202607": -10122.800000000001,
+          "202608": -20354.4,
+          "202609": -2713.1999999999994
+        },
+        "net_usd": 3645.8000000000065,
+        "net_without_largest_month": -33613.2,
+        "net_without_largest_trade": -8610.999999999993,
+        "no_fill_by_reason": {
+          "ENTRY_QUOTE": 10,
+          "ENTRY_RISK_BUDGET": 12
+        },
+        "no_opportunity": 196,
+        "positive_months": 3,
+        "profit_factor": 1.0352360831099143,
+        "quantity_max": 14,
+        "quantity_median": 6,
+        "quantity_total": 482,
+        "realized_max_drawdown_usd": 46387.7,
+        "side_net": {
+          "CALL": 17527.200000000033,
+          "PUT": -13881.399999999996
+        },
+        "ticker_net_usd": {
+          "QQQ": 15737.599999999995,
+          "SPXW": 1710.4000000000044,
+          "SPY": -13802.199999999992
+        },
+        "trades": 83,
+        "wait": 227
+      }
+    }
+  },
+  "resource_observation": {
+    "affinity": {
+      "cpu_indices": [
+        0
+      ],
+      "process_mask": 1
+    },
+    "minimum_free_bytes": 2000000000,
+    "observation": {
+      "available_ram_bytes": 15411159040,
+      "free_commit_bytes": 31058911232
+    },
+    "official_helper": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py",
+    "official_helper_sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+    "thread_environment": {
+      "BLIS_NUM_THREADS": "1",
+      "CUDA_VISIBLE_DEVICES": "-1",
+      "MKL_NUM_THREADS": "1",
+      "NUMBA_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "TBB_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "utc": "2026-11-02T10:07:24.395800+00:00"
+  },
+  "scope": "closed ledgers only; no replay, fit, inference, selection, or causal claim",
+  "selected_probability_ev": {
+    "DAILY_RAW": {
+      "brier": 0.768108505576109,
+      "ev": {
+        "adverse": {
+          "bias": 149.88892318494587,
+          "mae": 1033.2022540328003
+        },
+        "base": {
+          "bias": 151.78244611374626,
+          "mae": 1034.378693154448
+        }
+      },
+      "logloss": 1.5093262575269242,
+      "n": 104,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 96,
+          "observed": 0.08333333333333333,
+          "predicted": 0.015812020795225628
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 5,
+          "observed": 0.2,
+          "predicted": 0.1586950049204658
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 2,
+          "observed": 0.5,
+          "predicted": 0.24030595780127184
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.5759937166337985
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 3,
+          "observed": 1.0,
+          "predicted": 0.24307370712830098
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 35,
+          "observed": 0.3142857142857143,
+          "predicted": 0.3644650858569479
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 66,
+          "observed": 0.4090909090909091,
+          "predicted": 0.4399086681743814
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 35,
+          "observed": 0.11428571428571428,
+          "predicted": 0.08052234750940644
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 64,
+          "observed": 0.34375,
+          "predicted": 0.12846509349953728
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 5,
+          "observed": 0.0,
+          "predicted": 0.22623082666167876
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 48,
+          "observed": 0.020833333333333332,
+          "predicted": 0.07807014443285977
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 54,
+          "observed": 0.05555555555555555,
+          "predicted": 0.13226007450380237
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 3,
+          "n": 2,
+          "observed": 0.0,
+          "predicted": 0.24361158165392344
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.13004507840026774
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 23,
+          "observed": 0.21739130434782608,
+          "predicted": 0.27400614044367005
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 70,
+          "observed": 0.2571428571428571,
+          "predicted": 0.3377793271147317
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 4,
+          "n": 8,
+          "observed": 0.0,
+          "predicted": 0.4278650158657644
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 4,
+          "n": 2,
+          "observed": 0.0,
+          "predicted": 0.532499193985978
+        }
+      ]
+    },
+    "WEEKLY_RAW": {
+      "brier": 0.7720093080522702,
+      "ev": {
+        "adverse": {
+          "bias": 148.59125108723552,
+          "mae": 1024.5812388775933
+        },
+        "base": {
+          "bias": 150.48926946637553,
+          "mae": 1025.7637512156714
+        }
+      },
+      "logloss": 1.5143665764317746,
+      "n": 105,
+      "reliability": [
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 0,
+          "n": 97,
+          "observed": 0.08247422680412371,
+          "predicted": 0.016048968720277185
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 0,
+          "n": 5,
+          "observed": 0.2,
+          "predicted": 0.1497301541724197
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 0,
+          "n": 2,
+          "observed": 0.5,
+          "predicted": 0.23238492384563297
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 0,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.5759937166337985
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 1,
+          "n": 3,
+          "observed": 1.0,
+          "predicted": 0.2525808082195154
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 1,
+          "n": 36,
+          "observed": 0.3333333333333333,
+          "predicted": 0.36404886044108303
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 1,
+          "n": 66,
+          "observed": 0.3939393939393939,
+          "predicted": 0.4406181293269635
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 2,
+          "n": 37,
+          "observed": 0.13513513513513514,
+          "predicted": 0.08149243390133155
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 2,
+          "n": 62,
+          "observed": 0.3548387096774194,
+          "predicted": 0.1285758029541724
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 2,
+          "n": 6,
+          "observed": 0.0,
+          "predicted": 0.22844667841537736
+        },
+        {
+          "bin_high": 0.1,
+          "bin_low": 0.0,
+          "class": 3,
+          "n": 51,
+          "observed": 0.0392156862745098,
+          "predicted": 0.07853375565688145
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 3,
+          "n": 51,
+          "observed": 0.0392156862745098,
+          "predicted": 0.13388317070088265
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 3,
+          "n": 3,
+          "observed": 0.0,
+          "predicted": 0.23703450425278563
+        },
+        {
+          "bin_high": 0.2,
+          "bin_low": 0.1,
+          "class": 4,
+          "n": 1,
+          "observed": 0.0,
+          "predicted": 0.13004507840026774
+        },
+        {
+          "bin_high": 0.3,
+          "bin_low": 0.2,
+          "class": 4,
+          "n": 24,
+          "observed": 0.20833333333333334,
+          "predicted": 0.2758202979342202
+        },
+        {
+          "bin_high": 0.4,
+          "bin_low": 0.3,
+          "class": 4,
+          "n": 70,
+          "observed": 0.2571428571428571,
+          "predicted": 0.3373567468410682
+        },
+        {
+          "bin_high": 0.5,
+          "bin_low": 0.4,
+          "class": 4,
+          "n": 8,
+          "observed": 0.0,
+          "predicted": 0.42639825569753
+        },
+        {
+          "bin_high": 0.6,
+          "bin_low": 0.5,
+          "class": 4,
+          "n": 2,
+          "observed": 0.0,
+          "predicted": 0.5158402722738542
+        }
+      ]
+    }
+  },
+  "status": "PASS_READ_ONLY_DAILY_VS_WEEKLY_DESCRIPTIVE_VERIFICATION",
+  "top1_changed_rows": [
+    {
+      "candidate_id": "SPXW:20260702:20260710:CALL",
+      "daily_filled": false,
+      "daily_model_id": "CONTEXT182_20260702",
+      "daily_top1": false,
+      "entry_date": "20260702",
+      "ev_adverse_diff": -25.195122933332566,
+      "ev_base_diff": -25.206640896511676,
+      "p_cal_diff": [
+        0.0030681044033455673,
+        -0.001916302437377615,
+        0.0052895380871710584,
+        -0.0006758481800848704,
+        -0.0057654918730541405
+      ],
+      "p_model_diff": [
+        0.004947898161058777,
+        -0.003783976444797499,
+        0.008662629103548314,
+        -0.0008906748893744015,
+        -0.008935875930435155
+      ],
+      "right": "CALL",
+      "ticker": "SPXW",
+      "top1_changed": true,
+      "weekly_filled": true,
+      "weekly_model_id": "CONTEXT182_20260629",
+      "weekly_top1": true
+    },
+    {
+      "candidate_id": "SPY:20260821:20260828:PUT",
+      "daily_filled": false,
+      "daily_model_id": "CONTEXT182_20260821",
+      "daily_top1": false,
+      "entry_date": "20260821",
+      "ev_adverse_diff": -10.796525390425659,
+      "ev_base_diff": -10.810777181494272,
+      "p_cal_diff": [
+        0.003225005341567673,
+        0.00510780542569822,
+        0.0016298892198164522,
+        0.006788460503313429,
+        -0.016751160490395822
+      ],
+      "p_model_diff": [
+        -7.831894215874559e-10,
+        -0.005631047970565128,
+        0.0017244424945575265,
+        -0.00013984040570613754,
+        0.004046446664903225
+      ],
+      "right": "PUT",
+      "ticker": "SPY",
+      "top1_changed": true,
+      "weekly_filled": false,
+      "weekly_model_id": "CONTEXT182_20260817",
+      "weekly_top1": true
+    }
+  ],
+  "utc": "2026-11-02T10:07:24.432911+00:00"
+}
