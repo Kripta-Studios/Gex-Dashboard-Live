@@ -1,5 +1,17 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+Checkpoint 2-nov 11:59 UTC: usuario confirma continuar y amplía a revisitas
+multi-day, rebote/rechazo/ruptura y confluencia aproximada IB/Fib/walls. Dirección
+6850f559, DRAFT_NOT_EXECUTABLE: anchors causales, zonas entry-frozen/session-reset/
+walls-updated; level_id no persiste entre minutos. Geometría 0DTE, instrumento
+weekly. Sin eventos, labels o rentabilidad nuevos. B publicado3033f6e1/e7cf56f8;
+builder y auditor en corrección estática/streaming (metadata488996866filas).
+Spot0953d344/tests80d91442 CLEAR_STATIC_PRE_SUITE_REFRESHED, H1available2619
+incluye24SHORT. Ninguna suite/runtimeB todavía; esperar pins congelados yreviews,
+luego harness observado y binding/publicación antesrun. No relanzar fasescerradas.
+Goal activo, selecciónnull/promociónfalse. Dirección en
+weekly_multiday_20261101/WEEKLY_MULTIDAY_ZONE_REVISIT_RESEARCH_DIRECTION_20261102.md.
+
 Checkpoint2-nov: faseB devalores weekly predeclarada y revisada documentalmente.
 Contratoe7cf56f8/36466B CLEAR: hash/footer2768presentes+16missing, selector10:30
 float histórico3240 y9720segmentos samecontract; spotLONG1086570/2790identidades,
