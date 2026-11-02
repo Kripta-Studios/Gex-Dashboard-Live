@@ -1,0 +1,49 @@
+{
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_01\\admission.json",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_audit_failure_archive_01\\admission.json",
+      "bytes": 6044,
+      "sha256": "7be4ab7f17493b51fa9ab278b4971d417706a7417250773d6a7477d8f4b67431"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_01\\exit.json",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_audit_failure_archive_01\\exit.json",
+      "bytes": 1288,
+      "sha256": "0f623e6c80b767ab86d2bcd8b2ecf3031bbdb56a63657ba9713d50b292bcbfa8"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_01\\failure_receipt.json",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_audit_failure_archive_01\\failure_receipt.json",
+      "bytes": 271,
+      "sha256": "cf060674a646f1d5fefe5087e80d1b4a287dce3366fb7ea5ef7967971fa879a4"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_01\\process.json",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_audit_failure_archive_01\\process.json",
+      "bytes": 1274,
+      "sha256": "eb9ecdfa283b86d73188d2b018337b0ad3cac3ac3eb14bdc794a868b5d503874"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_01\\resource_observation.json",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_audit_failure_archive_01\\resource_observation.json",
+      "bytes": 4820,
+      "sha256": "69688d4f972030f5cd6000b89e119b4999ec32c6f03face97f38a171c6e750ab"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_01\\stderr.log",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_audit_failure_archive_01\\stderr.log",
+      "bytes": 2110,
+      "sha256": "e522f452c500b3476db9013c208590829c15b572ba479fb84600ed4fa93d7943"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_audit_observer_01\\stdout.log",
+      "copy": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_audit_failure_archive_01\\stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "count": 7,
+  "bytes": 15807,
+  "no_economic_audit": true
+}

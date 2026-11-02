@@ -1,0 +1,10 @@
+{
+  "audit_child_exit_code": 1,
+  "changed_pins": [],
+  "exit_code": 1,
+  "metadata_error": null,
+  "partial_output_not_authorized_for_adoption": true,
+  "retry": false,
+  "status": "AUDIT_CHILD_OR_CLOSURE_FAILED",
+  "utc": "2026-11-02T09:45:05.694846+00:00"
+}
