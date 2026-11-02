@@ -565,7 +565,8 @@ def test_publish_failure_and_postmove_drift_are_durably_unadoptable(producer, mo
             if self.mutate:
                 (target / "manifest.json").write_bytes(b"corrupt")
 
-    observe = lambda: {"available_ram_bytes": 3_000_000_000, "free_commit_bytes": 3_000_000_000}
+    def observe():
+        return {"available_ram_bytes": 3_000_000_000, "free_commit_bytes": 3_000_000_000}
     for fail, mutate in ((True, False), (False, True)):
         staging = tmp_path / ("stage-fail" if fail else "stage-drift")
         final = tmp_path / ("final-fail" if fail else "final-drift")

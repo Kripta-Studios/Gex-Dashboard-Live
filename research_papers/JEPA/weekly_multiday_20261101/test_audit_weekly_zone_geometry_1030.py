@@ -590,8 +590,9 @@ def test_auditor_journal_snapshots_and_durable_output(monkeypatch: pytest.Monkey
                                                       tmp_path: Path) -> None:
     disk = type("Disk", (), {"free": 5_000_000_000})()
     monkeypatch.setattr(audit.shutil, "disk_usage", lambda _path: disk)
-    observed = lambda: {"available_ram_bytes": 3_000_000_000,
-                        "free_commit_bytes": 3_000_000_000}
+    def observed():
+        return {"available_ram_bytes": 3_000_000_000,
+                "free_commit_bytes": 3_000_000_000}
     journal = audit.AuditJournal(tmp_path / "journal.jsonl", observed, lambda _value: None, tmp_path)
     with journal.unit("AUDIT_GEOMETRY_IDENTITY", "SPY:20260105", []) as details:
         details["geometry_status"] = "MISSING_SOURCE"

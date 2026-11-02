@@ -5,6 +5,8 @@ supplied.  The CLI fails before creating runtime paths when any authority is
 pending.  It never calls build_day, reads outcomes, or selects weekly options.
 """
 
+# Thread limits must precede NumPy/PyArrow imports.
+# ruff: noqa: E402
 from __future__ import annotations
 
 import os

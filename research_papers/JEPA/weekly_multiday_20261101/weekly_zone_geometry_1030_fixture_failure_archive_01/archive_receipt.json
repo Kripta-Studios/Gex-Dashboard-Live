@@ -1,0 +1,46 @@
+{
+  "schema": "weekly_zone_geometry_1030_fixture_failure_archive_receipt_v1",
+  "status": "PASS_EXACT_FIXTURE_FAILURE_ARCHIVE",
+  "closed_utc": "2026-11-02T16:54:34.4188939Z",
+  "source_file_count": 32,
+  "source_total_bytes": 464636,
+  "source_copy_differences": 0,
+  "compile_exit_code": 0,
+  "ruff_exit_code": 1,
+  "ruff_pid": 54668,
+  "ruff_retained_end_utc": "2026-11-02T16:52:26.840108+00:00",
+  "pytest_executed": false,
+  "real_geometry_runtime_executed": false,
+  "retry": false,
+  "closing_pin_differences": [],
+  "cpu_affinity_mask": 1,
+  "cpu_interpretation": "CPU0 only",
+  "thread_variables_count": 10,
+  "thread_variables_all_one": true,
+  "cuda_visible_devices": "-1",
+  "minimum_resource_and_disk_bytes": 2000000000,
+  "gate_observations": {
+    "preflight": {
+      "available_ram_bytes": 6357950464,
+      "free_commit_bytes": 3167969280,
+      "disk_free_bytes": 25055760384
+    },
+    "compile": {
+      "available_ram_bytes": 6357413888,
+      "free_commit_bytes": 3167936512,
+      "disk_free_bytes": 25055752192
+    },
+    "ruff": {
+      "available_ram_bytes": 6350172160,
+      "free_commit_bytes": 3157516288,
+      "disk_free_bytes": 25055727616
+    }
+  },
+  "subsequent_lint_neutral_changes_included": false,
+  "git_used": false,
+  "raw_opened": false,
+  "manifest": {
+    "bytes": 21737,
+    "sha256": "6e7ea462fc37ce6fc762293785e8d6b885e8cfc5e624c7b7736339b146e11bcf"
+  }
+}
