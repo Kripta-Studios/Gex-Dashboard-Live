@@ -1,5 +1,19 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov22:11UTC: DaccountingCERRADO10PASS/compile0/Ruff0,no relanzar.
+Root28380exit0retenido1a9653,pytestPID22940creation1793657195.1370666,
+exit1793657197.2330484;11pins/snapshots exactos. Helper9bcc/tests4bc5/harness4b21;
+reviewindependienteCLEAR_FINAL_IMPLEMENTATION_ACCOUNTING_FIXTURES_ONLY.
+Archivo02 24copias199038B/a04497c2/1fb6c23b; archivo01receiptmalformadopreservado,
+sin repetir suite. ProductorD4dd783/testsc8386SHIPestático;b3c272reviewpublicado.
+Harnessproductorf8c49916460BreviewSHIP,siguiente publicarantesprimerasuite23tests.
+AuditorD660e/909fentregaincompleta03preservada; autorprevio cesó. Nuevoúnico
+/root/d_auditor_complete_independent,sólo2pyindependientes+contratospúblicos;
+prohibidoleerproductor/helper/tests. B06mismo35709/PID8616vivo842/2768a22:08,
+exit ausente/stderr0; NO Bfull/C real/D real ni PnL nuevo. Goalactivo.
+Ver D_REVISIT_ACCOUNTING_FINAL_IMPLEMENTATION_REVIEW_20261102.md y
+D_REVISIT_MECHANICS_STATIC_REVIEW_20261102.md. Conservartodosfallos/snapshots.
+
 Checkpoint2-nov21:48UTC:D replay aúnWIP,sincompile/lint/pytest/runtime/PnL.
 Interfaz662147publicadaf212d5f9. Trace4288B27c5e083SHIPdocumental,publicarantes
 adopciónfinal; originalc041FIX_FIRSTpreservado. Auditorindependientedce9/tests
