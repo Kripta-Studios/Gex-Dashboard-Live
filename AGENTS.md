@@ -1,5 +1,21 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov22:19UTC: Dproductormecánico CERRADO23PASS+32subtests,0.48s.
+Compile0/Ruff0,root48801exit0retenido0a0abc,pytestPID70344creation1793657791.4527228
+exit1793657794.3831875. Productor6c86774538317B/testsc8386a23950B/helper9bccintacto.
+Fixture02harness9ed3a116488Bdesdepublicadocfe32873;14pins/snapshotsexactos,
+reviewindependienteCLEAR_FINAL_IMPLEMENTATION_D_MECHANICS_FIXTURES_ONLY.
+Archivo02 27copias263828B/55ac7ee0/1d4a93f1. Fixture01compile0/RuffE743fallido,
+pytestNO; cerrado012a9e/21copias241104B/d4b81e8d/b8013359, preservadoinmutable.
+ÚnicocambioI->_identifier4ocurrenciasrevisado9d180725. No repetir suitescerradas.
+Accounting10PASScerradosigueintacto. Auditorindependiente66988B6f3a7005snapshot04
+enreviewcompletaSol;13testsiniciales01f9snapshot04, autorúnico
+/root/d_auditor_complete_independent amplíasólotests de capital/ties/lockout/
+prioridadfísica/Decimalantesfinalreview. Prohibidoleerproductor/helper/tests.
+No suiteauditorD, adaptadorreal ni economía nueva. B06mismo35709/PID8616activo
+898/2768STREAMa22:18; exit ausente. NO Bfull/C real/D real. Goalactivo.
+Autoridad D_REVISIT_MECHANICS_FINAL_IMPLEMENTATION_REVIEW_20261102.md.
+
 Checkpoint2-nov22:11UTC: DaccountingCERRADO10PASS/compile0/Ruff0,no relanzar.
 Root28380exit0retenido1a9653,pytestPID22940creation1793657195.1370666,
 exit1793657197.2330484;11pins/snapshots exactos. Helper9bcc/tests4bc5/harness4b21;

@@ -1,3 +1,12 @@
+Checkpoint2-nov22:19UTC:Dproductormecánico23PASS+32subtests0.48s/compile0/Ruff0
+CERRADO. Root48801exit0retenido0a0abc,14pins/snapshots exactos;finalreviewCLEAR.
+Productor6c867745/tests c8386/helper9bcc/harness029ed3a1; archivo27copias263828B
+55ac7ee0/1d4a93f1. Fixture01lintE743fallido cerrado/preservado,sinpytestallí.
+Accounting10PASScerrado intacto. AuditorD6f3a7005snapshot04reviewcompletaenprogreso;
+autorindependienteamplíatests capital/ties/lockout/physicalwinner/Decimal.
+B06mismo35709/PID8616vivo898/2768a22:18,exit ausente, sinBfull/Creal/Dreal/PnL.
+Goalactivo,selecciónnull/promociónfalse; no repetir suitescerradas.
+
 Checkpoint2-nov22:11UTC: Daccounting10PASS/compile0/Ruff0CERRADO,root28380exit0
 retenido1a9653;11pins/snapshots exactos, reviewindependienteCLEAR_FINAL.
 Archivo02 24copias199038B/a04497c2/1fb6c23b;01receiptmalformadopreservado.

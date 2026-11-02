@@ -1,0 +1,1 @@
+{"status":"PASS_ARCHIVED","payload_files":27,"payload_bytes":263828,"manifest_sha256":"55ac7ee02597bf61b43c704aa7cf69e28c0ad81f4df72d2e5122b413c249714c","root_retained_exit_code":0,"root_exit_chunk":"0a0abc","pytest_passed":23,"pytest_subtests_passed":32,"pytest_seconds":0.48,"source_pins":14,"market_pnl_produced":false}
