@@ -1,0 +1,99 @@
+{
+  "child_created": false,
+  "cpu_affinity_mask": 1,
+  "cuda_visible_devices": "-1",
+  "disk_free_bytes": 26213265408,
+  "minimum_bytes": 2000000000,
+  "pins": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": {
+      "bytes": 31463,
+      "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md": {
+      "bytes": 36466,
+      "sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2R1_ADMISSION_REVIEW_20261102.md": {
+      "bytes": 1584,
+      "sha256": "886c0a83e25a65d8d63aef3ef26b530da984d224613d04139b590b78ac787a17"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2R1_AUDIT_ADMISSION_AMENDMENT_20261102.md": {
+      "bytes": 4291,
+      "sha256": "2afce2d91e35393aad91e9dd65d6b9d9b6e156c0307ffd0f67823254032943d3"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2R2_AUDITOR_IMPLEMENTATION_REVIEW_20261102.md": {
+      "bytes": 3713,
+      "sha256": "a9f78f01fff2afcf51e6581bd65928c3c42505daa74aa10065df212d166cbbd4"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2R2_PROJECTION_AMENDMENT_20261102.md": {
+      "bytes": 5938,
+      "sha256": "22be603919cc93b3d6c7342a7e373e62939f58b8b69efec98dc1e5f136ee260b"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2R2_PROJECTION_REVIEW_20261102.md": {
+      "bytes": 1721,
+      "sha256": "8cc822668fabb5f51cfc0f114ff8dab7c932af69247eae6f346ab4c7604e1abb"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2_CALENDAR_AMENDMENT_20261102.md": {
+      "bytes": 15276,
+      "sha256": "65fd1aaef25ddea13957ce07e6c21285771adc889f097d603f93e00572cf1146"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_value_paths.py": {
+      "bytes": 96078,
+      "sha256": "d927bca9cd64d51792d68a425a021d9fff9c5cb1ff5dfef79f02dcdcc3c2d2e7"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_value_paths_v2.py": {
+      "bytes": 112984,
+      "sha256": "1ad942249d2eb160b2e8fe1ed902e577f9617dc4c11575e297cf5262f5aa61f2"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_value_paths_v2r1.py": {
+      "bytes": 115418,
+      "sha256": "ef2bdd340c3e87ce9edd7d9b45b256ece02208646fa7fe095f167b24127a8122"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_value_paths_v2r2.py": {
+      "bytes": 116851,
+      "sha256": "414d80331301c82404f81e366a63682b029f4f51cc7c0d659e370d6c20886d83"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_event_value_paths_v2.py": {
+      "bytes": 91830,
+      "sha256": "ed260c55a62fecce729dadce170b5dec5c98049be92580495131e007a7ffd5ab"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_value_path_v2r2_audit_fixtures_20261102.py": {
+      "bytes": 16201,
+      "sha256": "654451b9c84de05cec893edf58fb49d03dcab7445f8b8ed7d67bfe5c30fa363d"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths.py": {
+      "bytes": 21539,
+      "sha256": "ac5d0fbee457396e8d9e15d217089a17927f1ba73953d681ffa02f2fc4840deb"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths_v2.py": {
+      "bytes": 36968,
+      "sha256": "e7f7c6e7cd7f9b93a1763b969205478da87182247b1d284d7c9fd5b980112bf7"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths_v2r1.py": {
+      "bytes": 41783,
+      "sha256": "f291c190833dfe3eff4ccd086e3fe323374f21f582ab9c97aaaa45fca79fe82b"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths_v2r2.py": {
+      "bytes": 51396,
+      "sha256": "d02eba1fa017b46e0c22727b13153db6a36e08ed7bd99ff89f1397d232fa6eb4"
+    }
+  },
+  "resources": {
+    "available_ram_bytes": 10495934464,
+    "free_commit_bytes": 9481211904
+  },
+  "stage": "compile",
+  "thread_variables": {
+    "ARROW_NUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMBA_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "POLARS_MAX_THREADS": "1",
+    "TBB_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "utc": "2026-11-02T14:46:31.520961+00:00"
+}

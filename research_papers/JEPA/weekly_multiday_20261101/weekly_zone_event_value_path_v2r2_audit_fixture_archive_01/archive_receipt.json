@@ -1,0 +1,21 @@
+{
+  "schema": "weekly_zone_event_value_path_v2r2_audit_fixture_archive_receipt_v1",
+  "status": "PASS_EXACT_ARCHIVE",
+  "closed_utc": "2026-11-02T14:48:02.6582654Z",
+  "archive_root": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2r2_audit_fixture_archive_01",
+  "payload_root": "preparation",
+  "payload_member_count": 37,
+  "payload_total_bytes": 843047,
+  "source_copy_differences": 0,
+  "unique_destination_members": true,
+  "parent_receipt_included": true,
+  "formal_suite_rerun": false,
+  "metadata_outside_payload": true,
+  "real_audit_root_04_present": false,
+  "real_audit_observer_root_04_present": false,
+  "manifest": {
+    "path": "archive_manifest.json",
+    "bytes": 22326,
+    "sha256": "ea3da7c348d4490db2bcbf5a1de068b150b66ea5eedd4ca6b2b0ab9c4d6586b5"
+  }
+}
