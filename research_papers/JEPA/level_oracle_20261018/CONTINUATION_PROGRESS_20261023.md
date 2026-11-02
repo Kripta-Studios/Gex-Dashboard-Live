@@ -1,3 +1,12 @@
+Checkpoint2-nov23:07UTC: integración D CERRADA8PASS1.21s/compile0/Ruff0 desde
+e2d38b2c;21pins/snapshots exactos, tres hijos retenidos exit0. Pytest26748creation
+1793660353.229248/exit1793660360.3008645, recibob3be7b6b/exit6a447ed4.
+Review independiente SHIP limitado a fixtures. Archivo34copias353533B/9cd9fa65/
+ce61f723,15proyecciones exactas. Root launcher exit/session/chunk no acreditados
+por truncación de salida exterior; limitación explícita/null, sin relanzar.
+Componentes10/23+32/19+167 cerrados intactos. B06 mismo35709/PID8616vivo1093/2768
+a23:04UTC; sinBfull/C real/D real/PnL. Goal activo; siguiente cierreB/admisión/C/D.
+
 Checkpoint2-nov22:48UTC: Dauditor03CERRADO19PASS167subtests4.40s/compile0/Ruff0,
 root35276exit0bbe971,11pinsexactos. Códigoc6c77/tests bde8/harness1e7f;
 archivo24copias275244B/2e80c2dd/f93a6abb;finalreviewCLEAR independiente.

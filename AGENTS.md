@@ -1,5 +1,20 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov23:07UTC: integración D sintética CERRADA8PASS1.21s/compile0/Ruff0.
+Primera ejecución desde e2d38b2c;21pins/snapshots/Git exactos. Pytest PID26748,
+creation1793660353.229248/exit1793660360.3008645; tres hijos exit0 retenidos,
+CPU0/TEN1/CUDA-1/gates2GB, sin drift/retry. Recibo1513B/b3be7b6b, exit117B/6a447ed4.
+Review independiente SHIP/CLEAR_FINAL_IMPLEMENTATION_D_INTEGRATION_FIXTURES_ONLY.
+Archivo34copias353533B/9cd9fa65/ce61f723,15proyecciones exactas. Salida exterior
+del launcher truncada durante compactación: root exit/session/chunk NO acreditados;
+recibo conserva null y limitación, sin relanzar. Los tres hijos/closure sí acreditados.
+Productor23PASS+32subtests, auditor19PASS+167subtests y accounting10PASS intactos.
+B06 sigue mismo35709/PID8616/creation1793644105.584635,1093/2768STREAM a23:04UTC;
+exit ausente/stderr0. No Bfull/C real/D real/PnL nuevo. Siguiente B completo,
+admisión B y C real productor/auditor; sólo después adaptador D real y A/B/C.
+Goal activo, selecciónnull/promociónfalse; no repetir suites cerradas. Autoridad:
+D_REVISIT_INTEGRATION_FINAL_REVIEW_20261102.md. Cambios ajenos intactos.
+
 Checkpoint2-nov22:48UTC: Dauditorindependiente CERRADO19PASS+167subtests4.40s.
 Fixture03compile0/Ruff0,root35276exit0retenidobbe971;pytestPID50076creation
 1793659453.9547591/exit1793659460.9961016. Código68119Bc6c77b1e/testsbde8e042
