@@ -1,0 +1,20 @@
+{
+  "attempt": "attempt01",
+  "closing_pin_differences": [],
+  "completed": [
+    {
+      "exit_code": 0,
+      "stage": "compile"
+    },
+    {
+      "exit_code": 1,
+      "stage": "ruff"
+    }
+  ],
+  "exit_code": 1,
+  "real_value_runtime_executed": false,
+  "recorded_utc": "2026-11-02T12:10:11.021052+00:00",
+  "retry": false,
+  "stage": "ruff",
+  "status": "FORMAL_FIXTURE_STAGE_FAILED"
+}

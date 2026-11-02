@@ -1,0 +1,11 @@
+{
+  "archive_files": 82,
+  "archive_receipt_sha256": "23d9473a919709aba883823e392ecede85713dd1b36573f1fbb64f6c953a676b",
+  "bytes": 997692,
+  "checked_utc": "2026-11-02T12:27:53.256597+00:00",
+  "files": 80,
+  "manifest_sha256": "f4fae5286863eb7e1971f5efde3d74a3c92b9cde4c8d32ab0826fbcd580a90bd",
+  "no_scientific_execution": true,
+  "source_and_destination_exact": true,
+  "status": "PASS_EXACT_SOURCE_AND_COPY_RECONCILIATION"
+}

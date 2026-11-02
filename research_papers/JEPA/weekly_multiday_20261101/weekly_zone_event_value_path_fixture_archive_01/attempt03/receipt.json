@@ -1,0 +1,76 @@
+{
+  "api_read": false,
+  "attempt": "attempt03",
+  "broker_read": false,
+  "closed_utc": "2026-11-02T12:22:30.155785+00:00",
+  "closing_sha256": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": {
+      "bytes": 31463,
+      "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md": {
+      "bytes": 2365,
+      "sha256": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md": {
+      "bytes": 2869,
+      "sha256": "f2b2dc96747159ec0c89f1a71ebc6ed91d808243561269f85773c8780dc272ff"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md": {
+      "bytes": 36466,
+      "sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md": {
+      "bytes": 2340,
+      "sha256": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_event_value_paths.py": {
+      "bytes": 83817,
+      "sha256": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_value_path_fixtures_20261102.py": {
+      "bytes": 14566,
+      "sha256": "f684ac9d364d6eebc5e5130a791760edc3d51b2439fdbde492c7a07ee81bfc96"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_value_path_fixtures_attempt02_20261102.py": {
+      "bytes": 19318,
+      "sha256": "68df689b7c2e372c48c913b8dd401ed86a354d7ada338bdaaa59f910a5c4ea54"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_value_path_fixtures_attempt03_20261102.py": {
+      "bytes": 14067,
+      "sha256": "c5d15af000b67475f415b51dc916888cdd4075b18d88a659bf04ca0093dde468"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_build_weekly_zone_event_value_paths.py": {
+      "bytes": 28614,
+      "sha256": "ea5c7d0b0848e3cc4dc8fc6a9ac0e59505bf9e5244cbd775308a81b682ae72aa"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_weekly_zone_event_spot_paths.py": {
+      "bytes": 33144,
+      "sha256": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb"
+    },
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_spot_paths.py": {
+      "bytes": 40814,
+      "sha256": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38"
+    }
+  },
+  "fit_performed": false,
+  "preserved_attempt01_failure_sha256": "f00ee544fb4dfd2956300f9656c08ab97af3a7e970c0d8286bb8bd13b0c3abaf",
+  "preserved_attempt02_failure_sha256": "c07528fe27f0a774c85a3f2f88fcb6f3bcafd41e8a92ba00c3b41789b3c7cdfd",
+  "real_value_runtime_executed": false,
+  "retry": false,
+  "stages": [
+    {
+      "exit_code": 0,
+      "stage": "compile"
+    },
+    {
+      "exit_code": 0,
+      "stage": "ruff"
+    },
+    {
+      "exit_code": 0,
+      "stage": "pytest"
+    }
+  ],
+  "status": "PASS_FORMAL_SYNTHETIC_WEEKLY_ZONE_EVENT_VALUE_PATH_FIXTURES"
+}

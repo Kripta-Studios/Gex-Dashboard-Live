@@ -1,0 +1,90 @@
+...............................................F........................ [ 75%]
+.......................                                                  [100%]
+================================== FAILURES ===================================
+___________ test_select_unit_journal_records_one_value_source_read ____________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7542/test_select_unit_journal_recor0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000266C2F36650>
+
+    def test_select_unit_journal_records_one_value_source_read(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        source_root = tmp_path / "options"
+        source_root.mkdir()
+        monkeypatch.setattr(M, "SOURCE_ROOT", source_root)
+        path = source_root / "SPY" / "greeks" / "2026" / "01" / "SPY_20260109_20260102_greeks.parquet"
+        path.parent.mkdir(parents=True)
+        table = _trajectory_table().take(pa.array([1, 4], type=pa.int64()))
+        pq.write_table(table, path)
+        source = _selector_source(path)
+        source.update(path=str(path), sha256=M.sha256_file(path), after_stat=M.guard_path(path, source_root))
+        plan = {
+            "status": "PLANNED", "plan_id": "SPY:20260102", "ticker": "SPY",
+            "date": "20260102", "expiration": "20260109", "entry_path": str(path),
+            "source_authority": "H1",
+        }
+        journal_path = tmp_path / "select_journal.jsonl"
+        journal = M.Journal(journal_path, gate=lambda: {"available_ram_bytes": M.MIN_FREE, "free_commit_bytes": M.MIN_FREE, "disk_free_bytes": M.MIN_FREE})
+>       decisions, misses = M.select_decisions([plan], {str(path): source}, journal, expected_count=2)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_build_weekly_zone_event_value_paths.py:246: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+plans = [{'date': '20260102', 'entry_path': 'C:\\Users\\Álvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-Álvaro Schwiedop\\py...PY\\greeks\\2026\\01\\SPY_20260109_20260102_greeks.parquet', 'expiration': '20260109', 'plan_id': 'SPY:20260102', ...}]
+source_metadata = {'C:\\Users\\Álvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-Álvaro Schwiedop\\pytest-7542\\test_select_unit_journal...6224744927465]}, 'clock_basis': 'NATIVE_STORED_TIMESTAMP', 'clock_column': 'timestamp', 'expiration': '20260109', ...}}
+journal = <value_paths_under_test.Journal object at 0x00000266C2F90D70>
+expected_count = 2
+
+    def select_decisions(
+        plans: Sequence[Mapping[str, Any]],
+        source_metadata: Mapping[str, Mapping[str, Any]],
+        journal: Journal,
+        expected_count: int = 3240,
+    ) -> tuple[list[dict[str, Any]], Counter[str]]:
+        decisions: list[dict[str, Any]] = []
+        misses: Counter[str] = Counter()
+        for plan in plans:
+            if plan["status"] != "PLANNED":
+                continue
+            path = str(canonical(plan["entry_path"]))
+            source = source_metadata.get(path)
+            require(source is not None, f"entry source unavailable: {path}")
+            with journal.unit_context("SELECT_1030", plan["plan_id"], [path]) as details:
+                before_stat = guard_path(Path(path), SOURCE_ROOT)
+                before_sha = sha256_file(Path(path))
+                require(before_stat == source["after_stat"] and before_sha == source["sha256"], f"selector source drift before read: {path}")
+                rows_1030 = _selector_rows_1030(Path(path), source, plan)
+                for right in RIGHTS:
+                    chosen = choose_side(rows_1030, right)
+                    if chosen is None:
+                        misses[f"NO_VALID_{right}"] += 1
+                        continue
+                    strike = chosen["strike_decimal"]
+                    decisions.append({
+                        "decision_id": decision_id(plan["plan_id"], plan["ticker"], plan["expiration"], strike, right),
+                        "plan_id": plan["plan_id"], "source_authority": plan["source_authority"],
+                        "ticker": plan["ticker"], "entry_date": plan["date"],
+                        "expiration": plan["expiration"], "right": right,
+                        "strike_decimal": strike, "decision_clock": "10:30",
+                        "decision_minute_i": 60, "decision_bid": chosen["_bid"],
+                        "decision_ask": chosen["_ask"], "decision_delta": chosen["_delta"],
+                        "decision_underlying_price": chosen["_spot"],
+                        "relative_spread": chosen["_relative"],
+                        "selector_distance": abs(abs(chosen["_delta"]) - 0.50),
+                        "source_path": path, "source_sha256": source["sha256"],
+                        "clock_basis": source["clock_basis"], "receipt_time_status": "UNKNOWN",
+                        "interval_used": interval_text(chosen.get("interval_used"), pq.ParquetFile(path).schema_arrow.field("interval_used").type) if "interval_used" in pq.ParquetFile(path).schema_arrow.names else None,
+                        "gamma_column_present": source["gamma_column_present"],
+                    })
+                after_stat = guard_path(Path(path), SOURCE_ROOT)
+                after_sha = sha256_file(Path(path))
+                require(after_stat == before_stat and after_sha == before_sha, f"selector source drift after read: {path}")
+                details.update(source_reads=1, rows_1030=len(rows_1030), decisions=len(decisions), before_stat=before_stat, after_stat=after_stat, sha256_before=before_sha, sha256_after=after_sha)
+        decisions.sort(key=lambda row: (row["entry_date"], TICKER_ORDINAL[row["ticker"]], RIGHT_ORDINAL[row["right"]]))
+        if len(decisions) != expected_count or misses:
+>           raise ValuePathError(f"real comparison decision gate failed: decisions={len(decisions)} misses={dict(misses)}")
+E           value_paths_under_test.ValuePathError: real comparison decision gate failed: decisions=0 misses={'NO_VALID_CALL': 1, 'NO_VALID_PUT': 1}
+
+build_weekly_zone_event_value_paths.py:816: ValuePathError
+=========================== short test summary info ===========================
+FAILED test_build_weekly_zone_event_value_paths.py::test_select_unit_journal_records_one_value_source_read
+1 failed, 94 passed in 1.89s

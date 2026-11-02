@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov12:30UTC: productorpaths preparado95PASS/compile0/Ruff0 en
+attempt03, PID47368exit0retenido12:22:30.119950; receiptfcc9aabf. Builderb652/
+testsea5c,spot0953/tests80d9, finalesb53b/2210 CLEAR. Archivo80copias997692B,
+manifestf4fa/receipt23d9, rootverificación7b752exacta. Binding758c8afc ylauncher
+93292a27 CLEARcondicionalpublicación; aún sinrunB. AuditorindependienteWIP
+fixtures: compilefallido01/Rufffallido02 preservados, sinpytestPASS todavía.
+No eventos/economía/revisitas evaluadas. Goalactivo/promociónfalse. Publicar
+paquete productorantesrunúnico; no relanzarhistorias. Véase preparación
+weekly_multiday_20261101/WEEKLY_ZONE_EVENT_VALUE_PATH_PREPARATION_RESULT_20261102.md.
+
 Checkpoint 2-nov 11:59 UTC: usuario confirma continuar y amplía a revisitas
 multi-day, rebote/rechazo/ruptura y confluencia aproximada IB/Fib/walls. Dirección
 6850f559, DRAFT_NOT_EXECUTABLE: anchors causales, zonas entry-frozen/session-reset/

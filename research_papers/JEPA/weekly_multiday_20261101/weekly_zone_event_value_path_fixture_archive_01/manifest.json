@@ -1,0 +1,731 @@
+{
+  "copy_method": "stdlib shutil.copyfile; no source mutation",
+  "destination_root": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01",
+  "entries": [
+    {
+      "bytes": 2365,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "destination_sha256": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc",
+      "relative_path_posix": "attempt01/WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc",
+      "source_sha256_before": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc"
+    },
+    {
+      "bytes": 2001,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "destination_sha256": "d1ce6dae270fb6169ce52791612ee6c27dc455c141fb40032b4f47500363c77e",
+      "relative_path_posix": "attempt01/WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "d1ce6dae270fb6169ce52791612ee6c27dc455c141fb40032b4f47500363c77e",
+      "source_sha256_before": "d1ce6dae270fb6169ce52791612ee6c27dc455c141fb40032b4f47500363c77e"
+    },
+    {
+      "bytes": 36466,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "destination_sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9",
+      "relative_path_posix": "attempt01/WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "source_sha256_after": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9",
+      "source_sha256_before": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9"
+    },
+    {
+      "bytes": 2340,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test",
+      "destination_sha256": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185",
+      "relative_path_posix": "attempt01/WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185",
+      "source_sha256_before": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185"
+    },
+    {
+      "bytes": 83817,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\build_weekly_zone_event_value_paths.py.before_test",
+      "destination_sha256": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe",
+      "relative_path_posix": "attempt01/build_weekly_zone_event_value_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\build_weekly_zone_event_value_paths.py.before_test",
+      "source_sha256_after": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe",
+      "source_sha256_before": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe"
+    },
+    {
+      "bytes": 1082,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\compile_exit.json",
+      "destination_sha256": "af48057b371ba735605815f1633efe04ecf94e9d9fea0fa0b179989f48471433",
+      "relative_path_posix": "attempt01/compile_exit.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\compile_exit.json",
+      "source_sha256_after": "af48057b371ba735605815f1633efe04ecf94e9d9fea0fa0b179989f48471433",
+      "source_sha256_before": "af48057b371ba735605815f1633efe04ecf94e9d9fea0fa0b179989f48471433"
+    },
+    {
+      "bytes": 1038,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\compile_process.json",
+      "destination_sha256": "de87b01e6804854d5526a63a3d77b06035688244237b6248795160bf60e57f9f",
+      "relative_path_posix": "attempt01/compile_process.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\compile_process.json",
+      "source_sha256_after": "de87b01e6804854d5526a63a3d77b06035688244237b6248795160bf60e57f9f",
+      "source_sha256_before": "de87b01e6804854d5526a63a3d77b06035688244237b6248795160bf60e57f9f"
+    },
+    {
+      "bytes": 3712,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\compile_resource_observation.json",
+      "destination_sha256": "6895683eea05e432c4b86bdee695097897d3a443533542126970cc6678bb7769",
+      "relative_path_posix": "attempt01/compile_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\compile_resource_observation.json",
+      "source_sha256_after": "6895683eea05e432c4b86bdee695097897d3a443533542126970cc6678bb7769",
+      "source_sha256_before": "6895683eea05e432c4b86bdee695097897d3a443533542126970cc6678bb7769"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\compile_stderr.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt01/compile_stderr.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\compile_stderr.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\compile_stdout.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt01/compile_stdout.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\compile_stdout.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 412,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\failure_receipt.json",
+      "destination_sha256": "f00ee544fb4dfd2956300f9656c08ab97af3a7e970c0d8286bb8bd13b0c3abaf",
+      "relative_path_posix": "attempt01/failure_receipt.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\failure_receipt.json",
+      "source_sha256_after": "f00ee544fb4dfd2956300f9656c08ab97af3a7e970c0d8286bb8bd13b0c3abaf",
+      "source_sha256_before": "f00ee544fb4dfd2956300f9656c08ab97af3a7e970c0d8286bb8bd13b0c3abaf"
+    },
+    {
+      "bytes": 31463,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "destination_sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "relative_path_posix": "attempt01/launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "source_sha256_after": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "source_sha256_before": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    {
+      "bytes": 14566,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\launch_weekly_zone_event_value_path_fixtures_20261102.py.before_test",
+      "destination_sha256": "f684ac9d364d6eebc5e5130a791760edc3d51b2439fdbde492c7a07ee81bfc96",
+      "relative_path_posix": "attempt01/launch_weekly_zone_event_value_path_fixtures_20261102.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\launch_weekly_zone_event_value_path_fixtures_20261102.py.before_test",
+      "source_sha256_after": "f684ac9d364d6eebc5e5130a791760edc3d51b2439fdbde492c7a07ee81bfc96",
+      "source_sha256_before": "f684ac9d364d6eebc5e5130a791760edc3d51b2439fdbde492c7a07ee81bfc96"
+    },
+    {
+      "bytes": 3714,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\preflight_resource_observation.json",
+      "destination_sha256": "4e646b03a45be5d235ac842f7807397b4ccb46c2f624d95a0b628bc3ad0b2d74",
+      "relative_path_posix": "attempt01/preflight_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\preflight_resource_observation.json",
+      "source_sha256_after": "4e646b03a45be5d235ac842f7807397b4ccb46c2f624d95a0b628bc3ad0b2d74",
+      "source_sha256_before": "4e646b03a45be5d235ac842f7807397b4ccb46c2f624d95a0b628bc3ad0b2d74"
+    },
+    {
+      "bytes": 1090,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\ruff_exit.json",
+      "destination_sha256": "dfffca5ad74d02bcb31904319d1cda2a36b97f3e23626a99321cbbc09c2270f4",
+      "relative_path_posix": "attempt01/ruff_exit.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\ruff_exit.json",
+      "source_sha256_after": "dfffca5ad74d02bcb31904319d1cda2a36b97f3e23626a99321cbbc09c2270f4",
+      "source_sha256_before": "dfffca5ad74d02bcb31904319d1cda2a36b97f3e23626a99321cbbc09c2270f4"
+    },
+    {
+      "bytes": 1046,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\ruff_process.json",
+      "destination_sha256": "18db1f0e795a9be0eab8abfd4585303f9ab84c706c2d7a1c1e01d75740bb7af6",
+      "relative_path_posix": "attempt01/ruff_process.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\ruff_process.json",
+      "source_sha256_after": "18db1f0e795a9be0eab8abfd4585303f9ab84c706c2d7a1c1e01d75740bb7af6",
+      "source_sha256_before": "18db1f0e795a9be0eab8abfd4585303f9ab84c706c2d7a1c1e01d75740bb7af6"
+    },
+    {
+      "bytes": 3709,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\ruff_resource_observation.json",
+      "destination_sha256": "c3fc73448232db86d8bf4911bd404a2ea47fdf4d126b48b82602104b16e8b5f8",
+      "relative_path_posix": "attempt01/ruff_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\ruff_resource_observation.json",
+      "source_sha256_after": "c3fc73448232db86d8bf4911bd404a2ea47fdf4d126b48b82602104b16e8b5f8",
+      "source_sha256_before": "c3fc73448232db86d8bf4911bd404a2ea47fdf4d126b48b82602104b16e8b5f8"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\ruff_stderr.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt01/ruff_stderr.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\ruff_stderr.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 437,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\ruff_stdout.txt",
+      "destination_sha256": "6cc615e1dc5f707f9dbdf3a0109a712e70437051a05c7749e85ae07e1d0ee2b4",
+      "relative_path_posix": "attempt01/ruff_stdout.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\ruff_stdout.txt",
+      "source_sha256_after": "6cc615e1dc5f707f9dbdf3a0109a712e70437051a05c7749e85ae07e1d0ee2b4",
+      "source_sha256_before": "6cc615e1dc5f707f9dbdf3a0109a712e70437051a05c7749e85ae07e1d0ee2b4"
+    },
+    {
+      "bytes": 28377,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\test_build_weekly_zone_event_value_paths.py.before_test",
+      "destination_sha256": "0f563473a615a835534f9f239ba15214aba4dd691a9644e0659cfc16259a6585",
+      "relative_path_posix": "attempt01/test_build_weekly_zone_event_value_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\test_build_weekly_zone_event_value_paths.py.before_test",
+      "source_sha256_after": "0f563473a615a835534f9f239ba15214aba4dd691a9644e0659cfc16259a6585",
+      "source_sha256_before": "0f563473a615a835534f9f239ba15214aba4dd691a9644e0659cfc16259a6585"
+    },
+    {
+      "bytes": 33144,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\test_weekly_zone_event_spot_paths.py.before_test",
+      "destination_sha256": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb",
+      "relative_path_posix": "attempt01/test_weekly_zone_event_spot_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\test_weekly_zone_event_spot_paths.py.before_test",
+      "source_sha256_after": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb",
+      "source_sha256_before": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb"
+    },
+    {
+      "bytes": 40814,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt01\\weekly_zone_event_spot_paths.py.before_test",
+      "destination_sha256": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38",
+      "relative_path_posix": "attempt01/weekly_zone_event_spot_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt01\\weekly_zone_event_spot_paths.py.before_test",
+      "source_sha256_after": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38",
+      "source_sha256_before": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38"
+    },
+    {
+      "bytes": 2365,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "destination_sha256": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc",
+      "relative_path_posix": "attempt02/WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc",
+      "source_sha256_before": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc"
+    },
+    {
+      "bytes": 2404,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "destination_sha256": "3c71635d40a322811dc1e1041320af79fac102e444ba30a6ebb793b61b4ebb5f",
+      "relative_path_posix": "attempt02/WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "3c71635d40a322811dc1e1041320af79fac102e444ba30a6ebb793b61b4ebb5f",
+      "source_sha256_before": "3c71635d40a322811dc1e1041320af79fac102e444ba30a6ebb793b61b4ebb5f"
+    },
+    {
+      "bytes": 36466,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "destination_sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9",
+      "relative_path_posix": "attempt02/WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "source_sha256_after": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9",
+      "source_sha256_before": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9"
+    },
+    {
+      "bytes": 2340,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test",
+      "destination_sha256": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185",
+      "relative_path_posix": "attempt02/WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185",
+      "source_sha256_before": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185"
+    },
+    {
+      "bytes": 83817,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\build_weekly_zone_event_value_paths.py.before_test",
+      "destination_sha256": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe",
+      "relative_path_posix": "attempt02/build_weekly_zone_event_value_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\build_weekly_zone_event_value_paths.py.before_test",
+      "source_sha256_after": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe",
+      "source_sha256_before": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe"
+    },
+    {
+      "bytes": 1082,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\compile_exit.json",
+      "destination_sha256": "c1fb91f95972aceef1045b58eb9211a66c29607c9851d55671d9824b70756c88",
+      "relative_path_posix": "attempt02/compile_exit.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\compile_exit.json",
+      "source_sha256_after": "c1fb91f95972aceef1045b58eb9211a66c29607c9851d55671d9824b70756c88",
+      "source_sha256_before": "c1fb91f95972aceef1045b58eb9211a66c29607c9851d55671d9824b70756c88"
+    },
+    {
+      "bytes": 1038,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\compile_process.json",
+      "destination_sha256": "f84926286774f8b0cf51f7adbabbf43effd7c34cfab016164ec148d5bfb641c3",
+      "relative_path_posix": "attempt02/compile_process.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\compile_process.json",
+      "source_sha256_after": "f84926286774f8b0cf51f7adbabbf43effd7c34cfab016164ec148d5bfb641c3",
+      "source_sha256_before": "f84926286774f8b0cf51f7adbabbf43effd7c34cfab016164ec148d5bfb641c3"
+    },
+    {
+      "bytes": 7359,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\compile_resource_observation.json",
+      "destination_sha256": "67ab3b489bb9e963ec4837c32044753c74b1ce9717900cbe5481393284ce5683",
+      "relative_path_posix": "attempt02/compile_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\compile_resource_observation.json",
+      "source_sha256_after": "67ab3b489bb9e963ec4837c32044753c74b1ce9717900cbe5481393284ce5683",
+      "source_sha256_before": "67ab3b489bb9e963ec4837c32044753c74b1ce9717900cbe5481393284ce5683"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\compile_stderr.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt02/compile_stderr.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\compile_stderr.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\compile_stdout.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt02/compile_stdout.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\compile_stdout.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 477,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\failure_receipt.json",
+      "destination_sha256": "c07528fe27f0a774c85a3f2f88fcb6f3bcafd41e8a92ba00c3b41789b3c7cdfd",
+      "relative_path_posix": "attempt02/failure_receipt.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\failure_receipt.json",
+      "source_sha256_after": "c07528fe27f0a774c85a3f2f88fcb6f3bcafd41e8a92ba00c3b41789b3c7cdfd",
+      "source_sha256_before": "c07528fe27f0a774c85a3f2f88fcb6f3bcafd41e8a92ba00c3b41789b3c7cdfd"
+    },
+    {
+      "bytes": 31463,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "destination_sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "relative_path_posix": "attempt02/launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "source_sha256_after": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "source_sha256_before": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    {
+      "bytes": 19318,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\launch_weekly_zone_event_value_path_fixtures_attempt02_20261102.py.before_test",
+      "destination_sha256": "68df689b7c2e372c48c913b8dd401ed86a354d7ada338bdaaa59f910a5c4ea54",
+      "relative_path_posix": "attempt02/launch_weekly_zone_event_value_path_fixtures_attempt02_20261102.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\launch_weekly_zone_event_value_path_fixtures_attempt02_20261102.py.before_test",
+      "source_sha256_after": "68df689b7c2e372c48c913b8dd401ed86a354d7ada338bdaaa59f910a5c4ea54",
+      "source_sha256_before": "68df689b7c2e372c48c913b8dd401ed86a354d7ada338bdaaa59f910a5c4ea54"
+    },
+    {
+      "bytes": 7361,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\preflight_resource_observation.json",
+      "destination_sha256": "ff3160005993f4513abd67007b2584dc2f4b132a8ae233fbca5349e7310d865e",
+      "relative_path_posix": "attempt02/preflight_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\preflight_resource_observation.json",
+      "source_sha256_after": "ff3160005993f4513abd67007b2584dc2f4b132a8ae233fbca5349e7310d865e",
+      "source_sha256_before": "ff3160005993f4513abd67007b2584dc2f4b132a8ae233fbca5349e7310d865e"
+    },
+    {
+      "bytes": 3433,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\preserved_attempt01_snapshot.json",
+      "destination_sha256": "c163f5c984306e27a59e813e6f1d5d782349a224cd44775960beddd9187bf1ee",
+      "relative_path_posix": "attempt02/preserved_attempt01_snapshot.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\preserved_attempt01_snapshot.json",
+      "source_sha256_after": "c163f5c984306e27a59e813e6f1d5d782349a224cd44775960beddd9187bf1ee",
+      "source_sha256_before": "c163f5c984306e27a59e813e6f1d5d782349a224cd44775960beddd9187bf1ee"
+    },
+    {
+      "bytes": 747,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\pytest_exit.json",
+      "destination_sha256": "392478a96147df57c72377030de6f2bf0b582f0ee57d67218a9bbaba1fab2930",
+      "relative_path_posix": "attempt02/pytest_exit.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\pytest_exit.json",
+      "source_sha256_after": "392478a96147df57c72377030de6f2bf0b582f0ee57d67218a9bbaba1fab2930",
+      "source_sha256_before": "392478a96147df57c72377030de6f2bf0b582f0ee57d67218a9bbaba1fab2930"
+    },
+    {
+      "bytes": 703,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\pytest_process.json",
+      "destination_sha256": "1385b5a69c3c3fd2ca9dfb9264e64646fce0d4a7bf89d7f6a7f0a2fe80fc4820",
+      "relative_path_posix": "attempt02/pytest_process.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\pytest_process.json",
+      "source_sha256_after": "1385b5a69c3c3fd2ca9dfb9264e64646fce0d4a7bf89d7f6a7f0a2fe80fc4820",
+      "source_sha256_before": "1385b5a69c3c3fd2ca9dfb9264e64646fce0d4a7bf89d7f6a7f0a2fe80fc4820"
+    },
+    {
+      "bytes": 7358,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\pytest_resource_observation.json",
+      "destination_sha256": "e429acfe6327e1f348072ca9aff481ef7dc7c20c389da5d2f5a8650fb851e108",
+      "relative_path_posix": "attempt02/pytest_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\pytest_resource_observation.json",
+      "source_sha256_after": "e429acfe6327e1f348072ca9aff481ef7dc7c20c389da5d2f5a8650fb851e108",
+      "source_sha256_before": "e429acfe6327e1f348072ca9aff481ef7dc7c20c389da5d2f5a8650fb851e108"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\pytest_stderr.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt02/pytest_stderr.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\pytest_stderr.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 6508,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\pytest_stdout.txt",
+      "destination_sha256": "0996041265b944f40010d515c9bdba39bc514a06f4f959b95af9743d25171ebb",
+      "relative_path_posix": "attempt02/pytest_stdout.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\pytest_stdout.txt",
+      "source_sha256_after": "0996041265b944f40010d515c9bdba39bc514a06f4f959b95af9743d25171ebb",
+      "source_sha256_before": "0996041265b944f40010d515c9bdba39bc514a06f4f959b95af9743d25171ebb"
+    },
+    {
+      "bytes": 1089,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\ruff_exit.json",
+      "destination_sha256": "6467eb3df7cdcdec985148e2989dcb4bde5c9718350a7cafb645d620986726b5",
+      "relative_path_posix": "attempt02/ruff_exit.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\ruff_exit.json",
+      "source_sha256_after": "6467eb3df7cdcdec985148e2989dcb4bde5c9718350a7cafb645d620986726b5",
+      "source_sha256_before": "6467eb3df7cdcdec985148e2989dcb4bde5c9718350a7cafb645d620986726b5"
+    },
+    {
+      "bytes": 1045,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\ruff_process.json",
+      "destination_sha256": "caae32a3ff4de975264e063abf70b7695482c36cccc0904aecd82c4f6b868f4a",
+      "relative_path_posix": "attempt02/ruff_process.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\ruff_process.json",
+      "source_sha256_after": "caae32a3ff4de975264e063abf70b7695482c36cccc0904aecd82c4f6b868f4a",
+      "source_sha256_before": "caae32a3ff4de975264e063abf70b7695482c36cccc0904aecd82c4f6b868f4a"
+    },
+    {
+      "bytes": 7356,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\ruff_resource_observation.json",
+      "destination_sha256": "e38802191cf20678369869f62b07522592ff991f79d5f55a97d67623aa094ceb",
+      "relative_path_posix": "attempt02/ruff_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\ruff_resource_observation.json",
+      "source_sha256_after": "e38802191cf20678369869f62b07522592ff991f79d5f55a97d67623aa094ceb",
+      "source_sha256_before": "e38802191cf20678369869f62b07522592ff991f79d5f55a97d67623aa094ceb"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\ruff_stderr.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt02/ruff_stderr.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\ruff_stderr.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 19,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\ruff_stdout.txt",
+      "destination_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "relative_path_posix": "attempt02/ruff_stdout.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\ruff_stdout.txt",
+      "source_sha256_after": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "source_sha256_before": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 28367,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\test_build_weekly_zone_event_value_paths.py.before_test",
+      "destination_sha256": "db5084abe4a751e77def095df7bc5fc92a78eae8c49f048892b6187bcae7499c",
+      "relative_path_posix": "attempt02/test_build_weekly_zone_event_value_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\test_build_weekly_zone_event_value_paths.py.before_test",
+      "source_sha256_after": "db5084abe4a751e77def095df7bc5fc92a78eae8c49f048892b6187bcae7499c",
+      "source_sha256_before": "db5084abe4a751e77def095df7bc5fc92a78eae8c49f048892b6187bcae7499c"
+    },
+    {
+      "bytes": 33144,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\test_weekly_zone_event_spot_paths.py.before_test",
+      "destination_sha256": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb",
+      "relative_path_posix": "attempt02/test_weekly_zone_event_spot_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\test_weekly_zone_event_spot_paths.py.before_test",
+      "source_sha256_after": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb",
+      "source_sha256_before": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb"
+    },
+    {
+      "bytes": 40814,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt02\\weekly_zone_event_spot_paths.py.before_test",
+      "destination_sha256": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38",
+      "relative_path_posix": "attempt02/weekly_zone_event_spot_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt02\\weekly_zone_event_spot_paths.py.before_test",
+      "source_sha256_after": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38",
+      "source_sha256_before": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38"
+    },
+    {
+      "bytes": 2365,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "destination_sha256": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc",
+      "relative_path_posix": "attempt03/WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\WEEKLY_ZONE_EVENT_SPOT_PATH_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc",
+      "source_sha256_before": "bb5d0e1223aabf357eba37ab7b380cc3f380757a3a7d691d3803bc5bdf035ebc"
+    },
+    {
+      "bytes": 2869,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "destination_sha256": "f2b2dc96747159ec0c89f1a71ebc6ed91d808243561269f85773c8780dc272ff",
+      "relative_path_posix": "attempt03/WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\WEEKLY_ZONE_EVENT_VALUE_PATH_BUILDER_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "f2b2dc96747159ec0c89f1a71ebc6ed91d808243561269f85773c8780dc272ff",
+      "source_sha256_before": "f2b2dc96747159ec0c89f1a71ebc6ed91d808243561269f85773c8780dc272ff"
+    },
+    {
+      "bytes": 36466,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "destination_sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9",
+      "relative_path_posix": "attempt03/WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "source_sha256_after": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9",
+      "source_sha256_before": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9"
+    },
+    {
+      "bytes": 2340,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test",
+      "destination_sha256": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185",
+      "relative_path_posix": "attempt03/WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185",
+      "source_sha256_before": "ad118946f30d0681770c25840a4f40d89941030688882b74e23350d098b6b185"
+    },
+    {
+      "bytes": 83817,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\build_weekly_zone_event_value_paths.py.before_test",
+      "destination_sha256": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe",
+      "relative_path_posix": "attempt03/build_weekly_zone_event_value_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\build_weekly_zone_event_value_paths.py.before_test",
+      "source_sha256_after": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe",
+      "source_sha256_before": "b6528622bd9d39fd3a132b6665e7e7cee2e1b0208cd7d854a270093c95398afe"
+    },
+    {
+      "bytes": 1082,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\compile_exit.json",
+      "destination_sha256": "cdb82a5fcb07e29e38b6f37f3d75d4f49cebd82208bbf1824583b54a5d0e73ca",
+      "relative_path_posix": "attempt03/compile_exit.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\compile_exit.json",
+      "source_sha256_after": "cdb82a5fcb07e29e38b6f37f3d75d4f49cebd82208bbf1824583b54a5d0e73ca",
+      "source_sha256_before": "cdb82a5fcb07e29e38b6f37f3d75d4f49cebd82208bbf1824583b54a5d0e73ca"
+    },
+    {
+      "bytes": 1038,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\compile_process.json",
+      "destination_sha256": "82e22d69b89953e0acf85aaa8497fb267bcf10bcb87791267dcb47ef6e9c458d",
+      "relative_path_posix": "attempt03/compile_process.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\compile_process.json",
+      "source_sha256_after": "82e22d69b89953e0acf85aaa8497fb267bcf10bcb87791267dcb47ef6e9c458d",
+      "source_sha256_before": "82e22d69b89953e0acf85aaa8497fb267bcf10bcb87791267dcb47ef6e9c458d"
+    },
+    {
+      "bytes": 12933,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\compile_resource_observation.json",
+      "destination_sha256": "5c1e5e1c69c58235b02177842d475aae2f0d56a0f028c0e0a9299bfb2957e8b7",
+      "relative_path_posix": "attempt03/compile_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\compile_resource_observation.json",
+      "source_sha256_after": "5c1e5e1c69c58235b02177842d475aae2f0d56a0f028c0e0a9299bfb2957e8b7",
+      "source_sha256_before": "5c1e5e1c69c58235b02177842d475aae2f0d56a0f028c0e0a9299bfb2957e8b7"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\compile_stderr.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt03/compile_stderr.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\compile_stderr.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\compile_stdout.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt03/compile_stdout.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\compile_stdout.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 31463,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "destination_sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "relative_path_posix": "attempt03/launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "source_sha256_after": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "source_sha256_before": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    {
+      "bytes": 14566,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\launch_weekly_zone_event_value_path_fixtures_20261102.py.before_test",
+      "destination_sha256": "f684ac9d364d6eebc5e5130a791760edc3d51b2439fdbde492c7a07ee81bfc96",
+      "relative_path_posix": "attempt03/launch_weekly_zone_event_value_path_fixtures_20261102.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\launch_weekly_zone_event_value_path_fixtures_20261102.py.before_test",
+      "source_sha256_after": "f684ac9d364d6eebc5e5130a791760edc3d51b2439fdbde492c7a07ee81bfc96",
+      "source_sha256_before": "f684ac9d364d6eebc5e5130a791760edc3d51b2439fdbde492c7a07ee81bfc96"
+    },
+    {
+      "bytes": 19318,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\launch_weekly_zone_event_value_path_fixtures_attempt02_20261102.py.before_test",
+      "destination_sha256": "68df689b7c2e372c48c913b8dd401ed86a354d7ada338bdaaa59f910a5c4ea54",
+      "relative_path_posix": "attempt03/launch_weekly_zone_event_value_path_fixtures_attempt02_20261102.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\launch_weekly_zone_event_value_path_fixtures_attempt02_20261102.py.before_test",
+      "source_sha256_after": "68df689b7c2e372c48c913b8dd401ed86a354d7ada338bdaaa59f910a5c4ea54",
+      "source_sha256_before": "68df689b7c2e372c48c913b8dd401ed86a354d7ada338bdaaa59f910a5c4ea54"
+    },
+    {
+      "bytes": 14067,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\launch_weekly_zone_event_value_path_fixtures_attempt03_20261102.py.before_test",
+      "destination_sha256": "c5d15af000b67475f415b51dc916888cdd4075b18d88a659bf04ca0093dde468",
+      "relative_path_posix": "attempt03/launch_weekly_zone_event_value_path_fixtures_attempt03_20261102.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\launch_weekly_zone_event_value_path_fixtures_attempt03_20261102.py.before_test",
+      "source_sha256_after": "c5d15af000b67475f415b51dc916888cdd4075b18d88a659bf04ca0093dde468",
+      "source_sha256_before": "c5d15af000b67475f415b51dc916888cdd4075b18d88a659bf04ca0093dde468"
+    },
+    {
+      "bytes": 12935,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\preflight_resource_observation.json",
+      "destination_sha256": "9b3da689ed4ecaa39fa7ecb324e4a05c2faea349c99c0bc3ac0682e7d8ab4efb",
+      "relative_path_posix": "attempt03/preflight_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\preflight_resource_observation.json",
+      "source_sha256_after": "9b3da689ed4ecaa39fa7ecb324e4a05c2faea349c99c0bc3ac0682e7d8ab4efb",
+      "source_sha256_before": "9b3da689ed4ecaa39fa7ecb324e4a05c2faea349c99c0bc3ac0682e7d8ab4efb"
+    },
+    {
+      "bytes": 8147,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\preserved_attempts_snapshot.json",
+      "destination_sha256": "de117ed424a8c6d66802f15c02f8ace162082de17a25b16c6e2a6d27906dfad4",
+      "relative_path_posix": "attempt03/preserved_attempts_snapshot.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\preserved_attempts_snapshot.json",
+      "source_sha256_after": "de117ed424a8c6d66802f15c02f8ace162082de17a25b16c6e2a6d27906dfad4",
+      "source_sha256_before": "de117ed424a8c6d66802f15c02f8ace162082de17a25b16c6e2a6d27906dfad4"
+    },
+    {
+      "bytes": 748,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\pytest_exit.json",
+      "destination_sha256": "fcc0c37035f01e5868ab50426d754593cf89ea36a05847626be124d1a532e7a1",
+      "relative_path_posix": "attempt03/pytest_exit.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\pytest_exit.json",
+      "source_sha256_after": "fcc0c37035f01e5868ab50426d754593cf89ea36a05847626be124d1a532e7a1",
+      "source_sha256_before": "fcc0c37035f01e5868ab50426d754593cf89ea36a05847626be124d1a532e7a1"
+    },
+    {
+      "bytes": 704,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\pytest_process.json",
+      "destination_sha256": "ef709a56bd9cea88a36044acd8126b6b7a029ae7fd84586d2eedc73ff134e71d",
+      "relative_path_posix": "attempt03/pytest_process.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\pytest_process.json",
+      "source_sha256_after": "ef709a56bd9cea88a36044acd8126b6b7a029ae7fd84586d2eedc73ff134e71d",
+      "source_sha256_before": "ef709a56bd9cea88a36044acd8126b6b7a029ae7fd84586d2eedc73ff134e71d"
+    },
+    {
+      "bytes": 12932,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\pytest_resource_observation.json",
+      "destination_sha256": "ed60d4273350cb0af993cd81db400a4e304d21c79ae061f82e76e723d42cc289",
+      "relative_path_posix": "attempt03/pytest_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\pytest_resource_observation.json",
+      "source_sha256_after": "ed60d4273350cb0af993cd81db400a4e304d21c79ae061f82e76e723d42cc289",
+      "source_sha256_before": "ed60d4273350cb0af993cd81db400a4e304d21c79ae061f82e76e723d42cc289"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\pytest_stderr.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt03/pytest_stderr.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\pytest_stderr.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 182,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\pytest_stdout.txt",
+      "destination_sha256": "724b0e9c605c74c6e1f82c4740e31c7f46826346220dce155651f6a2e7e26ef3",
+      "relative_path_posix": "attempt03/pytest_stdout.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\pytest_stdout.txt",
+      "source_sha256_after": "724b0e9c605c74c6e1f82c4740e31c7f46826346220dce155651f6a2e7e26ef3",
+      "source_sha256_before": "724b0e9c605c74c6e1f82c4740e31c7f46826346220dce155651f6a2e7e26ef3"
+    },
+    {
+      "bytes": 4397,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\receipt.json",
+      "destination_sha256": "fcc9aabf079747499d2aac231b6ceb6763a644e12525d741e58b4d41cef1c02a",
+      "relative_path_posix": "attempt03/receipt.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\receipt.json",
+      "source_sha256_after": "fcc9aabf079747499d2aac231b6ceb6763a644e12525d741e58b4d41cef1c02a",
+      "source_sha256_before": "fcc9aabf079747499d2aac231b6ceb6763a644e12525d741e58b4d41cef1c02a"
+    },
+    {
+      "bytes": 1090,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\ruff_exit.json",
+      "destination_sha256": "7efb60eed72ccdc9b7e8524108594fdeb0a3fe0285ae3d3360ce756d28376133",
+      "relative_path_posix": "attempt03/ruff_exit.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\ruff_exit.json",
+      "source_sha256_after": "7efb60eed72ccdc9b7e8524108594fdeb0a3fe0285ae3d3360ce756d28376133",
+      "source_sha256_before": "7efb60eed72ccdc9b7e8524108594fdeb0a3fe0285ae3d3360ce756d28376133"
+    },
+    {
+      "bytes": 1046,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\ruff_process.json",
+      "destination_sha256": "691c44ecc5be63e51184ca979268aad2bda37693f56a0bae22d9e41805d0a09e",
+      "relative_path_posix": "attempt03/ruff_process.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\ruff_process.json",
+      "source_sha256_after": "691c44ecc5be63e51184ca979268aad2bda37693f56a0bae22d9e41805d0a09e",
+      "source_sha256_before": "691c44ecc5be63e51184ca979268aad2bda37693f56a0bae22d9e41805d0a09e"
+    },
+    {
+      "bytes": 12930,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\ruff_resource_observation.json",
+      "destination_sha256": "3428fecfd3ecc87f757a92b2761a231f9424d76b7581ac5ddbcfe4bd8fa47b97",
+      "relative_path_posix": "attempt03/ruff_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\ruff_resource_observation.json",
+      "source_sha256_after": "3428fecfd3ecc87f757a92b2761a231f9424d76b7581ac5ddbcfe4bd8fa47b97",
+      "source_sha256_before": "3428fecfd3ecc87f757a92b2761a231f9424d76b7581ac5ddbcfe4bd8fa47b97"
+    },
+    {
+      "bytes": 0,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\ruff_stderr.txt",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "relative_path_posix": "attempt03/ruff_stderr.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\ruff_stderr.txt",
+      "source_sha256_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 19,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\ruff_stdout.txt",
+      "destination_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "relative_path_posix": "attempt03/ruff_stdout.txt",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\ruff_stdout.txt",
+      "source_sha256_after": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "source_sha256_before": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "bytes": 28614,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\test_build_weekly_zone_event_value_paths.py.before_test",
+      "destination_sha256": "ea5c7d0b0848e3cc4dc8fc6a9ac0e59505bf9e5244cbd775308a81b682ae72aa",
+      "relative_path_posix": "attempt03/test_build_weekly_zone_event_value_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\test_build_weekly_zone_event_value_paths.py.before_test",
+      "source_sha256_after": "ea5c7d0b0848e3cc4dc8fc6a9ac0e59505bf9e5244cbd775308a81b682ae72aa",
+      "source_sha256_before": "ea5c7d0b0848e3cc4dc8fc6a9ac0e59505bf9e5244cbd775308a81b682ae72aa"
+    },
+    {
+      "bytes": 33144,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\test_weekly_zone_event_spot_paths.py.before_test",
+      "destination_sha256": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb",
+      "relative_path_posix": "attempt03/test_weekly_zone_event_spot_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\test_weekly_zone_event_spot_paths.py.before_test",
+      "source_sha256_after": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb",
+      "source_sha256_before": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb"
+    },
+    {
+      "bytes": 40814,
+      "destination_path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\attempt03\\weekly_zone_event_spot_paths.py.before_test",
+      "destination_sha256": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38",
+      "relative_path_posix": "attempt03/weekly_zone_event_spot_paths.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01\\attempt03\\weekly_zone_event_spot_paths.py.before_test",
+      "source_sha256_after": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38",
+      "source_sha256_before": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38"
+    }
+  ],
+  "ordering": "ascending POSIX relative path by Python Unicode code-point tuple",
+  "schema": "weekly_zone_event_value_path_fixture_archive_manifest_v1",
+  "source_file_count": 80,
+  "source_root": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01",
+  "source_total_bytes": 997692
+}

@@ -1,0 +1,20 @@
+{
+  "all_destinations_rehashed_after_copy": true,
+  "all_sources_rehashed_after_copy": true,
+  "api_read": false,
+  "closed_utc": "2026-11-02T12:24:22.487899+00:00",
+  "destination_root": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01",
+  "git_used": false,
+  "manifest": {
+    "bytes": 67117,
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixture_archive_01\\manifest.json",
+    "sha256": "f4fae5286863eb7e1971f5efde3d74a3c92b9cde4c8d32ab0826fbcd580a90bd"
+  },
+  "runtime_executed": false,
+  "schema": "weekly_zone_event_value_path_fixture_archive_receipt_v1",
+  "source_file_count": 80,
+  "source_root": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_fixtures_01",
+  "source_total_bytes": 997692,
+  "status": "PASS_EXACT_FIXTURE_ARCHIVE",
+  "tests_executed": false
+}

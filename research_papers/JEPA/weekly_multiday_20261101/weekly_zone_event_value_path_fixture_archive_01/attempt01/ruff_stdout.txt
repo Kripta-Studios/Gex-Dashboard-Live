@@ -1,0 +1,14 @@
+F401 [*] `datetime.timezone` imported but unused
+  --> test_build_weekly_zone_event_value_paths.py:10:38
+   |
+ 8 | import os
+ 9 | from types import SimpleNamespace
+10 | from datetime import date, datetime, timezone
+   |                                      ^^^^^^^^
+11 | from decimal import Decimal
+12 | from pathlib import Path
+   |
+help: Remove unused import: `datetime.timezone`
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.
