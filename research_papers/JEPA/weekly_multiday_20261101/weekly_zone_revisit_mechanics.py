@@ -29,7 +29,7 @@ def C(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
 
 
-def I(schema: str, **payload: Any) -> str:
+def _identifier(schema: str, **payload: Any) -> str:
     return hashlib.sha256(C({"schema": schema, **payload}).encode("utf-8")).hexdigest()
 
 
@@ -247,7 +247,7 @@ def _validate(plans, anchors, spots, quotes, config) -> dict[str, list[dict[str,
     return grouped
 
 def event(p:dict[str,Any],a:dict[str,Any])->dict[str,Any]:
-    r=I("D_REVISIT_V1",plan_id=p["plan_id"],anchor_id=a["anchor_id"])
+    r=_identifier("D_REVISIT_V1",plan_id=p["plan_id"],anchor_id=a["anchor_id"])
     return {"calendar_ordinal":p["calendar_ordinal"],"plan_id":p["plan_id"],"ticker":p["ticker"],"trade_date":p["trade_date"],"expiry_date":p["expiry_date"],"anchor_id":a["anchor_id"],"cluster_ordinal":a["cluster_ordinal"],"center":a["center"],"band":a["band"],"source_mask":a["source_mask"],"anchor_available_at":a["anchor_available_at_local_ns"],"revisit_id":r,"event_status":"NOT_ARMED","armed_side":None,"visit_time":None,"departure_time":None,"departure_side":None,"revisit_time":None,"confirmation_time":None,"confirmation_time_local_ns":None,"event_id":None,"event_session_date":None,"decision_id":None,"side":None,"stop_spot":None,"target_anchor_id":None,"target_spot":None,"entry_quote_time":None,"entry_quote_time_local_ns":None,"event_entry_ask":None,"intent_id":None,"terminal_reason":"NO_VISIT","overlap_rank_json":"","transition_trace_json":"[]","spot_coverage_status":"COMPLETE","option_coverage_status":"NOT_REQUIRED","label_available_at":p["horizon_end_local_ns"],"b_plan_pin":p["b_plan_pin"],"c_anchor_pin":p["c_anchor_pin"],"_t":[]}
 def target(p:dict[str,Any],a:dict[str,Any],aa:list[dict[str,Any]],side:str,s:float):
     z=[x for x in aa if x["anchor_id"]!=a["anchor_id"] and ((side=="ABOVE" and x["center"]>s) or(side=="BELOW" and x["center"]<s))]
@@ -334,7 +334,7 @@ def scan(p: dict[str, Any], a: dict[str, Any], aa: list[dict[str, Any]], ss: lis
                 state = "CONFIRMED"
                 trace(e, "CONFIRMED", moment, spot, side, "CONFIRM_ONE_" + str(side), state, "OUTER_SAME_SIDE")
                 e.update(event_status="CONFIRMED", confirmation_time=moment, confirmation_time_local_ns=moment, event_session_date=sample["trade_date"], departure_side=side, side="CALL" if side == "ABOVE" else "PUT", decision_id=p["call_decision_id"] if side == "ABOVE" else p["put_decision_id"], stop_spot=a["center"] - 2.0 * a["band"] if side == "ABOVE" else a["center"] + 2.0 * a["band"])
-                e["event_id"] = I("D_EVENT_V1", revisit_id=e["revisit_id"], confirmation_time_local_ns=moment, departure_side=side)
+                e["event_id"] = _identifier("D_EVENT_V1", revisit_id=e["revisit_id"], confirmation_time_local_ns=moment, departure_side=side)
                 chosen = target(p, a, aa, side, spot)
                 if chosen is not None:
                     e.update(target_anchor_id=chosen["anchor_id"], target_spot=chosen["center"])
@@ -432,7 +432,7 @@ def _resolve_intents(events: list[dict[str, Any]], plans: dict[str, dict[str, An
                     _terminal_trace(e, "NO_ENTRY_QUOTE", horizon, "ASK_ABSENT")
                 continue
             e.update(entry_quote_time=first_ask["time_local_ns"], entry_quote_time_local_ns=first_ask["time_local_ns"], event_entry_ask=first_ask["ask"], option_coverage_status="ENTRY_QUOTE_VALID")
-            e["intent_id"] = I("D_INTENT_V1", event_id=e["event_id"], decision_id=e["decision_id"], entry_quote_time_local_ns=first_ask["time_local_ns"])
+            e["intent_id"] = _identifier("D_INTENT_V1", event_id=e["event_id"], decision_id=e["decision_id"], entry_quote_time_local_ns=first_ask["time_local_ns"])
             intents.append(e)
     return intents
 

@@ -1,0 +1,9 @@
+E743 Ambiguous function name: `I`
+  --> weekly_zone_revisit_mechanics.py:32:5
+   |
+32 | def I(schema: str, **payload: Any) -> str:
+   |     ^
+33 |     return hashlib.sha256(C({"schema": schema, **payload}).encode("utf-8")).hexdigest()
+   |
+
+Found 1 error.

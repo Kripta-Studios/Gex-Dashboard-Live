@@ -1,0 +1,1 @@
+{"status":"FAILED_CLOSED_ARCHIVED","payload_files":21,"payload_bytes":241104,"manifest_sha256":"d4b81e8d2412f6a31c387d4cb65d53922f1f115f359a7fb02d71053ba4cc74f4","root_retained_exit_code":1,"root_exit_chunk":"012a9e","stage":"ruff","diagnostic":"E743 ambiguous function I","compile_exit_code":0,"pytest_executed":false,"source_pins":13,"market_pnl_produced":false}
