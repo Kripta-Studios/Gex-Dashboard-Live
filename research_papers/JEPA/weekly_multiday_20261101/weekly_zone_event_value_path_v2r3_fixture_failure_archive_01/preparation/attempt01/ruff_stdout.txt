@@ -1,0 +1,14 @@
+F401 [*] `audit_weekly_zone_event_value_paths_v2r2_attempt05` imported but unused
+  --> test_bounded_resource_wait.py:13:62
+   |
+11 | import pytest
+12 |
+13 | import audit_weekly_zone_event_value_paths_v2r2_attempt05 as baseline
+   |                                                              ^^^^^^^^
+14 | import audit_weekly_zone_event_value_paths_v2r3 as audit
+15 | import bounded_resource_wait as wait
+   |
+help: Remove unused import: `audit_weekly_zone_event_value_paths_v2r2_attempt05`
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

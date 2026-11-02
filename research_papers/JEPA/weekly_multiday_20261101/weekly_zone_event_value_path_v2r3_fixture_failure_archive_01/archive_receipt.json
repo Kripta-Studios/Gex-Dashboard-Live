@@ -1,0 +1,50 @@
+{
+  "schema": "weekly_zone_event_value_path_v2r3_fixture_failure_archive_receipt_v1",
+  "status": "PASS_EXACT_FIXTURE_FAILURE_ARCHIVE",
+  "closed_utc": "2026-11-02T17:23:22.1983203Z",
+  "source_file_count": 60,
+  "source_total_bytes": 14808161,
+  "source_copy_differences": 0,
+  "snapshot_count": 47,
+  "compile_exit_code": 0,
+  "ruff_exit_code": 1,
+  "ruff_pid": 57472,
+  "ruff_end_utc": "2026-11-02T17:22:04.656373+00:00",
+  "ruff_rule": "F401",
+  "ruff_error_count": 1,
+  "pytest_executed": false,
+  "formal_suite_pass": false,
+  "real_value_audit_executed": false,
+  "retry": false,
+  "closing_pin_differences": [],
+  "cpu_affinity_mask": 1,
+  "thread_variables_count": 10,
+  "thread_variables_all_one": true,
+  "cuda_visible_devices": "-1",
+  "gate_observations": {
+    "preflight": {
+      "available_ram_bytes": 9760231424,
+      "free_commit_bytes": 10015465472,
+      "disk_free_bytes": 25035255808
+    },
+    "compile": {
+      "available_ram_bytes": 9744764928,
+      "free_commit_bytes": 10003423232,
+      "disk_free_bytes": 25035239424
+    },
+    "ruff": {
+      "available_ram_bytes": 9732427776,
+      "free_commit_bytes": 9990811648,
+      "disk_free_bytes": 25035210752
+    }
+  },
+  "post_failure_unused_import_correction_included": false,
+  "original_snapshots_immutable": true,
+  "market_values_opened": false,
+  "raw_opened": false,
+  "git_used": false,
+  "manifest": {
+    "bytes": 42199,
+    "sha256": "fcce933dc79f877d76e60dd70a2e07f5a787bd2cfb6013eea7eb82a87f3d811b"
+  }
+}

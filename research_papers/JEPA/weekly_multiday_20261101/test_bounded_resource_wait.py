@@ -10,7 +10,6 @@ from pathlib import Path
 
 import pytest
 
-import audit_weekly_zone_event_value_paths_v2r2_attempt05 as baseline
 import audit_weekly_zone_event_value_paths_v2r3 as audit
 import bounded_resource_wait as wait
 
