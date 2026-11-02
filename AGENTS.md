@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint 2-nov: fase A source-plan preparada, sin runtime real todavía.
+Builder9a412a3a/tests ed4de57a:22PASS/compile/Ruff0 en attempt02; attempt01
+21PASS/1FAIL de fixture preservado, código intacto. Auditor118a349f/tests289b:
+20PASS/compile/Ruff0. Reviews independientes CLEAR_FINAL_IMPLEMENTATION.
+Archivos exactos planner51copias275511B/45fcfee2 y auditor26copias130003B/
+89805f2b; CPU0/diezvars1/gates oficiales por hijo. Falta publicar paquete
+y ejecutar una vez el plan2790/4860; auditor real sólo tras cierre y binding.
+No raw/footers/arrays/outcomes/fits nuevos. DAILY sigueFAIL, goalactivo,
+selecciónnull/promociónfalse. ContratoB de valores todavía pendiente.
+
 Checkpoint 2-nov: nueva fase A de eventos weekly predeclarada, sin valores.
 Contrato SOURCE_PLAN_NOT_VALUE_ADMISSION c1891e79 revisado documentalmente:
 2790ticker-días/930sesiones,1620planes,4860refs nominales D/D1/H2. Reutiliza
