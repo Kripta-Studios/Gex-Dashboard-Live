@@ -1,0 +1,13 @@
+{
+  "status": "ROOT_GO_B06_SINGLE_RUN",
+  "utc": "2026-11-02T18:28:15.8463230Z",
+  "publication_commit": "28b9b12b24c9fe48119df4db8333c989e78d4baa",
+  "launcher_sha256": "e051b1cfef41cbbff1e24f8b74e69940ae9869a3d207a9b8eea9ddd94364d0dc",
+  "launcher_bytes": 45860,
+  "runtime_binding_sha256": "a62ef18805190e0835b9388bef69a5974d26b61144c3d4a99ceafa384e60b54e",
+  "runtime_review_sha256": "60b4f731eb2db737ea1d8eadd457cc28bf947127f3e0cae4b7f2961f0488e014",
+  "publication_verification_sha256": "0f9741929debc442f799f06e7f1b112ea43d1c817417db6e5c35daf6a514402e",
+  "own_python_count_before_launch": 0,
+  "retry": false,
+  "user_express_resumption": true
+}

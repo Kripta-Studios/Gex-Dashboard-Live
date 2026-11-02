@@ -1,5 +1,24 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov19:20UTC: mismo B06 ACTIVO, NO RELANZAR; root35709/PID8616.
+2784FOOTERS y1101/1620SELECT cerrados; ceroERROR/stderr0, sinexit/PASS.
+ÚltimogateRAM8866705408/commit3930542080/disco22228283392; noWAITobservado.
+Daddendum38704B/c5671160 revisadoindependienteSHIP_DOCUMENT_ONLY; review3c47de48.
+Tresarms A/B/C, WEEKLY_RAW porcontinuidadpre-outcome, Dlibrocontinuo100000USD
+ene2-sep17 sinresetjulio ycriterio8/8EXIT; sóloenmiendadocumental, bindingsB/Cpendientes.
+Cwrappernuevoenpreparación;69C/136R3no repetidos. SinCreal/Dreplay/PnLnuevo.
+Goalactivo, selecciónnull/promociónfalse. EsperarcierremismohandleB06.
+
+Checkpoint2-nov18:28UTC: B06real ACTIVO, NO RELANZAR. Ordenexpresareanudación.
+Publicado28b9b12b/90files; root35709/PID8616creation1793644105.584635,
+start18:28:25.580056UTC,CPU0/handle retenido/metadataerrornull.
+Launchere051b1cf45860B/bindinga62ef1884314B, reviewindependienteSHIPpublicado.
+GateprechildRAM6589546496/commit7674454016/disco23153889280; TEN1/CUDA-1.
+Autoridades/calendario admitidos,FOOTERS iniciado. Sinexit/PASS/PnLnuevo.
+Esperarmismoproceso; no repetirR3/C, noadoptarparciales. C real despuésBfullPASS.
+Dformatosdocumentalesenpreparación. Goalactivo,selecciónnull,promociónfalse.
+Ver WEEKLY_ZONE_EVENT_VALUE_PATH_B06_START_20261102.md bajo weekly_multiday_20261101.
+
 REANUDADA por nueva orden expresa del usuario el2-nov-2026 en esta sesión.
 La orden revoca la pausa18:01:52UTC. get_goal=null; creado goal de continuación
 activo a18:20:59UTC. Autoridad actual: REANUDACION_20261102/LEEME.md bajo
