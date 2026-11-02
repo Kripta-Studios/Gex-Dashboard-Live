@@ -1,0 +1,56 @@
+................F...                                                     [100%]
+================================== FAILURES ===================================
+_____________ test_final_rehash_occurs_after_audit_manifest_write _____________
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7525/test_final_rehash_occurs_after0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000177012BF490>
+
+    def test_final_rehash_occurs_after_audit_manifest_write(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        watched = tmp_path / "watched.json"
+        dump_json(watched, {"stable": True})
+        output = tmp_path / "audit_output"
+        monkeypatch.setattr(audit, "OUTPUT", output)
+        monkeypatch.setattr(
+            audit, "admit",
+            lambda *_args: ({}, {str(watched): audit.pin(watched)}),
+        )
+        monkeypatch.setattr(audit, "import_pinned", lambda *_args: object())
+        monkeypatch.setattr(audit, "numeric_audit", lambda *_args: {"ok": True})
+        original_write = audit.write_json
+    
+        def mutating_write(path: Path, value: object) -> None:
+            original_write(path, value)
+            if path.name == "manifest.json":
+                dump_json(watched, {"stable": False})
+    
+        monkeypatch.setattr(audit, "write_json", mutating_write)
+        with pytest.raises(audit.AuditError, match="changed input/output"):
+>           audit.run(tmp_path, "a" * 64, tmp_path / "exit.json", "b" * 64, "c" * 64, "d" * 64, output)
+
+test_audit_weekly_daily_adaptation.py:303: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_daily_adaptation.py:865: in run
+    "producer_manifest": pin(producer_root / "manifest.json"),
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+audit_weekly_daily_adaptation.py:139: in pin
+    return {"path": str(path), "bytes": path.stat().st_size, "sha256": sha256_file(path)}
+                                        ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7525/test_final_rehash_occurs_after0/manifest.json')
+
+    def stat(self, *, follow_symlinks=True):
+        """
+        Return the result of the stat() system call on this path, like
+        os.stat() does.
+        """
+>       return os.stat(self, follow_symlinks=follow_symlinks)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [WinError 2] El sistema no puede encontrar el archivo especificado: 'C:\\Users\\Álvaro Schwiedop\\AppData\\Local\\Temp\\pytest-of-Álvaro Schwiedop\\pytest-7525\\test_final_rehash_occurs_after0\\manifest.json'
+
+C:\Program Files\Python314\Lib\pathlib\__init__.py:654: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED test_audit_weekly_daily_adaptation.py::test_final_rehash_occurs_after_audit_manifest_write
+1 failed, 19 passed in 0.59s

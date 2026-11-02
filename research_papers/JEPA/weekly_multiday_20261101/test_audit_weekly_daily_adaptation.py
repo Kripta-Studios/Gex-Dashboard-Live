@@ -283,6 +283,10 @@ def test_final_rehash_occurs_after_audit_manifest_write(
 ) -> None:
     watched = tmp_path / "watched.json"
     dump_json(watched, {"stable": True})
+    producer_manifest = tmp_path / "manifest.json"
+    producer_exit = tmp_path / "exit.json"
+    dump_json(producer_manifest, {"synthetic": "producer manifest"})
+    dump_json(producer_exit, {"exit_code": 0})
     output = tmp_path / "audit_output"
     monkeypatch.setattr(audit, "OUTPUT", output)
     monkeypatch.setattr(
@@ -300,7 +304,7 @@ def test_final_rehash_occurs_after_audit_manifest_write(
 
     monkeypatch.setattr(audit, "write_json", mutating_write)
     with pytest.raises(audit.AuditError, match="changed input/output"):
-        audit.run(tmp_path, "a" * 64, tmp_path / "exit.json", "b" * 64, "c" * 64, "d" * 64, output)
+        audit.run(tmp_path, "a" * 64, producer_exit, "b" * 64, "c" * 64, "d" * 64, output)
 
 
 def test_upstream_semantic_binding_and_flags_are_explicit_constants() -> None:

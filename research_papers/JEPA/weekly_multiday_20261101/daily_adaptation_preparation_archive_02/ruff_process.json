@@ -1,0 +1,21 @@
+{
+  "admission_error": null,
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-m",
+    "ruff",
+    "check",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_daily_adaptation.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_evaluate_weekly_daily_adaptation.py"
+  ],
+  "cpu_affinity": [
+    0
+  ],
+  "cpu_affinity_mask": 1,
+  "creation_epoch": 1793611532.04817,
+  "handle_retained": true,
+  "name": "ruff",
+  "pid": 37296,
+  "start_utc": "2026-11-02T09:25:32.046735+00:00",
+  "wait_pending": true
+}

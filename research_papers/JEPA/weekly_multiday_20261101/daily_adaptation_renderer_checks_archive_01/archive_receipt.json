@@ -1,0 +1,96 @@
+{
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\compile_exit.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\compile_exit.json",
+      "bytes": 565,
+      "sha256": "236c9935df24082192c380e1c19f4a8e14f1ff385eec744f67d7aa9ef127b8c2"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\compile_process.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\compile_process.json",
+      "bytes": 521,
+      "sha256": "6f4927da01b968d70a7371e9415acf8ba68e9b160410941f361e92efaa1a6189"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\compile_stderr.txt",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\compile_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\compile_stdout.txt",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\compile_stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\DAILY_ADAPTATION_CONTRACT_20261101.md.before_check",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\DAILY_ADAPTATION_CONTRACT_20261101.md.before_check",
+      "bytes": 12317,
+      "sha256": "5d388e484435c8fe23d40476c02928887c6ab5487af62197e5e74f08c1fe0047"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\DAILY_ADAPTATION_RENDERER_STATIC_REVIEW_20261101.md.before_check",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\DAILY_ADAPTATION_RENDERER_STATIC_REVIEW_20261101.md.before_check",
+      "bytes": 1575,
+      "sha256": "0735773e90f04ccf8c045b8c079daf264389c039a1e43503d92328befbfae921"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\launch_daily_adaptation_renderer_checks_20261102.py.before_check",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\launch_daily_adaptation_renderer_checks_20261102.py.before_check",
+      "bytes": 8512,
+      "sha256": "587a4e5ff8bb5d51cf0e6c4f7e2e458ea05cb681d6184f584c29d56bdbd1e4c7"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\preflight_gate_pass.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\preflight_gate_pass.json",
+      "bytes": 189,
+      "sha256": "a7c5791e026e59a416f8961cb19f9a33b628e9f00e934bbbdfab8ef494801609"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\preflight_observation.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\preflight_observation.json",
+      "bytes": 2120,
+      "sha256": "75b200bdbf1e4b72f2843be7dc2ad3f1b2824a7c4e895ada8bf13e3d848b9d41"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\receipt.json",
+      "bytes": 1663,
+      "sha256": "bef04941a5590ca374b6c87730be8509c295bfa58d444a6bf094937ae1aed2ef"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\render_weekly_daily_adaptation_result.py.before_check",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\render_weekly_daily_adaptation_result.py.before_check",
+      "bytes": 34271,
+      "sha256": "d0672f7d4723fa96f7df4745a0f7e922833e22b0b17deae2528c15b09fed3698"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\ruff_exit.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\ruff_exit.json",
+      "bytes": 572,
+      "sha256": "9617924d06bef28a223321cdc34a5033693b497902a684d365608c4d0e91c914"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\ruff_process.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\ruff_process.json",
+      "bytes": 528,
+      "sha256": "152121b5666511c759fe0431e41b8bf75ea1cdf1d31fa37e02b77bb1ebbf39f5"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\ruff_stderr.txt",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\ruff_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\daily_adaptation_renderer_preparation_01\\attempt01\\ruff_stdout.txt",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_renderer_checks_archive_01\\ruff_stdout.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    }
+  ],
+  "count": 15,
+  "bytes": 62852
+}

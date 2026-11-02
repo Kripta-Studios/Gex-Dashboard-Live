@@ -1,0 +1,26 @@
+{
+  "closed_utc": "2026-11-02T09:32:11.558190+00:00",
+  "closing_sha256": {
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\DAILY_ADAPTATION_CONTRACT_20261101.md": "5d388e484435c8fe23d40476c02928887c6ab5487af62197e5e74f08c1fe0047",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\DAILY_ADAPTATION_RENDERER_STATIC_REVIEW_20261101.md": "0735773e90f04ccf8c045b8c079daf264389c039a1e43503d92328befbfae921",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_daily_adaptation_renderer_checks_20261102.py": "587a4e5ff8bb5d51cf0e6c4f7e2e458ea05cb681d6184f584c29d56bdbd1e4c7",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\render_weekly_daily_adaptation_result.py": "d0672f7d4723fa96f7df4745a0f7e922833e22b0b17deae2528c15b09fed3698"
+  },
+  "inference_run": false,
+  "outcomes_read": false,
+  "replay_run": false,
+  "report_rendered": false,
+  "retry": false,
+  "stages": [
+    {
+      "exit_code": 0,
+      "stage": "compile"
+    },
+    {
+      "exit_code": 0,
+      "stage": "ruff"
+    }
+  ],
+  "status": "PASS_DAILY_ADAPTATION_RENDERER_TECHNICAL_CHECKS"
+}

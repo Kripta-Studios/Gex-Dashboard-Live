@@ -1,0 +1,17 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "py_compile",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\render_weekly_daily_adaptation_result.py"
+  ],
+  "cpu_affinity_mask": 1,
+  "creation_time": 1793611928.4389727,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 33688,
+  "start_utc": "2026-11-02T09:32:08.426449+00:00",
+  "wait_pending": true
+}
