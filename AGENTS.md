@@ -1,6 +1,6 @@
 # AI Agent Hand-off: Current Production Reality
 
-Checkpoint2-nov23:07UTC: integración D sintética CERRADA8PASS1.21s/compile0/Ruff0.
+Checkpoint2-nov23:06UTC: integración D sintética CERRADA8PASS1.21s/compile0/Ruff0.
 Primera ejecución desde e2d38b2c;21pins/snapshots/Git exactos. Pytest PID26748,
 creation1793660353.229248/exit1793660360.3008645; tres hijos exit0 retenidos,
 CPU0/TEN1/CUDA-1/gates2GB, sin drift/retry. Recibo1513B/b3be7b6b, exit117B/6a447ed4.
