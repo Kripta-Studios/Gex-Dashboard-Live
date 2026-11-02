@@ -1,0 +1,13 @@
+# R3 fixture04: bounded waiting before formal test children
+
+Date: 2026-11-02. Documentary extension; no scientific execution authority.
+
+Fixture03 failed before compile at 17:35:38 UTC after its earlier preflight; no child, Ruff or pytest ran. Repeated new roots do not solve a transient resource deficit. Root extends the already reviewed 600-second/5-second bounded resource-wait protocol to the R3 formal fixture harness itself, while preserving every 2 GB threshold and the exact scientific test files.
+
+After this extension is reviewed and published, one new fixture04 harness may reuse the pinned ResourceWaiter (helper33873bfa) before preflight and before each child. It binds the same official observation/gate pair. Its exclusive observer is its fresh attempt directory; WAIT evidence is resource_wait.jsonl, using the existing canonical schema, durable writes and strict terminal validation. No extra polling process, hidden worker or retry loop is added. Each acquisition has its own fixed monotonic budget. Malformed observations, unexpected exceptions, safety errors, timeout and interruption remain fatal.
+
+Code/publication pins and compact admission metadata retain their existing verification order. No market values or scientific input are opened during WAIT, and no compile/lint/test child starts until a fresh official observation passes RAM/free commit/disk. The accepted observation is persisted in the existing per-stage resource receipt. Missing WAIT evidence is null only when no file exists; any existing file must validate and close with an exact stable pin in the final receipt. Invalid evidence prevents PASS and is preserved as failure evidence.
+
+Using the already published and statically reviewed waiter in this verification harness is explicitly permitted before its formal unit suite completes. This is an operational bootstrap, not evidence that the helper has passed tests: any defect still fails the attempt closed, and a final PASS requires the complete existing synthetic suite. The corrected retained-Windows-handle observation from harness03 remains unchanged. Old roots01-03 remain immutable; fixture04 has a fresh exclusive root and fixed one-attempt authority.
+
+Implementation/static review and exact publication precede the one formal run. Root may then launch fixture04 even if resources are currently low, because the reviewed harness will wait before creating any child and will fail after its fixed timeout. No threshold is relaxed; no foreign process may be stopped. This extends only fixture scheduling. Actual B06 remains prohibited until full fixture PASS and separate final binding/publication/GO; C real still requires B full PASS. No model or profitability claim follows.
