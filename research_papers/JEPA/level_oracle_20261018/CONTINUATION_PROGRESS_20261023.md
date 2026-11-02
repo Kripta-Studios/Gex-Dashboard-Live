@@ -1,5 +1,15 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+Checkpoint 2-nov: nueva fase A de eventos weekly predeclarada, sin valores.
+Contrato SOURCE_PLAN_NOT_VALUE_ADMISSION c1891e79 revisado documentalmente:
+2790ticker-días/930sesiones,1620planes,4860refs nominales D/D1/H2. Reutiliza
+H1/Q3 y overlay exacto de seis díasjunio; stat solamente, SHA históricos no
+reverificados, sin raw/footers/NPZ/outcomes/fit. Primero publicación y fixtures,
+luego review/binding/run único del plan. No reabre filtros/frecuencias cerrados.
+DAILY sigueFAIL8/8; goal activo y promociónfalse. FaseB necesitará contrato
+separado para valores/relojes/caches antes de eventos o probabilidades.
+
+
 Checkpoint 2-nov10:05UTC: comparación DAILY cerrada, auditada y presentada.
 Diario +2.493,80USD adverse,3/8 meses,DD realizado47.060,80; semanal+2.693,80,
 3/8,DD46.860,80.83trades ambos,82IDs comunes: reemplazoCALL SPXW pierde200USD
