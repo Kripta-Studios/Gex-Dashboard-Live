@@ -1,0 +1,33 @@
+{
+  "schema": "weekly_zone_geometry_1030_fixture_gate_archive_receipt_v3",
+  "status": "PASS_EXACT_PRE_SUITE_GATE_ARCHIVE",
+  "closed_utc": "2026-11-02T17:05:52.7380556Z",
+  "source_file_count": 24,
+  "source_total_bytes": 448832,
+  "source_copy_differences": 0,
+  "gate_rejection_utc": "2026-11-02T17:02:36.067180+00:00",
+  "error": "ValueError: 2GB RAM/commit gate unmet",
+  "available_ram_bytes": 6142832640,
+  "free_commit_bytes": 1970049024,
+  "disk_free_bytes": 25008254976,
+  "minimum_bytes": 2000000000,
+  "child_created": false,
+  "completed": [],
+  "compile_executed": false,
+  "ruff_executed": false,
+  "pytest_executed": false,
+  "real_geometry_runtime_executed": false,
+  "retry": false,
+  "closing_pin_differences": [],
+  "cpu_affinity_mask": 1,
+  "thread_variables_count": 10,
+  "thread_variables_all_one": true,
+  "cuda_visible_devices": "-1",
+  "unadoptable": true,
+  "git_used": false,
+  "raw_opened": false,
+  "manifest": {
+    "bytes": 17820,
+    "sha256": "ce3bae1bce9ba297dd44c7dd8638fd01af0971e8f989cd5baab841d31550fbc9"
+  }
+}

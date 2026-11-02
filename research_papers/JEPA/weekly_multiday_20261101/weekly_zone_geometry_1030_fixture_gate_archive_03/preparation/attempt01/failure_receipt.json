@@ -1,0 +1,10 @@
+{
+  "attempt": "attempt01",
+  "closing_pin_differences": [],
+  "completed": [],
+  "error": "ValueError: 2GB RAM/commit gate unmet",
+  "real_geometry_runtime_executed": false,
+  "retry": false,
+  "status": "RESOURCE_OR_DISK_GATE_REJECTED_BEFORE_GEOMETRY_FIXTURES",
+  "utc": "2026-11-02T17:02:36.067180+00:00"
+}

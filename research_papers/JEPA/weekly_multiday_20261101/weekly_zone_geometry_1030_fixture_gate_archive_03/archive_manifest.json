@@ -1,0 +1,204 @@
+{
+  "schema": "weekly_zone_geometry_1030_fixture_gate_archive_manifest_v3",
+  "status": "EXACT_COPY_VERIFIED",
+  "created_utc": "2026-11-02T17:05:52.7039708Z",
+  "source_root": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03",
+  "archive_root": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixture_gate_archive_03",
+  "payload_root": "preparation",
+  "source_file_count": 24,
+  "source_total_bytes": 448832,
+  "members": [
+    {
+      "bytes": 8652,
+      "copy_sha256": "149fb9f9ddd3a01be24af1fd5f461a9ed7e0abad84d417837f11aff562d2f88a",
+      "destination_relative": "preparation/attempt01/149fb9f9ddd3a01be24af1fd5f461a9ed7e0abad84d417837f11aff562d2f88a_C_GEOMETRY_1030_BINDING_FEASIBILITY_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\149fb9f9ddd3a01be24af1fd5f461a9ed7e0abad84d417837f11aff562d2f88a_C_GEOMETRY_1030_BINDING_FEASIBILITY_20261102.md.before_test",
+      "source_sha256_after": "149fb9f9ddd3a01be24af1fd5f461a9ed7e0abad84d417837f11aff562d2f88a",
+      "source_sha256_before": "149fb9f9ddd3a01be24af1fd5f461a9ed7e0abad84d417837f11aff562d2f88a"
+    },
+    {
+      "bytes": 1046,
+      "copy_sha256": "1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9",
+      "destination_relative": "preparation/attempt01/1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9_session_clock.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9_session_clock.py.before_test",
+      "source_sha256_after": "1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9",
+      "source_sha256_before": "1e63cf2d314caea14dd8b0b8f025f647d67bf8df58f246613975891a256f51e9"
+    },
+    {
+      "bytes": 2679,
+      "copy_sha256": "226123c6da553ecffbf14744d036d50d71e09c8a641c9a79f22c4cc283a1f1b6",
+      "destination_relative": "preparation/attempt01/226123c6da553ecffbf14744d036d50d71e09c8a641c9a79f22c4cc283a1f1b6_C_GEOMETRY_PRODUCER_STATIC_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\226123c6da553ecffbf14744d036d50d71e09c8a641c9a79f22c4cc283a1f1b6_C_GEOMETRY_PRODUCER_STATIC_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "226123c6da553ecffbf14744d036d50d71e09c8a641c9a79f22c4cc283a1f1b6",
+      "source_sha256_before": "226123c6da553ecffbf14744d036d50d71e09c8a641c9a79f22c4cc283a1f1b6"
+    },
+    {
+      "bytes": 31463,
+      "copy_sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "destination_relative": "preparation/attempt01/3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046_launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046_launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "source_sha256_after": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "source_sha256_before": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    {
+      "bytes": 2176,
+      "copy_sha256": "49c5c63ce7303c3305b8d3e01b41838e7e54f937844e26c63bed191ee159b8d9",
+      "destination_relative": "preparation/attempt01/49c5c63ce7303c3305b8d3e01b41838e7e54f937844e26c63bed191ee159b8d9_C_GEOMETRY_FIXTURE_LINT_CORRECTION_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\49c5c63ce7303c3305b8d3e01b41838e7e54f937844e26c63bed191ee159b8d9_C_GEOMETRY_FIXTURE_LINT_CORRECTION_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "49c5c63ce7303c3305b8d3e01b41838e7e54f937844e26c63bed191ee159b8d9",
+      "source_sha256_before": "49c5c63ce7303c3305b8d3e01b41838e7e54f937844e26c63bed191ee159b8d9"
+    },
+    {
+      "bytes": 2371,
+      "copy_sha256": "6300a7f8e5c6c99101d32d642081f4b8dec170d3c40f2751c27f1642d55466f1",
+      "destination_relative": "preparation/attempt01/6300a7f8e5c6c99101d32d642081f4b8dec170d3c40f2751c27f1642d55466f1_session_cache.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\6300a7f8e5c6c99101d32d642081f4b8dec170d3c40f2751c27f1642d55466f1_session_cache.py.before_test",
+      "source_sha256_after": "6300a7f8e5c6c99101d32d642081f4b8dec170d3c40f2751c27f1642d55466f1",
+      "source_sha256_before": "6300a7f8e5c6c99101d32d642081f4b8dec170d3c40f2751c27f1642d55466f1"
+    },
+    {
+      "bytes": 27435,
+      "copy_sha256": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+      "destination_relative": "preparation/attempt01/70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6_level_engine.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6_level_engine.py.before_test",
+      "source_sha256_after": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6",
+      "source_sha256_before": "70cc5d20990d971d16299fd008ff8e05ac99f99a6a2917a202fcb9a5f413b7c6"
+    },
+    {
+      "bytes": 20544,
+      "copy_sha256": "88f76551957e73e37c5dd816b00ec17d035132186df5071be10a5c534368cb3f",
+      "destination_relative": "preparation/attempt01/88f76551957e73e37c5dd816b00ec17d035132186df5071be10a5c534368cb3f_C_GEOMETRY_1030_OPERATIONAL_DRAFT_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\88f76551957e73e37c5dd816b00ec17d035132186df5071be10a5c534368cb3f_C_GEOMETRY_1030_OPERATIONAL_DRAFT_20261102.md.before_test",
+      "source_sha256_after": "88f76551957e73e37c5dd816b00ec17d035132186df5071be10a5c534368cb3f",
+      "source_sha256_before": "88f76551957e73e37c5dd816b00ec17d035132186df5071be10a5c534368cb3f"
+    },
+    {
+      "bytes": 18248,
+      "copy_sha256": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+      "destination_relative": "preparation/attempt01/985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f_build_cache.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f_build_cache.py.before_test",
+      "source_sha256_after": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f",
+      "source_sha256_before": "985e87dcbd1e73289b58e4576445e47e73a6edea13e5ac73dde3ad629180d69f"
+    },
+    {
+      "bytes": 17065,
+      "copy_sha256": "a5ab1c1ee24cb44ff1ca65184af9365fb4881a686b032c3453df571686b204dc",
+      "destination_relative": "preparation/attempt01/a5ab1c1ee24cb44ff1ca65184af9365fb4881a686b032c3453df571686b204dc_launch_weekly_zone_geometry_1030_fixtures03_20261102.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\a5ab1c1ee24cb44ff1ca65184af9365fb4881a686b032c3453df571686b204dc_launch_weekly_zone_geometry_1030_fixtures03_20261102.py.before_test",
+      "source_sha256_after": "a5ab1c1ee24cb44ff1ca65184af9365fb4881a686b032c3453df571686b204dc",
+      "source_sha256_before": "a5ab1c1ee24cb44ff1ca65184af9365fb4881a686b032c3453df571686b204dc"
+    },
+    {
+      "bytes": 2720,
+      "copy_sha256": "b0985eb963eac2cd21d9562b28afe1153322664609d86c405e2b6704f8f13b5c",
+      "destination_relative": "preparation/attempt01/b0985eb963eac2cd21d9562b28afe1153322664609d86c405e2b6704f8f13b5c_C_GEOMETRY_AUDITOR_STATIC_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\b0985eb963eac2cd21d9562b28afe1153322664609d86c405e2b6704f8f13b5c_C_GEOMETRY_AUDITOR_STATIC_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "b0985eb963eac2cd21d9562b28afe1153322664609d86c405e2b6704f8f13b5c",
+      "source_sha256_before": "b0985eb963eac2cd21d9562b28afe1153322664609d86c405e2b6704f8f13b5c"
+    },
+    {
+      "bytes": 1212,
+      "copy_sha256": "b3b056d2d447e407902a99d8567b437479ce1ee99e7efc7f62146e47c1fa2580",
+      "destination_relative": "preparation/attempt01/b3b056d2d447e407902a99d8567b437479ce1ee99e7efc7f62146e47c1fa2580_C_GEOMETRY_PARALLEL_PREPARATION_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\b3b056d2d447e407902a99d8567b437479ce1ee99e7efc7f62146e47c1fa2580_C_GEOMETRY_PARALLEL_PREPARATION_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "b3b056d2d447e407902a99d8567b437479ce1ee99e7efc7f62146e47c1fa2580",
+      "source_sha256_before": "b3b056d2d447e407902a99d8567b437479ce1ee99e7efc7f62146e47c1fa2580"
+    },
+    {
+      "bytes": 14617,
+      "copy_sha256": "c28572543c1658ab87b1083d60bfdfbdc059c57960c5240c54f98bef5cdd8027",
+      "destination_relative": "preparation/attempt01/c28572543c1658ab87b1083d60bfdfbdc059c57960c5240c54f98bef5cdd8027_C_GEOMETRY_1030_ADMISSION_CONTRACT_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\c28572543c1658ab87b1083d60bfdfbdc059c57960c5240c54f98bef5cdd8027_C_GEOMETRY_1030_ADMISSION_CONTRACT_20261102.md.before_test",
+      "source_sha256_after": "c28572543c1658ab87b1083d60bfdfbdc059c57960c5240c54f98bef5cdd8027",
+      "source_sha256_before": "c28572543c1658ab87b1083d60bfdfbdc059c57960c5240c54f98bef5cdd8027"
+    },
+    {
+      "bytes": 55343,
+      "copy_sha256": "e010c83e6891cf600b5ee6cee16cc5e2eb9a269b6bbd27270ffc3cdaa0f53848",
+      "destination_relative": "preparation/attempt01/e010c83e6891cf600b5ee6cee16cc5e2eb9a269b6bbd27270ffc3cdaa0f53848_test_audit_weekly_zone_geometry_1030.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\e010c83e6891cf600b5ee6cee16cc5e2eb9a269b6bbd27270ffc3cdaa0f53848_test_audit_weekly_zone_geometry_1030.py.before_test",
+      "source_sha256_after": "e010c83e6891cf600b5ee6cee16cc5e2eb9a269b6bbd27270ffc3cdaa0f53848",
+      "source_sha256_before": "e010c83e6891cf600b5ee6cee16cc5e2eb9a269b6bbd27270ffc3cdaa0f53848"
+    },
+    {
+      "bytes": 73030,
+      "copy_sha256": "ebe7c8984e2e7eb3806193e7c891dbbb0d0449b19e13e0657d0b68cdbe0d1b01",
+      "destination_relative": "preparation/attempt01/ebe7c8984e2e7eb3806193e7c891dbbb0d0449b19e13e0657d0b68cdbe0d1b01_build_weekly_zone_geometry_1030.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\ebe7c8984e2e7eb3806193e7c891dbbb0d0449b19e13e0657d0b68cdbe0d1b01_build_weekly_zone_geometry_1030.py.before_test",
+      "source_sha256_after": "ebe7c8984e2e7eb3806193e7c891dbbb0d0449b19e13e0657d0b68cdbe0d1b01",
+      "source_sha256_before": "ebe7c8984e2e7eb3806193e7c891dbbb0d0449b19e13e0657d0b68cdbe0d1b01"
+    },
+    {
+      "bytes": 35739,
+      "copy_sha256": "ec6aebc5c74d8dcc62e3a10a6ee2d4e722b1e6f58f84c4f56436abbd294dbcd5",
+      "destination_relative": "preparation/attempt01/ec6aebc5c74d8dcc62e3a10a6ee2d4e722b1e6f58f84c4f56436abbd294dbcd5_test_build_weekly_zone_geometry_1030.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\ec6aebc5c74d8dcc62e3a10a6ee2d4e722b1e6f58f84c4f56436abbd294dbcd5_test_build_weekly_zone_geometry_1030.py.before_test",
+      "source_sha256_after": "ec6aebc5c74d8dcc62e3a10a6ee2d4e722b1e6f58f84c4f56436abbd294dbcd5",
+      "source_sha256_before": "ec6aebc5c74d8dcc62e3a10a6ee2d4e722b1e6f58f84c4f56436abbd294dbcd5"
+    },
+    {
+      "bytes": 5695,
+      "copy_sha256": "f16d1a1c418fb51b5c5b180719c7a762ba338817a183c6006d472bc34ce13f31",
+      "destination_relative": "preparation/attempt01/f16d1a1c418fb51b5c5b180719c7a762ba338817a183c6006d472bc34ce13f31_C_GEOMETRY_WINDOWS_PUBLICATION_FEASIBILITY_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\f16d1a1c418fb51b5c5b180719c7a762ba338817a183c6006d472bc34ce13f31_C_GEOMETRY_WINDOWS_PUBLICATION_FEASIBILITY_20261102.md.before_test",
+      "source_sha256_after": "f16d1a1c418fb51b5c5b180719c7a762ba338817a183c6006d472bc34ce13f31",
+      "source_sha256_before": "f16d1a1c418fb51b5c5b180719c7a762ba338817a183c6006d472bc34ce13f31"
+    },
+    {
+      "bytes": 93663,
+      "copy_sha256": "f2d17a789bacf813be3b56652eab98fb4388afea8aaa4d691080e563cdc8b01e",
+      "destination_relative": "preparation/attempt01/f2d17a789bacf813be3b56652eab98fb4388afea8aaa4d691080e563cdc8b01e_audit_weekly_zone_geometry_1030.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\f2d17a789bacf813be3b56652eab98fb4388afea8aaa4d691080e563cdc8b01e_audit_weekly_zone_geometry_1030.py.before_test",
+      "source_sha256_after": "f2d17a789bacf813be3b56652eab98fb4388afea8aaa4d691080e563cdc8b01e",
+      "source_sha256_before": "f2d17a789bacf813be3b56652eab98fb4388afea8aaa4d691080e563cdc8b01e"
+    },
+    {
+      "bytes": 3761,
+      "copy_sha256": "f32d3bb23a830c9c67197926ab9defa847e5b347422b90fcf1d54d5bdb09b237",
+      "destination_relative": "preparation/attempt01/f32d3bb23a830c9c67197926ab9defa847e5b347422b90fcf1d54d5bdb09b237_C_GEOMETRY_PARALLEL_PREPARATION_AMENDMENT_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\f32d3bb23a830c9c67197926ab9defa847e5b347422b90fcf1d54d5bdb09b237_C_GEOMETRY_PARALLEL_PREPARATION_AMENDMENT_20261102.md.before_test",
+      "source_sha256_after": "f32d3bb23a830c9c67197926ab9defa847e5b347422b90fcf1d54d5bdb09b237",
+      "source_sha256_before": "f32d3bb23a830c9c67197926ab9defa847e5b347422b90fcf1d54d5bdb09b237"
+    },
+    {
+      "bytes": 21874,
+      "copy_sha256": "f93d3be334a2326dbec5d742e217bce63449e1beaf46b35fa46be83f25548883",
+      "destination_relative": "preparation/attempt01/f93d3be334a2326dbec5d742e217bce63449e1beaf46b35fa46be83f25548883_session_level_engine.py.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\f93d3be334a2326dbec5d742e217bce63449e1beaf46b35fa46be83f25548883_session_level_engine.py.before_test",
+      "source_sha256_after": "f93d3be334a2326dbec5d742e217bce63449e1beaf46b35fa46be83f25548883",
+      "source_sha256_before": "f93d3be334a2326dbec5d742e217bce63449e1beaf46b35fa46be83f25548883"
+    },
+    {
+      "bytes": 320,
+      "copy_sha256": "2d608dd7cc6232796a3f83b942979a5ae2830bc1dd17aebe186e9bd710edd552",
+      "destination_relative": "preparation/attempt01/failure_receipt.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\failure_receipt.json",
+      "source_sha256_after": "2d608dd7cc6232796a3f83b942979a5ae2830bc1dd17aebe186e9bd710edd552",
+      "source_sha256_before": "2d608dd7cc6232796a3f83b942979a5ae2830bc1dd17aebe186e9bd710edd552"
+    },
+    {
+      "bytes": 2207,
+      "copy_sha256": "fd71bd638dc952275e2a8872fc9b88f10ac92d1d98f755bdbc59824d7bad3c1e",
+      "destination_relative": "preparation/attempt01/fd71bd638dc952275e2a8872fc9b88f10ac92d1d98f755bdbc59824d7bad3c1e_C_GEOMETRY_FIXTURE_EXPECTATION_CORRECTION_REVIEW_20261102.md.before_test",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\fd71bd638dc952275e2a8872fc9b88f10ac92d1d98f755bdbc59824d7bad3c1e_C_GEOMETRY_FIXTURE_EXPECTATION_CORRECTION_REVIEW_20261102.md.before_test",
+      "source_sha256_after": "fd71bd638dc952275e2a8872fc9b88f10ac92d1d98f755bdbc59824d7bad3c1e",
+      "source_sha256_before": "fd71bd638dc952275e2a8872fc9b88f10ac92d1d98f755bdbc59824d7bad3c1e"
+    },
+    {
+      "bytes": 6806,
+      "copy_sha256": "49d8c88ea0166aa52e7ee9893b518353878244ad93ce4278b80b2383041dbb6a",
+      "destination_relative": "preparation/attempt01/preflight_resource_observation.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\preflight_resource_observation.json",
+      "source_sha256_after": "49d8c88ea0166aa52e7ee9893b518353878244ad93ce4278b80b2383041dbb6a",
+      "source_sha256_before": "49d8c88ea0166aa52e7ee9893b518353878244ad93ce4278b80b2383041dbb6a"
+    },
+    {
+      "bytes": 166,
+      "copy_sha256": "19a0735ee072a9cce42ad89505f6c8391aba2992a3f33c874a7f87233daa9786",
+      "destination_relative": "preparation/attempt01/publication.json",
+      "source_path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_geometry_1030_fixtures_03\\attempt01\\publication.json",
+      "source_sha256_after": "19a0735ee072a9cce42ad89505f6c8391aba2992a3f33c874a7f87233daa9786",
+      "source_sha256_before": "19a0735ee072a9cce42ad89505f6c8391aba2992a3f33c874a7f87233daa9786"
+    }
+  ]
+}
