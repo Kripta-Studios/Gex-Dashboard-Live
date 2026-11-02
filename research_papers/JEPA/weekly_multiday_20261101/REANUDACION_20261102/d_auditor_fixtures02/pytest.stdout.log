@@ -1,0 +1,240 @@
+...................                               [100%]
+================================== FAILURES ===================================
+_ TestIndependentSyntheticAuditor.test_schema_type_range_and_foreign_key_matrix (collection='ledger', field='ticker') _
+
+self = <test_audit_weekly_zone_revisit_mechanics.TestIndependentSyntheticAuditor testMethod=test_schema_type_range_and_foreign_key_matrix>
+
+    def test_schema_type_range_and_foreign_key_matrix(self):
+        """All 39/47/19 record shapes and the 39 count types reject drift."""
+        plan, anchors, spots, quotes = _fixture()
+        result = reconstruct_revisit_mechanics([plan], anchors, spots, quotes, config=CONFIG)
+        cases = []
+        malformed_event = deepcopy(result)
+        malformed_event["events"][0]["calendar_ordinal"] = True
+        cases.append(malformed_event)
+        malformed_event = deepcopy(result)
+        malformed_event["events"][0]["transition_trace_json"] = "{}"
+        cases.append(malformed_event)
+        malformed_ledger = deepcopy(result)
+        malformed_ledger["ledger"][0]["cash_before_entry_decimal"] = 100000.0
+        cases.append(malformed_ledger)
+        malformed_ledger = deepcopy(result)
+        malformed_ledger["ledger"][0]["event_id"] = "0" * 64
+        cases.append(malformed_ledger)
+        malformed_coverage = deepcopy(result)
+        malformed_coverage["plan_coverage"][0]["terminal_status_counts_json"] = "{}"
+        cases.append(malformed_coverage)
+        for count_name in result["counts"]:
+            malformed_counts = deepcopy(result)
+            malformed_counts["counts"][count_name] = True
+            cases.append(malformed_counts)
+        for observed in cases:
+            with self.subTest(observed=observed):
+                with self.assertRaises(AuditError):
+                    audit_revisit_mechanics([plan], anchors, spots, quotes, observed, config=CONFIG)
+        for collection, index in (("events", 0), ("ledger", 0), ("plan_coverage", 0)):
+            for field in result[collection][index]:
+                observed = deepcopy(result)
+                observed[collection][index][field] = object()
+                with self.subTest(collection=collection, field=field):
+                    with self.assertRaises(AuditError):
+>                       audit_revisit_mechanics([plan], anchors, spots, quotes, observed, config=CONFIG)
+
+test_audit_weekly_zone_revisit_mechanics.py:321: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_revisit_mechanics.py:1143: in audit_revisit_mechanics
+    _projection_invariants(observed)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _projection_invariants(result):
+        _need(set(result) == {"status", "events", "ledger", "plan_coverage", "counts"}, "return keys")
+        _need(result["status"] == "SYNTHETIC_MECHANICS_ONLY", "return status")
+        _need(all(set(row) == set(EVENT_FIELDS) for row in result["events"]), "event schema")
+        _need(all(set(row) == set(LEDGER_FIELDS) for row in result["ledger"]), "ledger schema")
+        _need(all(set(row) == set(COVERAGE_FIELDS) for row in result["plan_coverage"]), "coverage schema")
+        _need(result["events"] == sorted(result["events"], key=lambda row: (row["calendar_ordinal"], row["plan_id"], row["anchor_id"])), "event order")
+>       _need(result["ledger"] == sorted(result["ledger"], key=lambda row: (row["event_session_date"], row["ticker"], row["arm"], row["cost"], row["ledger_id"])), "ledger order")
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: '<' not supported between instances of 'str' and 'object'
+
+audit_weekly_zone_revisit_mechanics.py:1060: TypeError
+_ TestIndependentSyntheticAuditor.test_schema_type_range_and_foreign_key_matrix (collection='ledger', field='event_session_date') _
+
+self = <test_audit_weekly_zone_revisit_mechanics.TestIndependentSyntheticAuditor testMethod=test_schema_type_range_and_foreign_key_matrix>
+
+    def test_schema_type_range_and_foreign_key_matrix(self):
+        """All 39/47/19 record shapes and the 39 count types reject drift."""
+        plan, anchors, spots, quotes = _fixture()
+        result = reconstruct_revisit_mechanics([plan], anchors, spots, quotes, config=CONFIG)
+        cases = []
+        malformed_event = deepcopy(result)
+        malformed_event["events"][0]["calendar_ordinal"] = True
+        cases.append(malformed_event)
+        malformed_event = deepcopy(result)
+        malformed_event["events"][0]["transition_trace_json"] = "{}"
+        cases.append(malformed_event)
+        malformed_ledger = deepcopy(result)
+        malformed_ledger["ledger"][0]["cash_before_entry_decimal"] = 100000.0
+        cases.append(malformed_ledger)
+        malformed_ledger = deepcopy(result)
+        malformed_ledger["ledger"][0]["event_id"] = "0" * 64
+        cases.append(malformed_ledger)
+        malformed_coverage = deepcopy(result)
+        malformed_coverage["plan_coverage"][0]["terminal_status_counts_json"] = "{}"
+        cases.append(malformed_coverage)
+        for count_name in result["counts"]:
+            malformed_counts = deepcopy(result)
+            malformed_counts["counts"][count_name] = True
+            cases.append(malformed_counts)
+        for observed in cases:
+            with self.subTest(observed=observed):
+                with self.assertRaises(AuditError):
+                    audit_revisit_mechanics([plan], anchors, spots, quotes, observed, config=CONFIG)
+        for collection, index in (("events", 0), ("ledger", 0), ("plan_coverage", 0)):
+            for field in result[collection][index]:
+                observed = deepcopy(result)
+                observed[collection][index][field] = object()
+                with self.subTest(collection=collection, field=field):
+                    with self.assertRaises(AuditError):
+>                       audit_revisit_mechanics([plan], anchors, spots, quotes, observed, config=CONFIG)
+
+test_audit_weekly_zone_revisit_mechanics.py:321: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_revisit_mechanics.py:1143: in audit_revisit_mechanics
+    _projection_invariants(observed)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _projection_invariants(result):
+        _need(set(result) == {"status", "events", "ledger", "plan_coverage", "counts"}, "return keys")
+        _need(result["status"] == "SYNTHETIC_MECHANICS_ONLY", "return status")
+        _need(all(set(row) == set(EVENT_FIELDS) for row in result["events"]), "event schema")
+        _need(all(set(row) == set(LEDGER_FIELDS) for row in result["ledger"]), "ledger schema")
+        _need(all(set(row) == set(COVERAGE_FIELDS) for row in result["plan_coverage"]), "coverage schema")
+        _need(result["events"] == sorted(result["events"], key=lambda row: (row["calendar_ordinal"], row["plan_id"], row["anchor_id"])), "event order")
+>       _need(result["ledger"] == sorted(result["ledger"], key=lambda row: (row["event_session_date"], row["ticker"], row["arm"], row["cost"], row["ledger_id"])), "ledger order")
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: '<' not supported between instances of 'str' and 'object'
+
+audit_weekly_zone_revisit_mechanics.py:1060: TypeError
+_ TestIndependentSyntheticAuditor.test_schema_type_range_and_foreign_key_matrix (collection='ledger', field='arm') _
+
+self = <test_audit_weekly_zone_revisit_mechanics.TestIndependentSyntheticAuditor testMethod=test_schema_type_range_and_foreign_key_matrix>
+
+    def test_schema_type_range_and_foreign_key_matrix(self):
+        """All 39/47/19 record shapes and the 39 count types reject drift."""
+        plan, anchors, spots, quotes = _fixture()
+        result = reconstruct_revisit_mechanics([plan], anchors, spots, quotes, config=CONFIG)
+        cases = []
+        malformed_event = deepcopy(result)
+        malformed_event["events"][0]["calendar_ordinal"] = True
+        cases.append(malformed_event)
+        malformed_event = deepcopy(result)
+        malformed_event["events"][0]["transition_trace_json"] = "{}"
+        cases.append(malformed_event)
+        malformed_ledger = deepcopy(result)
+        malformed_ledger["ledger"][0]["cash_before_entry_decimal"] = 100000.0
+        cases.append(malformed_ledger)
+        malformed_ledger = deepcopy(result)
+        malformed_ledger["ledger"][0]["event_id"] = "0" * 64
+        cases.append(malformed_ledger)
+        malformed_coverage = deepcopy(result)
+        malformed_coverage["plan_coverage"][0]["terminal_status_counts_json"] = "{}"
+        cases.append(malformed_coverage)
+        for count_name in result["counts"]:
+            malformed_counts = deepcopy(result)
+            malformed_counts["counts"][count_name] = True
+            cases.append(malformed_counts)
+        for observed in cases:
+            with self.subTest(observed=observed):
+                with self.assertRaises(AuditError):
+                    audit_revisit_mechanics([plan], anchors, spots, quotes, observed, config=CONFIG)
+        for collection, index in (("events", 0), ("ledger", 0), ("plan_coverage", 0)):
+            for field in result[collection][index]:
+                observed = deepcopy(result)
+                observed[collection][index][field] = object()
+                with self.subTest(collection=collection, field=field):
+                    with self.assertRaises(AuditError):
+>                       audit_revisit_mechanics([plan], anchors, spots, quotes, observed, config=CONFIG)
+
+test_audit_weekly_zone_revisit_mechanics.py:321: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_revisit_mechanics.py:1143: in audit_revisit_mechanics
+    _projection_invariants(observed)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _projection_invariants(result):
+        _need(set(result) == {"status", "events", "ledger", "plan_coverage", "counts"}, "return keys")
+        _need(result["status"] == "SYNTHETIC_MECHANICS_ONLY", "return status")
+        _need(all(set(row) == set(EVENT_FIELDS) for row in result["events"]), "event schema")
+        _need(all(set(row) == set(LEDGER_FIELDS) for row in result["ledger"]), "ledger schema")
+        _need(all(set(row) == set(COVERAGE_FIELDS) for row in result["plan_coverage"]), "coverage schema")
+        _need(result["events"] == sorted(result["events"], key=lambda row: (row["calendar_ordinal"], row["plan_id"], row["anchor_id"])), "event order")
+>       _need(result["ledger"] == sorted(result["ledger"], key=lambda row: (row["event_session_date"], row["ticker"], row["arm"], row["cost"], row["ledger_id"])), "ledger order")
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: '<' not supported between instances of 'str' and 'object'
+
+audit_weekly_zone_revisit_mechanics.py:1060: TypeError
+_ TestIndependentSyntheticAuditor.test_schema_type_range_and_foreign_key_matrix (collection='ledger', field='cost') _
+
+self = <test_audit_weekly_zone_revisit_mechanics.TestIndependentSyntheticAuditor testMethod=test_schema_type_range_and_foreign_key_matrix>
+
+    def test_schema_type_range_and_foreign_key_matrix(self):
+        """All 39/47/19 record shapes and the 39 count types reject drift."""
+        plan, anchors, spots, quotes = _fixture()
+        result = reconstruct_revisit_mechanics([plan], anchors, spots, quotes, config=CONFIG)
+        cases = []
+        malformed_event = deepcopy(result)
+        malformed_event["events"][0]["calendar_ordinal"] = True
+        cases.append(malformed_event)
+        malformed_event = deepcopy(result)
+        malformed_event["events"][0]["transition_trace_json"] = "{}"
+        cases.append(malformed_event)
+        malformed_ledger = deepcopy(result)
+        malformed_ledger["ledger"][0]["cash_before_entry_decimal"] = 100000.0
+        cases.append(malformed_ledger)
+        malformed_ledger = deepcopy(result)
+        malformed_ledger["ledger"][0]["event_id"] = "0" * 64
+        cases.append(malformed_ledger)
+        malformed_coverage = deepcopy(result)
+        malformed_coverage["plan_coverage"][0]["terminal_status_counts_json"] = "{}"
+        cases.append(malformed_coverage)
+        for count_name in result["counts"]:
+            malformed_counts = deepcopy(result)
+            malformed_counts["counts"][count_name] = True
+            cases.append(malformed_counts)
+        for observed in cases:
+            with self.subTest(observed=observed):
+                with self.assertRaises(AuditError):
+                    audit_revisit_mechanics([plan], anchors, spots, quotes, observed, config=CONFIG)
+        for collection, index in (("events", 0), ("ledger", 0), ("plan_coverage", 0)):
+            for field in result[collection][index]:
+                observed = deepcopy(result)
+                observed[collection][index][field] = object()
+                with self.subTest(collection=collection, field=field):
+                    with self.assertRaises(AuditError):
+>                       audit_revisit_mechanics([plan], anchors, spots, quotes, observed, config=CONFIG)
+
+test_audit_weekly_zone_revisit_mechanics.py:321: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_revisit_mechanics.py:1143: in audit_revisit_mechanics
+    _projection_invariants(observed)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _projection_invariants(result):
+        _need(set(result) == {"status", "events", "ledger", "plan_coverage", "counts"}, "return keys")
+        _need(result["status"] == "SYNTHETIC_MECHANICS_ONLY", "return status")
+        _need(all(set(row) == set(EVENT_FIELDS) for row in result["events"]), "event schema")
+        _need(all(set(row) == set(LEDGER_FIELDS) for row in result["ledger"]), "ledger schema")
+        _need(all(set(row) == set(COVERAGE_FIELDS) for row in result["plan_coverage"]), "coverage schema")
+        _need(result["events"] == sorted(result["events"], key=lambda row: (row["calendar_ordinal"], row["plan_id"], row["anchor_id"])), "event order")
+>       _need(result["ledger"] == sorted(result["ledger"], key=lambda row: (row["event_session_date"], row["ticker"], row["arm"], row["cost"], row["ledger_id"])), "ledger order")
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: '<' not supported between instances of 'str' and 'object'
+
+audit_weekly_zone_revisit_mechanics.py:1060: TypeError
+=========================== short test summary info ===========================
+SUBFAILED(collection='ledger', field='ticker') test_audit_weekly_zone_revisit_mechanics.py::TestIndependentSyntheticAuditor::test_schema_type_range_and_foreign_key_matrix
+SUBFAILED(collection='ledger', field='event_session_date') test_audit_weekly_zone_revisit_mechanics.py::TestIndependentSyntheticAuditor::test_schema_type_range_and_foreign_key_matrix
+SUBFAILED(collection='ledger', field='arm') test_audit_weekly_zone_revisit_mechanics.py::TestIndependentSyntheticAuditor::test_schema_type_range_and_foreign_key_matrix
+SUBFAILED(collection='ledger', field='cost') test_audit_weekly_zone_revisit_mechanics.py::TestIndependentSyntheticAuditor::test_schema_type_range_and_foreign_key_matrix
+4 failed, 19 passed, 163 subtests passed in 5.03s

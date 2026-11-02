@@ -1056,9 +1056,6 @@ def _projection_invariants(result):
     _need(all(set(row) == set(EVENT_FIELDS) for row in result["events"]), "event schema")
     _need(all(set(row) == set(LEDGER_FIELDS) for row in result["ledger"]), "ledger schema")
     _need(all(set(row) == set(COVERAGE_FIELDS) for row in result["plan_coverage"]), "coverage schema")
-    _need(result["events"] == sorted(result["events"], key=lambda row: (row["calendar_ordinal"], row["plan_id"], row["anchor_id"])), "event order")
-    _need(result["ledger"] == sorted(result["ledger"], key=lambda row: (row["event_session_date"], row["ticker"], row["arm"], row["cost"], row["ledger_id"])), "ledger order")
-    _need(result["plan_coverage"] == sorted(result["plan_coverage"], key=lambda row: (row["calendar_ordinal"], row["plan_id"])), "coverage order")
     event_ids = set()
     events_by_id = {}
     intent_ids = set()
@@ -1121,6 +1118,9 @@ def _projection_invariants(result):
             _i32(value, "coverage terminal count", nonnegative=True)
         _pin(row["b_plan_pin"], "coverage b pin")
         _pin(row["c_geometry_pin"], "coverage c pin")
+    _need(result["events"] == sorted(result["events"], key=lambda row: (row["calendar_ordinal"], row["plan_id"], row["anchor_id"])), "event order")
+    _need(result["ledger"] == sorted(result["ledger"], key=lambda row: (row["event_session_date"], row["ticker"], row["arm"], row["cost"], row["ledger_id"])), "ledger order")
+    _need(result["plan_coverage"] == sorted(result["plan_coverage"], key=lambda row: (row["calendar_ordinal"], row["plan_id"])), "coverage order")
     counts = result["counts"]
     _need(set(counts) == set(COUNT_FIELDS) and all(_is_int(v) and v >= 0 for v in counts.values()), "count schema")
     _need(counts["plan_rows"] == counts["plan_coverage_rows"], "plan counts")
