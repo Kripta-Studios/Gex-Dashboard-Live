@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov20:59UTC:D aclaración causal pre-outcome revisadaSHIP.
+D_REVISIT_CAUSAL_TERMINAL_CLARIFICATION_20261102.md6230B/de8fb6b4:
+H2original10:35 tercera sesión, soporte porplan<=H2; postH2no cambia terminales.
+Precancela triggerantesH2 inmediatamente,sin dependerdeaskposterior; quotevalid
+heredada yprecedenciaterminal explícita. ReviewCLEAR_DOCUMENTARY_D_CAUSAL_TERMINAL.
+Publicarantesadopciónfinal/suites. MecánicaD productor/tests/interfaz WIP por
+/root/c_producer_launcher bajoenmiendaparalela publicada0fd0ca54; noejecución.
+Interfaz aúncorrigiéndose antesautor independiente; no leer productorparaauditor.
+B06mismoPID8616/root35709activo; sinBfull/Creal/Dreal/PnLnuevo. Goalactivo.
+
 Checkpoint2-nov20:40UTC:D mecánica sintética paralela predeclarada/revisadaSHIP.
 Enmienda D_REVISIT_PARALLEL_MECHANICS_PREPARATION_AMENDMENT_20261102.md
 7109B/d5a6be66 yreviewCLEAR_DOCUMENTARY_D_PARALLEL_SYNTHETIC_PREPARATION.
