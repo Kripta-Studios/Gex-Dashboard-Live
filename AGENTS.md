@@ -1,5 +1,13 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov19:40UTC: B06mismoPID8616/root35709ACTIVO, NO RELANZAR.
+2784FOOTERS y1620/1620SELECT cerrados sinERROR; STREAM_OPTION_SOURCE iniciado.
+WAITreal40s porfreecommit19:21:00-40 recuperado sinretry; umbral2GB intacto.
+Exit/PASS/outputfinalausentes, parcialesnoadoptables. Launcherfinale051b1cfintacto.
+Ddocumentalpublicado4a75a5f1:c5671160/38704B,review3c47de48SHIP_DOCUMENT_ONLY.
+Cwrapper9a741043/testbbc40d8a/harness27370e44 enreviewfocal, SINsuitewrapperaún.
+69C/136R3intactos; sinCreal/Dreplay/PnLnuevo. Goalactivo/promociónfalse.
+
 Checkpoint2-nov19:20UTC: mismo B06 ACTIVO, NO RELANZAR; root35709/PID8616.
 2784FOOTERS y1101/1620SELECT cerrados; ceroERROR/stderr0, sinexit/PASS.
 ÚltimogateRAM8866705408/commit3930542080/disco22228283392; noWAITobservado.
