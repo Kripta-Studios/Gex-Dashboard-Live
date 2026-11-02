@@ -1,0 +1,74 @@
+{
+  "schema": "weekly_zone_event_value_path_audit05_failure_archive_receipt_v1",
+  "status": "PASS_EXACT_AUDIT_FAILURE_ARCHIVE",
+  "closed_utc": "2026-11-02T16:41:29.9640131Z",
+  "audit_observer_files": 1,
+  "launcher_observer_files": 9,
+  "source_file_count": 10,
+  "source_total_bytes": 6109928,
+  "source_copy_differences": 0,
+  "audit_relaunched": false,
+  "raw_opened": false,
+  "git_used": false,
+  "exit_pid": 55648,
+  "pid_live_at_archive": false,
+  "pid_check_utc": "2026-11-02T16:41:29.9693284Z",
+  "output_root": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_05",
+  "output_root_present": false,
+  "failed_gate_message": "RAM/commit gate",
+  "failed_gate_threshold_values_persisted": false,
+  "failed_gate_component_attribution": "NOT_DETERMINED",
+  "journal_lines": 8330,
+  "journal_events": {
+    "STARTED": 4165,
+    "COMPLETED": 4164,
+    "ERROR": 1
+  },
+  "stage_event_counts": {
+    "ADMIT_AUTHORITIES": {
+      "STARTED": 1,
+      "COMPLETED": 1,
+      "ERROR": 0
+    },
+    "ADMIT_OPTION_FOOTER": {
+      "STARTED": 2784,
+      "COMPLETED": 2784,
+      "ERROR": 0
+    },
+    "ADMIT_OPTION_FOOTERS": {
+      "STARTED": 1,
+      "COMPLETED": 1,
+      "ERROR": 0
+    },
+    "NORMALIZE_CALENDAR": {
+      "STARTED": 1,
+      "COMPLETED": 1,
+      "ERROR": 0
+    },
+    "SELECT_1030_SOURCE": {
+      "STARTED": 1377,
+      "COMPLETED": 1377,
+      "ERROR": 0
+    },
+    "SELECT_1030": {
+      "STARTED": 1,
+      "COMPLETED": 0,
+      "ERROR": 1
+    }
+  },
+  "last_completed": {
+    "stage": "SELECT_1030_SOURCE",
+    "identity": "SPXW:20260223",
+    "utc": "2026-11-02T16:38:45.560084+00:00"
+  },
+  "terminal_error": {
+    "stage": "SELECT_1030",
+    "identity": "ALL",
+    "error": "AuditError",
+    "utc": "2026-11-02T16:38:45.597786+00:00"
+  },
+  "manifest": {
+    "bytes": 8182,
+    "sha256": "534cbdeb44bc9a72929bdc443d5322d59207592d7f7a40c43898b7cf65acb10c"
+  }
+}
