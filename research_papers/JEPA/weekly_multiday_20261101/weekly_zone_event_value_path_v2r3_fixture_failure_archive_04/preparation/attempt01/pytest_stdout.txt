@@ -1,0 +1,716 @@
+........................................................................ [ 52%]
+..................................................FFFFFFFFF.....         [100%]
+================================== FAILURES ===================================
+_ test_v2r2_real_parquet_prefix_passes_projection_to_population_gate[native_large-NATIVE_STORED_TIMESTAMP] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FB9E378190>
+variant = 'native_large', basis = 'NATIVE_STORED_TIMESTAMP'
+
+    @pytest.mark.parametrize(("variant", "basis"), [
+        ("native_large", "NATIVE_STORED_TIMESTAMP"),
+        ("proxy_large", "UNDERLYING_TIMESTAMP_PROXY"),
+        ("native_string", "NATIVE_STORED_TIMESTAMP"),
+    ])
+    def test_v2r2_real_parquet_prefix_passes_projection_to_population_gate(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, variant: str, basis: str,
+    ) -> None:
+        root, expected, source_rows, historical = synthetic_historical_prefix(tmp_path, variant)
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        schema = pq.read_schema(Path(source_rows[0]["path"]))
+        assert tuple(audit.HISTORICAL_IDENTITY_COLUMNS) == ("symbol", "expiration", "trade_date", "strike", "right")
+        assert tuple(audit.HISTORICAL_VALUE_COLUMNS) == (
+            "timestamp", "underlying_timestamp", "interval_used", "underlying_price",
+            "bid", "ask", "delta", "implied_vol", "gamma", "theta", "vega", "rho",
+        )
+        assert audit.parquet_schema_signature(schema) != expected
+        assert audit.historical_projection_signature(schema) == expected
+        assert "data_type" in schema.names and "iv_error" in schema.names
+        assert audit.validate_option_schema(schema)[1] == basis
+        with pytest.raises(audit.AuditError) as raised:
+            audit.reconstruct_sources(source_rows, historical)
+>       assert str(raised.value) == "source population"
+E       AssertionError: assert 'bounded reso... is not bound' == 'source population'
+E         
+E         - source population
+E         + bounded resource waiter is not bound
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:877: AssertionError
+_ test_v2r2_real_parquet_prefix_passes_projection_to_population_gate[proxy_large-UNDERLYING_TIMESTAMP_PROXY] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FB9E1BB260>
+variant = 'proxy_large', basis = 'UNDERLYING_TIMESTAMP_PROXY'
+
+    @pytest.mark.parametrize(("variant", "basis"), [
+        ("native_large", "NATIVE_STORED_TIMESTAMP"),
+        ("proxy_large", "UNDERLYING_TIMESTAMP_PROXY"),
+        ("native_string", "NATIVE_STORED_TIMESTAMP"),
+    ])
+    def test_v2r2_real_parquet_prefix_passes_projection_to_population_gate(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, variant: str, basis: str,
+    ) -> None:
+        root, expected, source_rows, historical = synthetic_historical_prefix(tmp_path, variant)
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        schema = pq.read_schema(Path(source_rows[0]["path"]))
+        assert tuple(audit.HISTORICAL_IDENTITY_COLUMNS) == ("symbol", "expiration", "trade_date", "strike", "right")
+        assert tuple(audit.HISTORICAL_VALUE_COLUMNS) == (
+            "timestamp", "underlying_timestamp", "interval_used", "underlying_price",
+            "bid", "ask", "delta", "implied_vol", "gamma", "theta", "vega", "rho",
+        )
+        assert audit.parquet_schema_signature(schema) != expected
+        assert audit.historical_projection_signature(schema) == expected
+        assert "data_type" in schema.names and "iv_error" in schema.names
+        assert audit.validate_option_schema(schema)[1] == basis
+        with pytest.raises(audit.AuditError) as raised:
+            audit.reconstruct_sources(source_rows, historical)
+>       assert str(raised.value) == "source population"
+E       AssertionError: assert 'bounded reso... is not bound' == 'source population'
+E         
+E         - source population
+E         + bounded resource waiter is not bound
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:877: AssertionError
+_ test_v2r2_real_parquet_prefix_passes_projection_to_population_gate[native_string-NATIVE_STORED_TIMESTAMP] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FB9E338250>
+variant = 'native_string', basis = 'NATIVE_STORED_TIMESTAMP'
+
+    @pytest.mark.parametrize(("variant", "basis"), [
+        ("native_large", "NATIVE_STORED_TIMESTAMP"),
+        ("proxy_large", "UNDERLYING_TIMESTAMP_PROXY"),
+        ("native_string", "NATIVE_STORED_TIMESTAMP"),
+    ])
+    def test_v2r2_real_parquet_prefix_passes_projection_to_population_gate(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, variant: str, basis: str,
+    ) -> None:
+        root, expected, source_rows, historical = synthetic_historical_prefix(tmp_path, variant)
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        schema = pq.read_schema(Path(source_rows[0]["path"]))
+        assert tuple(audit.HISTORICAL_IDENTITY_COLUMNS) == ("symbol", "expiration", "trade_date", "strike", "right")
+        assert tuple(audit.HISTORICAL_VALUE_COLUMNS) == (
+            "timestamp", "underlying_timestamp", "interval_used", "underlying_price",
+            "bid", "ask", "delta", "implied_vol", "gamma", "theta", "vega", "rho",
+        )
+        assert audit.parquet_schema_signature(schema) != expected
+        assert audit.historical_projection_signature(schema) == expected
+        assert "data_type" in schema.names and "iv_error" in schema.names
+        assert audit.validate_option_schema(schema)[1] == basis
+        with pytest.raises(audit.AuditError) as raised:
+            audit.reconstruct_sources(source_rows, historical)
+>       assert str(raised.value) == "source population"
+E       AssertionError: assert 'bounded reso... is not bound' == 'source population'
+E         
+E         - source population
+E         + bounded resource waiter is not bound
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:877: AssertionError
+_ test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[missing_bid-required option columns] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FB9E3D77D0>
+mutation = 'missing_bid', message = 'required option columns'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+        with pytest.raises(audit.AuditError, match=message):
+>           audit.reconstruct_sources(source_rows, historical)
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:908: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_event_value_paths_v2r3.py:1634: in reconstruct_sources
+    with unit() as details:
+         ^^^^^^
+C:\Program Files\Python314\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+audit_weekly_zone_event_value_paths_v2r3.py:1629: in unit
+    resource_gate("ADMIT_OPTION_FOOTER", path)
+audit_weekly_zone_event_value_paths_v2r3.py:395: in resource_gate
+    require(_RESOURCE_WAITER is not None, "bounded resource waiter is not bound")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = False, message = 'bounded resource waiter is not bound'
+
+    def require(value: bool, message: str) -> None:
+        if not value:
+>           raise AuditError(message)
+E           audit_weekly_zone_event_value_paths_v2r3.AuditError: bounded resource waiter is not bound
+
+audit_weekly_zone_event_value_paths_v2r3.py:238: AuditError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FB9E3D77D0>
+mutation = 'missing_bid', message = 'required option columns'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+>       with pytest.raises(audit.AuditError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'required option columns'
+E         Actual message: 'bounded resource waiter is not bound'
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:907: AssertionError
+_ test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[bid_float32-bid must be float64] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE4DFB9A0>
+mutation = 'bid_float32', message = 'bid must be float64'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+        with pytest.raises(audit.AuditError, match=message):
+>           audit.reconstruct_sources(source_rows, historical)
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:908: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_event_value_paths_v2r3.py:1634: in reconstruct_sources
+    with unit() as details:
+         ^^^^^^
+C:\Program Files\Python314\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+audit_weekly_zone_event_value_paths_v2r3.py:1629: in unit
+    resource_gate("ADMIT_OPTION_FOOTER", path)
+audit_weekly_zone_event_value_paths_v2r3.py:395: in resource_gate
+    require(_RESOURCE_WAITER is not None, "bounded resource waiter is not bound")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = False, message = 'bounded resource waiter is not bound'
+
+    def require(value: bool, message: str) -> None:
+        if not value:
+>           raise AuditError(message)
+E           audit_weekly_zone_event_value_paths_v2r3.AuditError: bounded resource waiter is not bound
+
+audit_weekly_zone_event_value_paths_v2r3.py:238: AuditError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE4DFB9A0>
+mutation = 'bid_float32', message = 'bid must be float64'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+>       with pytest.raises(audit.AuditError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'bid must be float64'
+E         Actual message: 'bounded resource waiter is not bound'
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:907: AssertionError
+_ test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[expected_order-historical footer projection] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE3ADDF60>
+mutation = 'expected_order', message = 'historical footer projection'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+        with pytest.raises(audit.AuditError, match=message):
+>           audit.reconstruct_sources(source_rows, historical)
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:908: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_event_value_paths_v2r3.py:1634: in reconstruct_sources
+    with unit() as details:
+         ^^^^^^
+C:\Program Files\Python314\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+audit_weekly_zone_event_value_paths_v2r3.py:1629: in unit
+    resource_gate("ADMIT_OPTION_FOOTER", path)
+audit_weekly_zone_event_value_paths_v2r3.py:395: in resource_gate
+    require(_RESOURCE_WAITER is not None, "bounded resource waiter is not bound")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = False, message = 'bounded resource waiter is not bound'
+
+    def require(value: bool, message: str) -> None:
+        if not value:
+>           raise AuditError(message)
+E           audit_weekly_zone_event_value_paths_v2r3.AuditError: bounded resource waiter is not bound
+
+audit_weekly_zone_event_value_paths_v2r3.py:238: AuditError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE3ADDF60>
+mutation = 'expected_order', message = 'historical footer projection'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+>       with pytest.raises(audit.AuditError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'historical footer projection'
+E         Actual message: 'bounded resource waiter is not bound'
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:907: AssertionError
+_ test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[expected_type-historical footer projection] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE3ADFAF0>
+mutation = 'expected_type', message = 'historical footer projection'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+        with pytest.raises(audit.AuditError, match=message):
+>           audit.reconstruct_sources(source_rows, historical)
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:908: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_event_value_paths_v2r3.py:1634: in reconstruct_sources
+    with unit() as details:
+         ^^^^^^
+C:\Program Files\Python314\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+audit_weekly_zone_event_value_paths_v2r3.py:1629: in unit
+    resource_gate("ADMIT_OPTION_FOOTER", path)
+audit_weekly_zone_event_value_paths_v2r3.py:395: in resource_gate
+    require(_RESOURCE_WAITER is not None, "bounded resource waiter is not bound")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = False, message = 'bounded resource waiter is not bound'
+
+    def require(value: bool, message: str) -> None:
+        if not value:
+>           raise AuditError(message)
+E           audit_weekly_zone_event_value_paths_v2r3.AuditError: bounded resource waiter is not bound
+
+audit_weekly_zone_event_value_paths_v2r3.py:238: AuditError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE3ADFAF0>
+mutation = 'expected_type', message = 'historical footer projection'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+>       with pytest.raises(audit.AuditError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'historical footer projection'
+E         Actual message: 'bounded resource waiter is not bound'
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:907: AssertionError
+_ test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[expected_duplicate-historical footer projection] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE4E2CD00>
+mutation = 'expected_duplicate', message = 'historical footer projection'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+        with pytest.raises(audit.AuditError, match=message):
+>           audit.reconstruct_sources(source_rows, historical)
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:908: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_event_value_paths_v2r3.py:1634: in reconstruct_sources
+    with unit() as details:
+         ^^^^^^
+C:\Program Files\Python314\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+audit_weekly_zone_event_value_paths_v2r3.py:1629: in unit
+    resource_gate("ADMIT_OPTION_FOOTER", path)
+audit_weekly_zone_event_value_paths_v2r3.py:395: in resource_gate
+    require(_RESOURCE_WAITER is not None, "bounded resource waiter is not bound")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = False, message = 'bounded resource waiter is not bound'
+
+    def require(value: bool, message: str) -> None:
+        if not value:
+>           raise AuditError(message)
+E           audit_weekly_zone_event_value_paths_v2r3.AuditError: bounded resource waiter is not bound
+
+audit_weekly_zone_event_value_paths_v2r3.py:238: AuditError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE4E2CD00>
+mutation = 'expected_duplicate', message = 'historical footer projection'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+>       with pytest.raises(audit.AuditError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'historical footer projection'
+E         Actual message: 'bounded resource waiter is not bound'
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:907: AssertionError
+_ test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[expected_malformed-historical footer projection] _
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE4E2F930>
+mutation = 'expected_malformed', message = 'historical footer projection'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+        with pytest.raises(audit.AuditError, match=message):
+>           audit.reconstruct_sources(source_rows, historical)
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:908: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+audit_weekly_zone_event_value_paths_v2r3.py:1634: in reconstruct_sources
+    with unit() as details:
+         ^^^^^^
+C:\Program Files\Python314\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+audit_weekly_zone_event_value_paths_v2r3.py:1629: in unit
+    resource_gate("ADMIT_OPTION_FOOTER", path)
+audit_weekly_zone_event_value_paths_v2r3.py:395: in resource_gate
+    require(_RESOURCE_WAITER is not None, "bounded resource waiter is not bound")
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = False, message = 'bounded resource waiter is not bound'
+
+    def require(value: bool, message: str) -> None:
+        if not value:
+>           raise AuditError(message)
+E           audit_weekly_zone_event_value_paths_v2r3.AuditError: bounded resource waiter is not bound
+
+audit_weekly_zone_event_value_paths_v2r3.py:238: AuditError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Álvaro Schwiedop/AppData/Local/Temp/pytest-of-Álvaro Schwiedop/pytest-7554/test_v2r2_real_parquet_prefix_8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FBE4E2F930>
+mutation = 'expected_malformed', message = 'historical footer projection'
+
+    @pytest.mark.parametrize(("mutation", "message"), [
+        ("missing_bid", "required option columns"),
+        ("bid_float32", "bid must be float64"),
+        ("expected_order", "historical footer projection"),
+        ("expected_type", "historical footer projection"),
+        ("expected_duplicate", "historical footer projection"),
+        ("expected_malformed", "historical footer projection"),
+    ])
+    def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str, message: str,
+    ) -> None:
+        root, _expected, source_rows, historical = synthetic_historical_prefix(
+            tmp_path, "native_large", missing_bid=mutation == "missing_bid",
+            bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
+        )
+        monkeypatch.setattr(audit, "SOURCE_ROOT", root)
+        audit.bind_resource_helper()
+        descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
+        assert isinstance(descriptor, list)
+        if mutation == "expected_order":
+            descriptor[5], descriptor[6] = descriptor[6], descriptor[5]
+        elif mutation == "expected_type":
+            descriptor[0] = {**descriptor[0], "type": "string"}
+        elif mutation == "expected_duplicate":
+            descriptor.append(dict(descriptor[-1]))
+        elif mutation == "expected_malformed":
+            descriptor[0] = {"name": "symbol"}
+>       with pytest.raises(audit.AuditError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'historical footer projection'
+E         Actual message: 'bounded resource waiter is not bound'
+
+test_audit_weekly_zone_event_value_paths_v2r3.py:907: AssertionError
+=========================== short test summary info ===========================
+FAILED test_audit_weekly_zone_event_value_paths_v2r3.py::test_v2r2_real_parquet_prefix_passes_projection_to_population_gate[native_large-NATIVE_STORED_TIMESTAMP]
+FAILED test_audit_weekly_zone_event_value_paths_v2r3.py::test_v2r2_real_parquet_prefix_passes_projection_to_population_gate[proxy_large-UNDERLYING_TIMESTAMP_PROXY]
+FAILED test_audit_weekly_zone_event_value_paths_v2r3.py::test_v2r2_real_parquet_prefix_passes_projection_to_population_gate[native_string-NATIVE_STORED_TIMESTAMP]
+FAILED test_audit_weekly_zone_event_value_paths_v2r3.py::test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[missing_bid-required option columns]
+FAILED test_audit_weekly_zone_event_value_paths_v2r3.py::test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[bid_float32-bid must be float64]
+FAILED test_audit_weekly_zone_event_value_paths_v2r3.py::test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[expected_order-historical footer projection]
+FAILED test_audit_weekly_zone_event_value_paths_v2r3.py::test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[expected_type-historical footer projection]
+FAILED test_audit_weekly_zone_event_value_paths_v2r3.py::test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[expected_duplicate-historical footer projection]
+FAILED test_audit_weekly_zone_event_value_paths_v2r3.py::test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift[expected_malformed-historical footer projection]
+9 failed, 127 passed in 32.52s

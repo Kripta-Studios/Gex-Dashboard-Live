@@ -1,0 +1,22 @@
+{
+  "audit_child_exit_code": 0,
+  "changed_pins": [],
+  "cpu_affinity": [
+    0
+  ],
+  "creation_time": 1793616938.6076891,
+  "elapsed_seconds": 2.6378097999986494,
+  "exit_code": 0,
+  "files": {
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_audit_observer_01\\admission.json": "a8e6225b841ae4f0019ee7efd35ddf7ce7fabdacbf6ce422ae6b736c0b43105e",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_audit_observer_01\\process.json": "eb51777635716b5b88a817cae1678c27efdf9483ee34801588f8bac6fde7e9cf",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_audit_observer_01\\resource_observation.json": "991874ff338bfb9bcd3b2a28d036cfc78b1329abf63dddc31a66df63573c6916",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_audit_observer_01\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_audit_observer_01\\stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "metadata_error": null,
+  "pid": 24408,
+  "retry": false,
+  "source": "subprocess.Popen.wait_retained_handle",
+  "utc": "2026-11-02T10:55:41.244567+00:00"
+}

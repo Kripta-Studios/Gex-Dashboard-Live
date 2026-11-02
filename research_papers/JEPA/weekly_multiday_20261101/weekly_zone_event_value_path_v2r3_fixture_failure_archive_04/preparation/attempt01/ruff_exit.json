@@ -1,0 +1,28 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-m",
+    "ruff",
+    "check",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\bounded_resource_wait.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_bounded_resource_wait.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_value_paths_v2r3.py",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths_v2r3.py"
+  ],
+  "cpu_affinity_mask": 1,
+  "creation_epoch": 1793641902.2375076,
+  "end_utc": "2026-11-02T17:51:42.554750+00:00",
+  "exit_code": 0,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 8700,
+  "process_times": {
+    "creation_epoch": 1793641902.2375076,
+    "exit_epoch": 1793641902.5447145,
+    "kernel_seconds": 0.046875,
+    "user_seconds": 0.046875
+  },
+  "start_utc": "2026-11-02T17:51:42.234078+00:00"
+}

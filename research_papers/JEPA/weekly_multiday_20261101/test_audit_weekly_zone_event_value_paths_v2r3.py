@@ -22,6 +22,25 @@ import audit_weekly_zone_event_value_paths_v2r3 as audit
 NY = ZoneInfo("America/New_York")
 
 
+def bind_artificial_pass_resource_waiter(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Bind the real pinned gate to deterministic artificial passing metrics."""
+    audit.bind_resource_helper()
+    observer = tmp_path / "synthetic_resource_observer"
+    observer.mkdir(exist_ok=False)
+    passing = {"available_ram_bytes": 3_000_000_000, "free_commit_bytes": 3_000_000_000}
+    waiter = audit._RESOURCE_WAITER_CLASS(
+        observation=lambda: dict(passing), official_gate=audit._OFFICIAL_GATE,
+        disk_probe=lambda: 3_000_000_000,
+        evidence_path=observer / "resource_wait.jsonl",
+        monotonic=lambda: 0.0,
+        sleeper=lambda _seconds: pytest.fail("passing fixture must not sleep"),
+        utc_now=lambda: "2026-11-02T00:00:00+00:00",
+    )
+    monkeypatch.setattr(audit, "_RESOURCE_WAITER", waiter)
+
+
 def option_schema(*, gamma: bool = True, interval_type: pa.DataType = pa.string()) -> pa.Schema:
     fields = [
         pa.field("symbol", pa.string()), pa.field("expiration", pa.string()),
@@ -861,7 +880,7 @@ def test_v2r2_real_parquet_prefix_passes_projection_to_population_gate(
 ) -> None:
     root, expected, source_rows, historical = synthetic_historical_prefix(tmp_path, variant)
     monkeypatch.setattr(audit, "SOURCE_ROOT", root)
-    audit.bind_resource_helper()
+    bind_artificial_pass_resource_waiter(tmp_path, monkeypatch)
     schema = pq.read_schema(Path(source_rows[0]["path"]))
     assert tuple(audit.HISTORICAL_IDENTITY_COLUMNS) == ("symbol", "expiration", "trade_date", "strike", "right")
     assert tuple(audit.HISTORICAL_VALUE_COLUMNS) == (
@@ -893,7 +912,7 @@ def test_v2r2_real_parquet_prefix_rejects_schema_and_descriptor_drift(
         bid_type=pa.float32() if mutation == "bid_float32" else pa.float64(),
     )
     monkeypatch.setattr(audit, "SOURCE_ROOT", root)
-    audit.bind_resource_helper()
+    bind_artificial_pass_resource_waiter(tmp_path, monkeypatch)
     descriptor = historical[str(Path(source_rows[0]["path"]).absolute())]["projected_schema"]
     assert isinstance(descriptor, list)
     if mutation == "expected_order":

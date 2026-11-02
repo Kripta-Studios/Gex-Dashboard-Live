@@ -1,0 +1,548 @@
+{
+  "authority_pins": {
+    "h1_candidates": {
+      "bytes": 4047694,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\candidates.jsonl",
+      "sha256": "c98f232a97a8a6f9221b5d3452424d71bec3684a6b037b258c8a5b0f8fb9d5ad"
+    },
+    "h1_coverage": {
+      "bytes": 2640341,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\coverage.json",
+      "sha256": "83ebf5704cb4f1c9ca7c2aff4cca749592f2e30b55978172ec1413a85cec6209"
+    },
+    "h1_manifest": {
+      "bytes": 1541,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_01\\manifest.json",
+      "sha256": "bfc7370f38e32e1209bc41fe72f01563dcdaa17ddf86fe7b625814beedcbe1d8"
+    },
+    "q3_candidates": {
+      "bytes": 236850,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\candidates.jsonl",
+      "sha256": "c1aae6b9d45240fe712aabceb296b8d42506b12523465eb8755a8c6939045864"
+    },
+    "q3_coverage": {
+      "bytes": 151653,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\coverage.json",
+      "sha256": "5ce9ac8fef25057fe867b46d4ff9ebf224391ae0b538527d402d3afa8607a5c5"
+    },
+    "q3_manifest": {
+      "bytes": 6184,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_dataset_v2_extension_2026q3_partial_01\\manifest.json",
+      "sha256": "b45b017c63fea42036ab73418cc07faa8e377047fec1f8d60c908e98eea5400b"
+    }
+  },
+  "coverage_plan": [
+    {
+      "candidate_ids": [],
+      "entry_date": "20260629",
+      "entry_path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2026\\06\\SPY_20260702_20260629_greeks.parquet",
+      "exit_date": "20260701",
+      "exit_path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2026\\07\\SPY_20260702_20260701_greeks.parquet",
+      "expiration": "20260702",
+      "reason": null,
+      "status": "PLANNED",
+      "ticker": "SPY"
+    },
+    {
+      "candidate_ids": [],
+      "entry_date": "20260630",
+      "entry_path": null,
+      "exit_date": "20260702",
+      "exit_path": null,
+      "expiration": null,
+      "reason": "NO_1_TO_8_DTE_SERIES_ALLOWING_H2",
+      "status": "NO_SERIES",
+      "ticker": "SPY"
+    },
+    {
+      "candidate_ids": [],
+      "entry_date": "20260629",
+      "entry_path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2026\\06\\QQQ_20260702_20260629_greeks.parquet",
+      "exit_date": "20260701",
+      "exit_path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2026\\07\\QQQ_20260702_20260701_greeks.parquet",
+      "expiration": "20260702",
+      "reason": null,
+      "status": "PLANNED",
+      "ticker": "QQQ"
+    },
+    {
+      "candidate_ids": [],
+      "entry_date": "20260630",
+      "entry_path": null,
+      "exit_date": "20260702",
+      "exit_path": null,
+      "expiration": null,
+      "reason": "NO_1_TO_8_DTE_SERIES_ALLOWING_H2",
+      "status": "NO_SERIES",
+      "ticker": "QQQ"
+    },
+    {
+      "candidate_ids": [],
+      "entry_date": "20260629",
+      "entry_path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\06\\SPXW_20260702_20260629_greeks.parquet",
+      "exit_date": "20260701",
+      "exit_path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\07\\SPXW_20260702_20260701_greeks.parquet",
+      "expiration": "20260702",
+      "reason": null,
+      "status": "PLANNED",
+      "ticker": "SPXW"
+    },
+    {
+      "candidate_ids": [],
+      "entry_date": "20260630",
+      "entry_path": null,
+      "exit_date": "20260702",
+      "exit_path": null,
+      "expiration": null,
+      "reason": "NO_1_TO_8_DTE_SERIES_ALLOWING_H2",
+      "status": "NO_SERIES",
+      "ticker": "SPXW"
+    }
+  ],
+  "implementation_pins": {
+    "bridge_contract": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\H2_JUNE_JULY_BRIDGE_CONTRACT_20261101.md",
+      "sha256": "fe506ec96812ea582f11d0bc23497c34e51e878ae912ccc76fcc8924c30cda55"
+    },
+    "builder_v2": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_dataset_v2.py",
+      "sha256": "ec19e2c9066f0bb6103526ccf30a5b156c69a25a96349220d9fd680a92822945"
+    },
+    "clock_amendment": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\H2_CLOCK_FILTER_V2_AMENDMENT.md",
+      "sha256": "9210c6e50094e5745f80c5e03f577f6bd673263f84d3c3ef764ad76b22ca56eb"
+    },
+    "h2_contract": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\ECONOMIC_H2_CONTRACT.md",
+      "sha256": "245a6df1530fbabf29e6a2e5e86662972ebdc680e011987253f35eb61257d5d5"
+    },
+    "source_pilot": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_multiday_source_pilot.py",
+      "sha256": "ad5b3ffba4e125ca7fcb4d5b0789eec601ace55be3740813d46374827766c878"
+    },
+    "wrapper": {
+      "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_h2_boundary_bridge.py",
+      "sha256": "29d8e7906f0f594ed469b07bb8134a500d26cc01434a77928a09b8a8c90bedb2"
+    }
+  },
+  "old_candidate_id_count": 3234,
+  "old_candidate_ids_sha256": "a924bdf667f83bb34b887aca27cd43c773293fb7238f928c2a0af4df2f21b50f",
+  "schema": "weekly_h2_boundary_bridge_inventory_v1",
+  "scope": {
+    "entry_dates": [
+      "20260629",
+      "20260630"
+    ],
+    "nominal_source_count": 6,
+    "plan_count": 6,
+    "segment_dates": [
+      "20260629",
+      "20260630",
+      "20260701",
+      "20260702"
+    ],
+    "ticker_count": 3
+  },
+  "segment_calendar": [
+    {
+      "close_i": 390,
+      "date": "20260629",
+      "ticker": "QQQ"
+    },
+    {
+      "close_i": 390,
+      "date": "20260630",
+      "ticker": "QQQ"
+    },
+    {
+      "close_i": 390,
+      "date": "20260701",
+      "ticker": "QQQ"
+    },
+    {
+      "close_i": 390,
+      "date": "20260702",
+      "ticker": "QQQ"
+    },
+    {
+      "close_i": 390,
+      "date": "20260629",
+      "ticker": "SPXW"
+    },
+    {
+      "close_i": 390,
+      "date": "20260630",
+      "ticker": "SPXW"
+    },
+    {
+      "close_i": 390,
+      "date": "20260701",
+      "ticker": "SPXW"
+    },
+    {
+      "close_i": 390,
+      "date": "20260702",
+      "ticker": "SPXW"
+    },
+    {
+      "close_i": 390,
+      "date": "20260629",
+      "ticker": "SPY"
+    },
+    {
+      "close_i": 390,
+      "date": "20260630",
+      "ticker": "SPY"
+    },
+    {
+      "close_i": 390,
+      "date": "20260701",
+      "ticker": "SPY"
+    },
+    {
+      "close_i": 390,
+      "date": "20260702",
+      "ticker": "SPY"
+    }
+  ],
+  "source_root": "D:\\ThetaData",
+  "sources": [
+    {
+      "bytes": 4748621,
+      "clock_basis": "NATIVE_STORED_TIMESTAMP",
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2026\\06\\QQQ_20260702_20260629_greeks.parquet",
+      "physical_id": [
+        13854839602084785290,
+        281474977859221
+      ],
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_price",
+          "type": "double"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        },
+        {
+          "name": "delta",
+          "type": "double"
+        },
+        {
+          "name": "implied_vol",
+          "type": "double"
+        },
+        {
+          "name": "theta",
+          "type": "double"
+        },
+        {
+          "name": "vega",
+          "type": "double"
+        },
+        {
+          "name": "rho",
+          "type": "double"
+        }
+      ],
+      "rows": 136850,
+      "sha256": "49f25224bdaef7dd99495f5f09071e26f2c86de9dbc0e06a692bdfaa42dd0f11",
+      "status": "INVENTORIED"
+    },
+    {
+      "bytes": null,
+      "clock_basis": null,
+      "path": "D:\\ThetaData\\data_options\\QQQ\\greeks\\2026\\07\\QQQ_20260702_20260701_greeks.parquet",
+      "physical_id": null,
+      "projected_schema": null,
+      "rows": null,
+      "sha256": null,
+      "status": "MISSING_SOURCE"
+    },
+    {
+      "bytes": 8243771,
+      "clock_basis": "NATIVE_STORED_TIMESTAMP",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\06\\SPXW_20260702_20260629_greeks.parquet",
+      "physical_id": [
+        13854839602084785290,
+        281474977858141
+      ],
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_price",
+          "type": "double"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        },
+        {
+          "name": "delta",
+          "type": "double"
+        },
+        {
+          "name": "implied_vol",
+          "type": "double"
+        },
+        {
+          "name": "theta",
+          "type": "double"
+        },
+        {
+          "name": "vega",
+          "type": "double"
+        },
+        {
+          "name": "rho",
+          "type": "double"
+        }
+      ],
+      "rows": 236946,
+      "sha256": "ac3b39dcf3098403b966e7f47a6f9e680608e1e34febca241e5136273b5a12a4",
+      "status": "INVENTORIED"
+    },
+    {
+      "bytes": 7546736,
+      "clock_basis": "NATIVE_STORED_TIMESTAMP",
+      "path": "D:\\ThetaData\\data_options\\SPXW\\greeks\\2026\\07\\SPXW_20260702_20260701_greeks.parquet",
+      "physical_id": [
+        13854839602084785290,
+        844424930862266
+      ],
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_price",
+          "type": "double"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        },
+        {
+          "name": "delta",
+          "type": "double"
+        },
+        {
+          "name": "implied_vol",
+          "type": "double"
+        },
+        {
+          "name": "theta",
+          "type": "double"
+        },
+        {
+          "name": "vega",
+          "type": "double"
+        },
+        {
+          "name": "rho",
+          "type": "double"
+        }
+      ],
+      "rows": 240074,
+      "sha256": "465382f82802b1d62bcaaf986045f4aefbcc01903fb72275e34376fc97d2d258",
+      "status": "INVENTORIED"
+    },
+    {
+      "bytes": 4764007,
+      "clock_basis": "NATIVE_STORED_TIMESTAMP",
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2026\\06\\SPY_20260702_20260629_greeks.parquet",
+      "physical_id": [
+        13854839602084785290,
+        281474977859335
+      ],
+      "projected_schema": [
+        {
+          "name": "symbol",
+          "type": "large_string"
+        },
+        {
+          "name": "expiration",
+          "type": "large_string"
+        },
+        {
+          "name": "trade_date",
+          "type": "large_string"
+        },
+        {
+          "name": "strike",
+          "type": "double"
+        },
+        {
+          "name": "right",
+          "type": "large_string"
+        },
+        {
+          "name": "timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_timestamp",
+          "type": "large_string"
+        },
+        {
+          "name": "interval_used",
+          "type": "large_string"
+        },
+        {
+          "name": "underlying_price",
+          "type": "double"
+        },
+        {
+          "name": "bid",
+          "type": "double"
+        },
+        {
+          "name": "ask",
+          "type": "double"
+        },
+        {
+          "name": "delta",
+          "type": "double"
+        },
+        {
+          "name": "implied_vol",
+          "type": "double"
+        },
+        {
+          "name": "theta",
+          "type": "double"
+        },
+        {
+          "name": "vega",
+          "type": "double"
+        },
+        {
+          "name": "rho",
+          "type": "double"
+        }
+      ],
+      "rows": 160310,
+      "sha256": "efa19618877cce6cff30cd32a9a41995eaebf1cd44a16cab5cf8a2ac0bef355a",
+      "status": "INVENTORIED"
+    },
+    {
+      "bytes": null,
+      "clock_basis": null,
+      "path": "D:\\ThetaData\\data_options\\SPY\\greeks\\2026\\07\\SPY_20260702_20260701_greeks.parquet",
+      "physical_id": null,
+      "projected_schema": null,
+      "rows": null,
+      "sha256": null,
+      "status": "MISSING_SOURCE"
+    }
+  ],
+  "unified_calendar": {
+    "rows": 2790,
+    "schema": "weekly_h2_boundary_unified_calendar_v1",
+    "sha256": "be622bb24aca35448594743dfeb5236e6b2d08a4410109b20302891f8c1fa7d6"
+  }
+}
