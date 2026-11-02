@@ -1,5 +1,25 @@
 # Continuación local: estado del 23 de octubre de 2026
 
+Continuación2-nov: enmiendaV2 calendario65fd1aae/15276B revisadaCLEARdocumental.
+Validaautoridadlexicalticker/date ycopiacanónicafecha/SPYQQQSPXW enmemoria,
+digest13bc456a/137640B; mismos2790triples. Nuevosbuilder/testsv2 yroots02,
+spot0953intacto;29autoridades/10implpins, summary/manifestV2 sólooperacionales.
+Fallo01 inmutable; nooutput/rawadmitido. Publicar enmienda+review antescódigo
+yfixturesV2, luego finalreviews/binding/publicación antesrunúnico02. Goalactivo,
+sinrentabilidadnueva/promociónfalse. AuditorV1sintéticoaúnencierre correctivo;
+no autorizaauditarfallido01 niroots02 sinadaptaciónseparada.
+
+Checkpoint2-nov12:33UTC: productorpaths01 FALLÓ y está CERRADO, NO RELANZAR.
+Desde88d19972, PID47576/creation1793622790.0402176 exit1retenido12:33:10.901532;
+exit48b635e9/failure6ee1cb2e/journala12c7f5d. Fallo calendarorder/identity antes
+staging/footers/raw/NPZ;39pins sin cambios, recursos sanos, output01ausente.
+Calendario upstreambe622 tiene2790identidades exactas ordenadas ticker/fecha;
+consumidor exigíafecha/ordinalSPYQQQSPXW. Normalizarcopia enmemoria requiere
+amendmentV2 publicado, fixtures/reviews/binding yroots02 nuevos; no alterarfuente
+niadoptar01. Archivo20copias332233B/44bc6a77/9550a1a1, rootverificadoexacto;
+reviewCLEAR_FAILED_CLOSURE_NO_VALUES. Goalactivo/promociónfalse, noeconomía.
+Fallo documentado en weekly_multiday_20261101/WEEKLY_ZONE_EVENT_VALUE_PATH_FAILURE01_20261102.md.
+
 Checkpoint2-nov12:30UTC: productorpaths preparado95PASS/compile0/Ruff0 en
 attempt03, PID47368exit0retenido12:22:30.119950; receiptfcc9aabf. Builderb652/
 testsea5c,spot0953/tests80d9, finalesb53b/2210 CLEAR. Archivo80copias997692B,

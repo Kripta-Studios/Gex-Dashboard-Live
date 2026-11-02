@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\build_weekly_zone_event_value_paths.py", line 1436, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\build_weekly_zone_event_value_paths.py", line 1431, in main
+    execute_reviewed_builder(Path(args.output_dir), Path(args.observer_dir), Path(args.journal), Path(args.implementation_pins_json))
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\build_weekly_zone_event_value_paths.py", line 1291, in execute_reviewed_builder
+    calendar = validate_stage_a(plans, stage_sources, documents)
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\build_weekly_zone_event_value_paths.py", line 1124, in validate_stage_a
+    require(calendar == ordered and len({(row["ticker"], row["date"]) for row in calendar}) == 2790, "calendar order/identity")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\build_weekly_zone_event_value_paths.py", line 152, in require
+    raise ValuePathError(message)
+ValuePathError: calendar order/identity

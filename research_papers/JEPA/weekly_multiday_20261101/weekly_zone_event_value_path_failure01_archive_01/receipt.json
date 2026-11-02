@@ -1,0 +1,45 @@
+{
+  "closed_utc": "2026-11-02T12:35:11.429380+00:00",
+  "entry_count": 20,
+  "git_used": false,
+  "implementation_authority_count": 10,
+  "manifest": {
+    "bytes": 18000,
+    "path": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_failure01_archive_01\\manifest.json",
+    "sha256": "44bc6a77eb46214d296c1cc23418c81b1a10fb87069b5dfef8616f2deaa8082b"
+  },
+  "observer_file_count": 10,
+  "parent_pid_asserted": false,
+  "raw_data_opened": false,
+  "retained_child_evidence": {
+    "changed_pins": [],
+    "creation_epoch": 1793622790.0402176,
+    "exit_code": 1,
+    "exit_utc": "2026-11-02T12:33:10.901532+00:00",
+    "handle_retained": true,
+    "metadata_error": null,
+    "pid": 47576,
+    "value_child_exit_code": 1
+  },
+  "runtime_relaunched": false,
+  "runtime_root_stats_metadata_only": {
+    "weekly_zone_event_value_paths_01": {
+      "file_count": 0,
+      "lexists": false,
+      "total_file_bytes": 0
+    },
+    "weekly_zone_event_value_paths_01.staging": {
+      "file_count": 0,
+      "lexists": false,
+      "total_file_bytes": 0
+    },
+    "weekly_zone_event_value_paths_staging_01": {
+      "file_count": 0,
+      "lexists": false,
+      "total_file_bytes": 0
+    }
+  },
+  "schema": "weekly_zone_event_value_path_failure01_archive_receipt_v1",
+  "status": "PASS_FAILURE_EVIDENCE_ARCHIVED",
+  "total_copied_bytes": 332233
+}
