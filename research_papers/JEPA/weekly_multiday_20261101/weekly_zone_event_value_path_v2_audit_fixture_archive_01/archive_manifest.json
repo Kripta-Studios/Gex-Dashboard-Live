@@ -1,0 +1,236 @@
+{
+  "schema": "weekly_zone_event_value_path_v2_audit_fixture_archive_manifest_v1",
+  "status": "EXACT_COPY_VERIFIED",
+  "created_utc": "2026-11-02T13:33:00.3791232Z",
+  "source_root": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01",
+  "archive_root": "C:\\Users\\Álvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixture_archive_01",
+  "payload_root": "preparation",
+  "payload_member_count": 28,
+  "payload_total_bytes": 485943,
+  "members": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\audit_weekly_zone_event_value_paths_v2.py.before_test",
+      "destination_relative": "preparation/attempt01/audit_weekly_zone_event_value_paths_v2.py.before_test",
+      "bytes": 112984,
+      "sha256": "1ad942249d2eb160b2e8fe1ed902e577f9617dc4c11575e297cf5262f5aa61f2",
+      "source_rehash_sha256": "1ad942249d2eb160b2e8fe1ed902e577f9617dc4c11575e297cf5262f5aa61f2",
+      "copy_sha256": "1ad942249d2eb160b2e8fe1ed902e577f9617dc4c11575e297cf5262f5aa61f2"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\audit_weekly_zone_event_value_paths.py.before_test",
+      "destination_relative": "preparation/attempt01/audit_weekly_zone_event_value_paths.py.before_test",
+      "bytes": 96078,
+      "sha256": "d927bca9cd64d51792d68a425a021d9fff9c5cb1ff5dfef79f02dcdcc3c2d2e7",
+      "source_rehash_sha256": "d927bca9cd64d51792d68a425a021d9fff9c5cb1ff5dfef79f02dcdcc3c2d2e7",
+      "copy_sha256": "d927bca9cd64d51792d68a425a021d9fff9c5cb1ff5dfef79f02dcdcc3c2d2e7"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\build_weekly_zone_event_value_paths_v2.py.before_test",
+      "destination_relative": "preparation/attempt01/build_weekly_zone_event_value_paths_v2.py.before_test",
+      "bytes": 91830,
+      "sha256": "ed260c55a62fecce729dadce170b5dec5c98049be92580495131e007a7ffd5ab",
+      "source_rehash_sha256": "ed260c55a62fecce729dadce170b5dec5c98049be92580495131e007a7ffd5ab",
+      "copy_sha256": "ed260c55a62fecce729dadce170b5dec5c98049be92580495131e007a7ffd5ab"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\compile_exit.json",
+      "destination_relative": "preparation/attempt01/compile_exit.json",
+      "bytes": 749,
+      "sha256": "fe9cc0e718c4477cd7434c24d59aed2fc717a8c3117cd466f30a1380896970a1",
+      "source_rehash_sha256": "fe9cc0e718c4477cd7434c24d59aed2fc717a8c3117cd466f30a1380896970a1",
+      "copy_sha256": "fe9cc0e718c4477cd7434c24d59aed2fc717a8c3117cd466f30a1380896970a1"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\compile_process.json",
+      "destination_relative": "preparation/attempt01/compile_process.json",
+      "bytes": 705,
+      "sha256": "383b316bcb387155eb251e50bed284e504de1ea1c23344a5b74a5e773744e54f",
+      "source_rehash_sha256": "383b316bcb387155eb251e50bed284e504de1ea1c23344a5b74a5e773744e54f",
+      "copy_sha256": "383b316bcb387155eb251e50bed284e504de1ea1c23344a5b74a5e773744e54f"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\compile_resource_observation.json",
+      "destination_relative": "preparation/attempt01/compile_resource_observation.json",
+      "bytes": 3724,
+      "sha256": "52dd848c25bbb0e853d5ffacc816c0121965c32c2bcdc3235b5b38b59d31aa0d",
+      "source_rehash_sha256": "52dd848c25bbb0e853d5ffacc816c0121965c32c2bcdc3235b5b38b59d31aa0d",
+      "copy_sha256": "52dd848c25bbb0e853d5ffacc816c0121965c32c2bcdc3235b5b38b59d31aa0d"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\compile_stderr.txt",
+      "destination_relative": "preparation/attempt01/compile_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_rehash_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\compile_stdout.txt",
+      "destination_relative": "preparation/attempt01/compile_stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_rehash_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "destination_relative": "preparation/attempt01/launch_monthly_test_index_v2_audit_20261024.py.before_test",
+      "bytes": 31463,
+      "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "source_rehash_sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046",
+      "copy_sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\launch_weekly_zone_event_value_path_v2_audit_fixtures_20261102.py.before_test",
+      "destination_relative": "preparation/attempt01/launch_weekly_zone_event_value_path_v2_audit_fixtures_20261102.py.before_test",
+      "bytes": 13374,
+      "sha256": "6933dd6cfdc25dfff3ca5341cbf244c4a22d97e93085209eac78d41723dfd524",
+      "source_rehash_sha256": "6933dd6cfdc25dfff3ca5341cbf244c4a22d97e93085209eac78d41723dfd524",
+      "copy_sha256": "6933dd6cfdc25dfff3ca5341cbf244c4a22d97e93085209eac78d41723dfd524"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\preflight_resource_observation.json",
+      "destination_relative": "preparation/attempt01/preflight_resource_observation.json",
+      "bytes": 3726,
+      "sha256": "3de1ab1b30d265556eb30845d3ce129161e6275c82da153e01e01ac97bf47baf",
+      "source_rehash_sha256": "3de1ab1b30d265556eb30845d3ce129161e6275c82da153e01e01ac97bf47baf",
+      "copy_sha256": "3de1ab1b30d265556eb30845d3ce129161e6275c82da153e01e01ac97bf47baf"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\pytest_exit.json",
+      "destination_relative": "preparation/attempt01/pytest_exit.json",
+      "bytes": 579,
+      "sha256": "61a050d051fe79e78c4b44bf9e2358b8b2baadb6a1ec4d673a92642d09c23aa1",
+      "source_rehash_sha256": "61a050d051fe79e78c4b44bf9e2358b8b2baadb6a1ec4d673a92642d09c23aa1",
+      "copy_sha256": "61a050d051fe79e78c4b44bf9e2358b8b2baadb6a1ec4d673a92642d09c23aa1"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\pytest_process.json",
+      "destination_relative": "preparation/attempt01/pytest_process.json",
+      "bytes": 535,
+      "sha256": "b12ce1e158152237efb37962be3de138d88acfdaa8744a67e447149e8babd3a2",
+      "source_rehash_sha256": "b12ce1e158152237efb37962be3de138d88acfdaa8744a67e447149e8babd3a2",
+      "copy_sha256": "b12ce1e158152237efb37962be3de138d88acfdaa8744a67e447149e8babd3a2"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\pytest_resource_observation.json",
+      "destination_relative": "preparation/attempt01/pytest_resource_observation.json",
+      "bytes": 3723,
+      "sha256": "08ef7c52b022cbb9fce6d80529b69e76aec7f587a5407cc0f0a0520dc76c6b43",
+      "source_rehash_sha256": "08ef7c52b022cbb9fce6d80529b69e76aec7f587a5407cc0f0a0520dc76c6b43",
+      "copy_sha256": "08ef7c52b022cbb9fce6d80529b69e76aec7f587a5407cc0f0a0520dc76c6b43"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\pytest_stderr.txt",
+      "destination_relative": "preparation/attempt01/pytest_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_rehash_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\pytest_stdout.txt",
+      "destination_relative": "preparation/attempt01/pytest_stdout.txt",
+      "bytes": 102,
+      "sha256": "54452b80b9b6da698026696697dcd6fd18aec1fee296a1415dd32efcdb1a1dc7",
+      "source_rehash_sha256": "54452b80b9b6da698026696697dcd6fd18aec1fee296a1415dd32efcdb1a1dc7",
+      "copy_sha256": "54452b80b9b6da698026696697dcd6fd18aec1fee296a1415dd32efcdb1a1dc7"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\receipt.json",
+      "destination_relative": "preparation/attempt01/receipt.json",
+      "bytes": 3571,
+      "sha256": "61fd4f0c294033db612fb2fcb928da78513dc6b00ddfad8c9d0f09351e35c6a3",
+      "source_rehash_sha256": "61fd4f0c294033db612fb2fcb928da78513dc6b00ddfad8c9d0f09351e35c6a3",
+      "copy_sha256": "61fd4f0c294033db612fb2fcb928da78513dc6b00ddfad8c9d0f09351e35c6a3"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\ruff_exit.json",
+      "destination_relative": "preparation/attempt01/ruff_exit.json",
+      "bytes": 755,
+      "sha256": "fc1ce39fe2311a2f31a8061930ab94134b65c43e8186ea97045efefeb8cf7854",
+      "source_rehash_sha256": "fc1ce39fe2311a2f31a8061930ab94134b65c43e8186ea97045efefeb8cf7854",
+      "copy_sha256": "fc1ce39fe2311a2f31a8061930ab94134b65c43e8186ea97045efefeb8cf7854"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\ruff_process.json",
+      "destination_relative": "preparation/attempt01/ruff_process.json",
+      "bytes": 711,
+      "sha256": "b93d9d6bd37d5208f9a1740901421e516c716d8b3ab1fe2303094a99a6349593",
+      "source_rehash_sha256": "b93d9d6bd37d5208f9a1740901421e516c716d8b3ab1fe2303094a99a6349593",
+      "copy_sha256": "b93d9d6bd37d5208f9a1740901421e516c716d8b3ab1fe2303094a99a6349593"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\ruff_resource_observation.json",
+      "destination_relative": "preparation/attempt01/ruff_resource_observation.json",
+      "bytes": 3721,
+      "sha256": "267d0e492c851358f5784639620447a80bf47074e6aa20661a455133c76772d5",
+      "source_rehash_sha256": "267d0e492c851358f5784639620447a80bf47074e6aa20661a455133c76772d5",
+      "copy_sha256": "267d0e492c851358f5784639620447a80bf47074e6aa20661a455133c76772d5"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\ruff_stderr.txt",
+      "destination_relative": "preparation/attempt01/ruff_stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_rehash_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "copy_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\ruff_stdout.txt",
+      "destination_relative": "preparation/attempt01/ruff_stdout.txt",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "source_rehash_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "copy_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\test_audit_weekly_zone_event_value_paths_v2.py.before_test",
+      "destination_relative": "preparation/attempt01/test_audit_weekly_zone_event_value_paths_v2.py.before_test",
+      "bytes": 36968,
+      "sha256": "e7f7c6e7cd7f9b93a1763b969205478da87182247b1d284d7c9fd5b980112bf7",
+      "source_rehash_sha256": "e7f7c6e7cd7f9b93a1763b969205478da87182247b1d284d7c9fd5b980112bf7",
+      "copy_sha256": "e7f7c6e7cd7f9b93a1763b969205478da87182247b1d284d7c9fd5b980112bf7"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\test_audit_weekly_zone_event_value_paths.py.before_test",
+      "destination_relative": "preparation/attempt01/test_audit_weekly_zone_event_value_paths.py.before_test",
+      "bytes": 21539,
+      "sha256": "ac5d0fbee457396e8d9e15d217089a17927f1ba73953d681ffa02f2fc4840deb",
+      "source_rehash_sha256": "ac5d0fbee457396e8d9e15d217089a17927f1ba73953d681ffa02f2fc4840deb",
+      "copy_sha256": "ac5d0fbee457396e8d9e15d217089a17927f1ba73953d681ffa02f2fc4840deb"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "destination_relative": "preparation/attempt01/WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md.before_test",
+      "bytes": 36466,
+      "sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9",
+      "source_rehash_sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9",
+      "copy_sha256": "e7cf56f8fba5dc50937dcb4e3625752b83e4d73ebbeed77ee19f97f8bf219ac9"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2_AUDITOR_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "destination_relative": "preparation/attempt01/WEEKLY_ZONE_EVENT_VALUE_PATH_V2_AUDITOR_IMPLEMENTATION_REVIEW_20261102.md.before_test",
+      "bytes": 3774,
+      "sha256": "57591073d9ea1cdf099c5d9b9614ba7c30b4261ff1b985dc48a152428604e943",
+      "source_rehash_sha256": "57591073d9ea1cdf099c5d9b9614ba7c30b4261ff1b985dc48a152428604e943",
+      "copy_sha256": "57591073d9ea1cdf099c5d9b9614ba7c30b4261ff1b985dc48a152428604e943"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\attempt01\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2_CALENDAR_AMENDMENT_20261102.md.before_test",
+      "destination_relative": "preparation/attempt01/WEEKLY_ZONE_EVENT_VALUE_PATH_V2_CALENDAR_AMENDMENT_20261102.md.before_test",
+      "bytes": 15276,
+      "sha256": "65fd1aaef25ddea13957ce07e6c21285771adc889f097d603f93e00572cf1146",
+      "source_rehash_sha256": "65fd1aaef25ddea13957ce07e6c21285771adc889f097d603f93e00572cf1146",
+      "copy_sha256": "65fd1aaef25ddea13957ce07e6c21285771adc889f097d603f93e00572cf1146"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_path_v2_audit_fixtures_01\\receipt.json",
+      "destination_relative": "preparation/receipt.json",
+      "bytes": 3571,
+      "sha256": "61fd4f0c294033db612fb2fcb928da78513dc6b00ddfad8c9d0f09351e35c6a3",
+      "source_rehash_sha256": "61fd4f0c294033db612fb2fcb928da78513dc6b00ddfad8c9d0f09351e35c6a3",
+      "copy_sha256": "61fd4f0c294033db612fb2fcb928da78513dc6b00ddfad8c9d0f09351e35c6a3"
+    }
+  ]
+}
