@@ -1,5 +1,15 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint2-nov: faseB devalores weekly predeclarada y revisada documentalmente.
+Contratoe7cf56f8/36466B CLEAR: hash/footer2768presentes+16missing, selector10:30
+float histórico3240 y9720segmentos samecontract; spotLONG1086570/2790identidades,
+2772caches+18missing con24SHORT. Sin candidatesJSONL/outcomes/fit/eventos/PNL.
+ReutilizacachesH1/Q3, sólo time_ns/spot/spot_valid,8163pins transitivos. CPU0,
+10vars1/gatesRAMcommitdisk2GB/journals/cierreSHA. Publicar antesimplementación
+yfixtures; builderquotes+modulospot separados, auditorindependiente posterior.
+No runtimeB todavía. FaseA1b710775 cerradaintacta. Goalactivo/promociónfalse.
+Contrato WEEKLY_ZONE_EVENT_VALUE_PATH_CONTRACT_20261102.md en weekly_multiday.
+
 Checkpoint2-nov10:55UTC: faseAweekly SOURCE_PLAN cerrada y auditada, NO RELANZAR.
 Auditor24408exit0retenido bfdf36bf/audit1b710775/manifest49935941,26inputs y
 26runtimepins exactos. Reconstrucción2790planes/4860refs/2784fuentes:2768presentes,
