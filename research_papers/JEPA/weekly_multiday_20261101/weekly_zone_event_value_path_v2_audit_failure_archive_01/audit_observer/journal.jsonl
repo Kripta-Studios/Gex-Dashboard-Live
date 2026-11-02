@@ -1,0 +1,2 @@
+{"event":"STARTED","gate":{"available_ram_bytes":11553939456,"disk_free_bytes":26214961152,"free_commit_bytes":11251322880},"identity":"ALL","stage":"ADMIT_AUTHORITIES","utc":"2026-11-02T14:01:03.390295+00:00"}
+{"details":{},"error":"AuditError","event":"ERROR","identity":"ALL","stage":"ADMIT_AUTHORITIES","utc":"2026-11-02T14:01:03.474367+00:00"}

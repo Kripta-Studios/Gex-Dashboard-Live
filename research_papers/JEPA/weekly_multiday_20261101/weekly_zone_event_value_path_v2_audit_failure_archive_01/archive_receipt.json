@@ -1,0 +1,17 @@
+{
+  "audit_observer_files": 1,
+  "audit_relaunched": false,
+  "closed_utc": "2026-11-02T14:02:11.437275+00:00",
+  "git_used": false,
+  "launcher_observer_files": 9,
+  "manifest": {
+    "bytes": 8223,
+    "sha256": "b8713683e1fdf2ab5402f9f12abea690bdce6d6d30a170547fcf9a591fe5fe7e"
+  },
+  "producer_modified": false,
+  "raw_opened": false,
+  "schema": "weekly_zone_event_value_path_v2_audit_failure_archive_receipt_v1",
+  "source_file_count": 10,
+  "source_total_bytes": 56177,
+  "status": "PASS_EXACT_AUDIT_FAILURE_ARCHIVE"
+}

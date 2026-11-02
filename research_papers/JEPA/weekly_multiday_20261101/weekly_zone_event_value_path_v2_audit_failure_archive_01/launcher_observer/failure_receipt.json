@@ -1,0 +1,11 @@
+{
+  "changed_pins": [],
+  "closing_pin_differences": [],
+  "exit_code": 1,
+  "metadata_error": null,
+  "partial_output_not_authorized_for_adoption": true,
+  "retry": false,
+  "status": "VALUE_CHILD_OR_CLOSURE_FAILED",
+  "utc": "2026-11-02T14:01:03.881906+00:00",
+  "value_child_exit_code": 1
+}
