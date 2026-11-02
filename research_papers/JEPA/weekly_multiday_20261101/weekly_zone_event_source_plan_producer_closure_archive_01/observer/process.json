@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\build_weekly_zone_event_source_plan.py",
+    "--execute-reviewed-plan",
+    "--builder-sha256",
+    "9a412a3ad4b1ae6d527c92c7b1307dfceecb2aec1b4d81cfff70acf8e71c1270",
+    "--tests-sha256",
+    "ed4de57a2e4ff53f4f5f490377aa2a1338dba8aaf9b2939a028e9fad902e4121",
+    "--contract-sha256",
+    "c1891e794cab794d5f6570f99d838a888663a48b8ccededd4d96d27a63173d65"
+  ],
+  "cpu_affinity": [
+    0
+  ],
+  "creation_time": 1793616657.3419435,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 3816,
+  "utc": "2026-11-02T10:50:57.340729+00:00",
+  "wait_pending": true
+}

@@ -1,0 +1,22 @@
+{
+  "changed_pins": [],
+  "cpu_affinity": [
+    0
+  ],
+  "creation_time": 1793616657.3419435,
+  "elapsed_seconds": 3.186876799998572,
+  "exit_code": 0,
+  "files": {
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\admission.json": "b49b4908907ff6441e0e141594ec9830da0fc516ea328960092133b13cbb69a5",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\process.json": "61239dbfafecf9f2a01e3d75d2e03f6c477e01b0e52ef0ea75339b2b017ad85f",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\resource_observation.json": "dee6c5b8468a5bfd4eed208c6becadbe1f01bf026caa31394abffa70197bf1f7",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_source_plan_observer_01\\stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "metadata_error": null,
+  "pid": 3816,
+  "planner_child_exit_code": 0,
+  "retry": false,
+  "source": "subprocess.Popen.wait_retained_handle",
+  "utc": "2026-11-02T10:51:00.527590+00:00"
+}

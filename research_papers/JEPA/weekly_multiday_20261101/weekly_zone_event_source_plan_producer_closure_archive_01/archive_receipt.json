@@ -1,0 +1,93 @@
+{
+  "schema": "weekly_zone_event_source_plan_producer_closure_archive_receipt_v1",
+  "status": "ARCHIVED_CLOSED_PRODUCER_AND_OBSERVER_BYTE_EXACT",
+  "source_roots": {
+    "plan": "D:/GexResearchArtifacts/weekly_multiday_20261101/weekly_zone_event_source_plan_01",
+    "observer": "D:/GexResearchArtifacts/weekly_multiday_20261101/weekly_zone_event_source_plan_observer_01"
+  },
+  "destination_root": "C:/Users/Álvaro Schwiedop/Desktop/KriptaStudios/Gex-Dashboard-Live/research_papers/JEPA/weekly_multiday_20261101/weekly_zone_event_source_plan_producer_closure_archive_01",
+  "files": [
+    {
+      "source": "plan/entry_plan.jsonl",
+      "destination": "plan/entry_plan.jsonl",
+      "bytes": 1018910,
+      "sha256": "0db0065f2dcdd254122a4c4575ecb9c752318cab3a90666ad8215aef922d91bb"
+    },
+    {
+      "source": "plan/manifest.json",
+      "destination": "plan/manifest.json",
+      "bytes": 5094,
+      "sha256": "a0a9d330992d7f5768550c5b60401a701e1c1b02caec4a0967de50b7c7f13161"
+    },
+    {
+      "source": "plan/summary.json",
+      "destination": "plan/summary.json",
+      "bytes": 1398,
+      "sha256": "612ecf1abf18f973656aeda347f21efe563f5c84b9cc06f96e22383ed19b3b39"
+    },
+    {
+      "source": "plan/weekly_sources.jsonl",
+      "destination": "plan/weekly_sources.jsonl",
+      "bytes": 2367532,
+      "sha256": "59081a049d11a0403204ca06e62ef4661bb6de3cd042548e081c10f8eaddd1f7"
+    },
+    {
+      "source": "observer/admission.json",
+      "destination": "observer/admission.json",
+      "bytes": 6713,
+      "sha256": "b49b4908907ff6441e0e141594ec9830da0fc516ea328960092133b13cbb69a5"
+    },
+    {
+      "source": "observer/exit.json",
+      "destination": "observer/exit.json",
+      "bytes": 1307,
+      "sha256": "b8f34b02dccf570f0f3ebaaa4a120fbaded81e5d76645ac7f1f68de688bf1a9b"
+    },
+    {
+      "source": "observer/process.json",
+      "destination": "observer/process.json",
+      "bytes": 825,
+      "sha256": "61239dbfafecf9f2a01e3d75d2e03f6c477e01b0e52ef0ea75339b2b017ad85f"
+    },
+    {
+      "source": "observer/resource_observation.json",
+      "destination": "observer/resource_observation.json",
+      "bytes": 5973,
+      "sha256": "dee6c5b8468a5bfd4eed208c6becadbe1f01bf026caa31394abffa70197bf1f7"
+    },
+    {
+      "source": "observer/stderr.log",
+      "destination": "observer/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "observer/stdout.log",
+      "destination": "observer/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "payload_totals": {
+    "file_count": 10,
+    "total_bytes": 3407752,
+    "plan_files": 4,
+    "observer_files": 6
+  },
+  "compact_pin_verification": {
+    "manifest_sha256": "a0a9d330992d7f5768550c5b60401a701e1c1b02caec4a0967de50b7c7f13161",
+    "manifest_input_pins_rehashed": 10,
+    "manifest_output_pins_rehashed": 3,
+    "observer_exit_sha256": "b8f34b02dccf570f0f3ebaaa4a120fbaded81e5d76645ac7f1f68de688bf1a9b",
+    "observer_exit_listed_files_rehashed": 5,
+    "observer_exit_rehashed": true,
+    "zero_differences": true
+  },
+  "scope": {
+    "raw_market_files_opened": false,
+    "raw_market_files_statted": false,
+    "inference_performed": false,
+    "tests_or_runtime_repeated": false,
+    "git_used": false
+  }
+}
