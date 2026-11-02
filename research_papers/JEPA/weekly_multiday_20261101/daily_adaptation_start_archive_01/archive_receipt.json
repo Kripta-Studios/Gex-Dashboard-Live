@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\admission.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_start_archive_01\\admission.json",
+      "bytes": 7082,
+      "sha256": "1b3035533cedbcc94e9dea15f68209b3e1f23f8943851905cc7c9a1474328b1e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\process.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_start_archive_01\\process.json",
+      "bytes": 1039,
+      "sha256": "2ed656ed929e26495acae77a9162355bf982240a460661d32c35509807b38276"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\resource_observation.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_start_archive_01\\resource_observation.json",
+      "bytes": 6105,
+      "sha256": "d1bb63a4638df4e78ec1fe23c0bf4902fdb710ce2877e42c2cff0d22e4a60d15"
+    }
+  ],
+  "count": 3,
+  "bytes": 14226
+}

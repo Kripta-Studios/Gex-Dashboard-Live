@@ -1,0 +1,29 @@
+{
+  "command": [
+    "C:\\Program Files\\Python314\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\evaluate_weekly_daily_adaptation.py",
+    "--execute-reviewed-daily-adaptation",
+    "--output",
+    "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01",
+    "--contract-sha256",
+    "5d388e484435c8fe23d40476c02928887c6ab5487af62197e5e74f08c1fe0047",
+    "--implementation-sha256",
+    "536a581d8295362b3374dd8c5db2224095f8afe66c5b0e9ae895cf08b18d4f2e",
+    "--tests-sha256",
+    "fa199a2a6339cf73911cc6f818c73f655cce1931e222733c041bff82b23e661e",
+    "--review-sha256",
+    "bd0f514610c6d93167924aef651a2edf66e2d31c281e4be1fe0325ccd87eb841"
+  ],
+  "cpu_affinity": [
+    0
+  ],
+  "creation_time": 1793612188.7548792,
+  "handle_retained": true,
+  "metadata_error": null,
+  "pid": 15312,
+  "utc": "2026-11-02T09:36:28.753739+00:00",
+  "wait_pending": true
+}

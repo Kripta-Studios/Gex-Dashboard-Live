@@ -1,0 +1,1435 @@
+{
+  "count": 178,
+  "reused_source": {
+    "bytes": 5486991,
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_context_adaptation_01\\states.jsonl",
+    "sha256": "d9313b329b4543aecd1aaad39116aa13eff3efad271e9931916caa91feeac475"
+  },
+  "rows": [
+    {
+      "date": "20260102",
+      "source": "REUSED",
+      "source_row": 0,
+      "state_id": "CONTEXT182_20260102",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260105",
+      "source": "REUSED",
+      "source_row": 1,
+      "state_id": "CONTEXT182_20260105",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260106",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260106",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260107",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260107",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260108",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260108",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260109",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260109",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260112",
+      "source": "REUSED",
+      "source_row": 2,
+      "state_id": "CONTEXT182_20260112",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260113",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260113",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260114",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260114",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260115",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260115",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260116",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260116",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260120",
+      "source": "REUSED",
+      "source_row": 3,
+      "state_id": "CONTEXT182_20260120",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260121",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260121",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260122",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260122",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260123",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260123",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260126",
+      "source": "REUSED",
+      "source_row": 4,
+      "state_id": "CONTEXT182_20260126",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260127",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260127",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260128",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260128",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260129",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260129",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260130",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260130",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260202",
+      "source": "REUSED",
+      "source_row": 5,
+      "state_id": "CONTEXT182_20260202",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260203",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260203",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260204",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260204",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260205",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260205",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260206",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260206",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260209",
+      "source": "REUSED",
+      "source_row": 6,
+      "state_id": "CONTEXT182_20260209",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260210",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260210",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260211",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260211",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260212",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260212",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260213",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260213",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260217",
+      "source": "REUSED",
+      "source_row": 7,
+      "state_id": "CONTEXT182_20260217",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260218",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260218",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260219",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260219",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260220",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260220",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260223",
+      "source": "REUSED",
+      "source_row": 8,
+      "state_id": "CONTEXT182_20260223",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260224",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260224",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260225",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260225",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260226",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260226",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260227",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260227",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260302",
+      "source": "REUSED",
+      "source_row": 9,
+      "state_id": "CONTEXT182_20260302",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260303",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260303",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260304",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260304",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260305",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260305",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260306",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260306",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260309",
+      "source": "REUSED",
+      "source_row": 10,
+      "state_id": "CONTEXT182_20260309",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260310",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260310",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260311",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260311",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260312",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260312",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260313",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260313",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260316",
+      "source": "REUSED",
+      "source_row": 11,
+      "state_id": "CONTEXT182_20260316",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260317",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260317",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260318",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260318",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260319",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260319",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260320",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260320",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260323",
+      "source": "REUSED",
+      "source_row": 12,
+      "state_id": "CONTEXT182_20260323",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260324",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260324",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260325",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260325",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260326",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260326",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260327",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260327",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260330",
+      "source": "REUSED",
+      "source_row": 13,
+      "state_id": "CONTEXT182_20260330",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260331",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260331",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260401",
+      "source": "REUSED",
+      "source_row": 14,
+      "state_id": "CONTEXT182_20260401",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260402",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260402",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260406",
+      "source": "REUSED",
+      "source_row": 15,
+      "state_id": "CONTEXT182_20260406",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260407",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260407",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260408",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260408",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260409",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260409",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260410",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260410",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260413",
+      "source": "REUSED",
+      "source_row": 16,
+      "state_id": "CONTEXT182_20260413",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260414",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260414",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260415",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260415",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260416",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260416",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260417",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260417",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260420",
+      "source": "REUSED",
+      "source_row": 17,
+      "state_id": "CONTEXT182_20260420",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260421",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260421",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260422",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260422",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260423",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260423",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260424",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260424",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260427",
+      "source": "REUSED",
+      "source_row": 18,
+      "state_id": "CONTEXT182_20260427",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260428",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260428",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260429",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260429",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260430",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260430",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260501",
+      "source": "REUSED",
+      "source_row": 19,
+      "state_id": "CONTEXT182_20260501",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260504",
+      "source": "REUSED",
+      "source_row": 20,
+      "state_id": "CONTEXT182_20260504",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260505",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260505",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260506",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260506",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260507",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260507",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260508",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260508",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260511",
+      "source": "REUSED",
+      "source_row": 21,
+      "state_id": "CONTEXT182_20260511",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260512",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260512",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260513",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260513",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260514",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260514",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260515",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260515",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260518",
+      "source": "REUSED",
+      "source_row": 22,
+      "state_id": "CONTEXT182_20260518",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260519",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260519",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260520",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260520",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260521",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260521",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260522",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260522",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260526",
+      "source": "REUSED",
+      "source_row": 23,
+      "state_id": "CONTEXT182_20260526",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260527",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260527",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260528",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260528",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260529",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260529",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260601",
+      "source": "REUSED",
+      "source_row": 24,
+      "state_id": "CONTEXT182_20260601",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260602",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260602",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260603",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260603",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260604",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260604",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260605",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260605",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260608",
+      "source": "REUSED",
+      "source_row": 25,
+      "state_id": "CONTEXT182_20260608",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260609",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260609",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260610",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260610",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260611",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260611",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260612",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260612",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260615",
+      "source": "REUSED",
+      "source_row": 26,
+      "state_id": "CONTEXT182_20260615",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260616",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260616",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260617",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260617",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260618",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260618",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260622",
+      "source": "REUSED",
+      "source_row": 27,
+      "state_id": "CONTEXT182_20260622",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260623",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260623",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260624",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260624",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260625",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260625",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260626",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260626",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260629",
+      "source": "REUSED",
+      "source_row": 28,
+      "state_id": "CONTEXT182_20260629",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260630",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260630",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260701",
+      "source": "REUSED",
+      "source_row": 29,
+      "state_id": "CONTEXT182_20260701",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260702",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260702",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260706",
+      "source": "REUSED",
+      "source_row": 30,
+      "state_id": "CONTEXT182_20260706",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260707",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260707",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260708",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260708",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260709",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260709",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260710",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260710",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260713",
+      "source": "REUSED",
+      "source_row": 31,
+      "state_id": "CONTEXT182_20260713",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260714",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260714",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260715",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260715",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260716",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260716",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260717",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260717",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260720",
+      "source": "REUSED",
+      "source_row": 32,
+      "state_id": "CONTEXT182_20260720",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260721",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260721",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260722",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260722",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260723",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260723",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260724",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260724",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260727",
+      "source": "REUSED",
+      "source_row": 33,
+      "state_id": "CONTEXT182_20260727",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260728",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260728",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260729",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260729",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260730",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260730",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260731",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260731",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260803",
+      "source": "REUSED",
+      "source_row": 34,
+      "state_id": "CONTEXT182_20260803",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260804",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260804",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260805",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260805",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260806",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260806",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260807",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260807",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260810",
+      "source": "REUSED",
+      "source_row": 35,
+      "state_id": "CONTEXT182_20260810",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260811",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260811",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260812",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260812",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260813",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260813",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260814",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260814",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260817",
+      "source": "REUSED",
+      "source_row": 36,
+      "state_id": "CONTEXT182_20260817",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260818",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260818",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260819",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260819",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260820",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260820",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260821",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260821",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260824",
+      "source": "REUSED",
+      "source_row": 37,
+      "state_id": "CONTEXT182_20260824",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260825",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260825",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260826",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260826",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260827",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260827",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260828",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260828",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260831",
+      "source": "REUSED",
+      "source_row": 38,
+      "state_id": "CONTEXT182_20260831",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260901",
+      "source": "REUSED",
+      "source_row": 39,
+      "state_id": "CONTEXT182_20260901",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260902",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260902",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260903",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260903",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260904",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260904",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260908",
+      "source": "REUSED",
+      "source_row": 40,
+      "state_id": "CONTEXT182_20260908",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260909",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260909",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260910",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260910",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260911",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260911",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260914",
+      "source": "REUSED",
+      "source_row": 41,
+      "state_id": "CONTEXT182_20260914",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260915",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260915",
+      "terminal_unused_for_scoring": false,
+      "used_for_scoring": true
+    },
+    {
+      "date": "20260916",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260916",
+      "terminal_unused_for_scoring": true,
+      "used_for_scoring": false
+    },
+    {
+      "date": "20260917",
+      "source": "NEW",
+      "source_row": null,
+      "state_id": "CONTEXT182_20260917",
+      "terminal_unused_for_scoring": true,
+      "used_for_scoring": false
+    }
+  ],
+  "schema": "weekly_daily_adaptation_schedule_v1"
+}

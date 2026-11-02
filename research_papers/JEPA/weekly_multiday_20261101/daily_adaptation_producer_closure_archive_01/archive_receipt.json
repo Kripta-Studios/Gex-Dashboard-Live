@@ -1,0 +1,67 @@
+{
+  "files": [
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\admission.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\observer_admission.json",
+      "bytes": 7082,
+      "sha256": "1b3035533cedbcc94e9dea15f68209b3e1f23f8943851905cc7c9a1474328b1e"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\process.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\observer_process.json",
+      "bytes": 1039,
+      "sha256": "2ed656ed929e26495acae77a9162355bf982240a460661d32c35509807b38276"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\resource_observation.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\observer_resource_observation.json",
+      "bytes": 6105,
+      "sha256": "d1bb63a4638df4e78ec1fe23c0bf4902fdb710ce2877e42c2cff0d22e4a60d15"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\stdout.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\observer_stdout.log",
+      "bytes": 159,
+      "sha256": "29e2ea408e8debd98e5e483c3eed1cc9e018a3ae79c676948a3886bb95bf193d"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\stderr.log",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\observer_stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\exit.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\observer_exit.json",
+      "bytes": 1262,
+      "sha256": "54021b954d522e0c9535b237de45a63da14a39e91e12e71fe90546d351f9f0d0"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\manifest.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\manifest.json",
+      "bytes": 42358,
+      "sha256": "7decb3e2baf360d807fd849604013728f5fe05c48dcd3302c0b270a1440d2206"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\daily_schedule.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\daily_schedule.json",
+      "bytes": 36665,
+      "sha256": "b7d244230739960477880c3e77a3e011b20a2e9495d0dc837677d5ddd67f8876"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\fit_journal.jsonl",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\fit_journal.jsonl",
+      "bytes": 77656,
+      "sha256": "981cee9258029592b6296d52fc15d7283929b3d63705d39057c924981a31cb0d"
+    },
+    {
+      "source": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_closure_01\\root_metadata_receipt.json",
+      "copy": "research_papers\\JEPA\\weekly_multiday_20261101\\daily_adaptation_producer_closure_archive_01\\root_metadata_receipt.json",
+      "bytes": 933,
+      "sha256": "2b59260b4019f7e04199a6353b58bdcb8fd995c671e23cb6485ab6fa67533a2d"
+    }
+  ],
+  "count": 10,
+  "bytes": 173259,
+  "scope": "closure metadata only; economics and large models/plans remain local under manifest pins"
+}

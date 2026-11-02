@@ -1,0 +1,27 @@
+{
+  "observed_utc": "2026-11-02T09:39:30.744298+00:00",
+  "status": "PASS_ROOT_PRODUCER_CLOSURE_METADATA_ONLY_NOT_ECONOMIC_AUDIT",
+  "manifest": {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_01\\manifest.json",
+    "bytes": 42358,
+    "sha256": "7decb3e2baf360d807fd849604013728f5fe05c48dcd3302c0b270a1440d2206"
+  },
+  "exit": {
+    "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\h2_daily_adaptation_observer_01\\exit.json",
+    "sha256": "54021b954d522e0c9535b237de45a63da14a39e91e12e71fe90546d351f9f0d0",
+    "utc": "2026-11-02T09:38:36.109764+00:00"
+  },
+  "inputs_verified": 45,
+  "outputs_verified": 152,
+  "output_bytes": 62093810,
+  "counts": {
+    "schedule": 178,
+    "reused": 42,
+    "new": 136,
+    "fits_started": 136,
+    "fits_completed": 136,
+    "score_lines": 2448,
+    "new_state_lines": 136
+  },
+  "economics_interpreted": false
+}
