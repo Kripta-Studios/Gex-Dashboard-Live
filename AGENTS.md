@@ -1,5 +1,26 @@
 # AI Agent Hand-off: Current Production Reality
 
+Reanudación expresa3-nov2026: goal ACTIVE confirmado tras la espera ordenada.
+B06 FALLIDO/CERRADO, NO RELANZAR: PID8616/creation1793644105.584635,
+exit1 retenido04:13:48.952731UTC; launcher04:13:50, root0e8b4a exit1.
+35124.612s, metadata_errornull/changed_pins[]/retryfalse; output06 ausente.
+Completó2784footers/1620SELECT/2768option sources/2790cache identities,
+pero falla cache_admission schema/order row0 antes compare_spot/summary/cierre.
+Productor escribe JSONL sort_keys; auditor esperaba orden de inserción. También
+spot_coverage tiene ese mismatch. Ningún parcial adoptable, noBfull/C/D/PnL.
+Archivo06 externo11payload15578491B/566e208f/8254c723 y13proyecciones
+REANUDACION_20261103/b06_failure. Diez pins implementación actuales exactos.
+R4 propuesta mínima: helper JSONL+dos calls, identidades07; Parquet/valores/gates
+intactos. Enmienda5cc7f6054663B en revisión; requiere publicación, fixtures
+focales observadas, review final y binding/launcher antes un único07 completo.
+No reabrir R3136 ni productorB02. No se ha creado/ejecutado07.
+D V2 permanece local SIN suites: productor538aada8/helper11010573/test1a85c754;
+auditorc3ccba90/test2b589176 staticSHIP sin publicación. Fallos estáticos
+conservados en REANUDACION_20261102/d_scale_*_static_candidate*. No ampliarlo.
+Prioridad: cerrar el defecto JSONL B y obtener admisión completa; después C/D.
+Autoridad WEEKLY_ZONE_EVENT_VALUE_PATH_B06_FAILURE_AND_R4_JSONL_AMENDMENT_20261103.md.
+Goal activo, selected_policy=null/promotion_approved=false. Cambios ajenos intactos.
+
 Checkpoint2-nov23:06UTC: integración D sintética CERRADA8PASS1.21s/compile0/Ruff0.
 Primera ejecución desde e2d38b2c;21pins/snapshots/Git exactos. Pytest PID26748,
 creation1793660353.229248/exit1793660360.3008645; tres hijos exit0 retenidos,

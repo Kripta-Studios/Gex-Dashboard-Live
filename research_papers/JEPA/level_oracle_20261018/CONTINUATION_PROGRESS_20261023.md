@@ -1,3 +1,13 @@
+Reanudación3-nov: goal ACTIVE por orden expresa. B06 FALLIDO/CERRADO exit1
+04:13:48.952731UTC, PID8616creation1793644105.584635/root0e8b4a; sin drift/retry.
+2768option sources y2790cache identities completos pero compare_rows rechaza
+cache_admission row0 por ordenclaves JSONL; spot_coverage mismo defecto latente.
+Archivo06 externo11copias15578491B/566e208f/8254c723;13proyecciones exactas.
+No adoptar parciales ni repetir06. R4helperJSONL+2calls propuesto en enmienda
+5cc7f6054663B, revisión/publicación y fixturesfocales previas a07 completo.
+Sin07/C real/D real/PnL. D V2local sin suites (538a/1101/1a85 y c3cc/2b58)
+queda sin ampliar; fallos estáticos preservados. No rerun136 ni productorB02.
+
 Checkpoint2-nov23:06UTC: integración D CERRADA8PASS1.21s/compile0/Ruff0 desde
 e2d38b2c;21pins/snapshots exactos, tres hijos retenidos exit0. Pytest26748creation
 1793660353.229248/exit1793660360.3008645, recibob3be7b6b/exit6a447ed4.

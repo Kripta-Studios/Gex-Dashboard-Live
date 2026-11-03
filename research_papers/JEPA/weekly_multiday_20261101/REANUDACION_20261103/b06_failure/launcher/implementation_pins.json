@@ -1,0 +1,52 @@
+{
+  "builder": {
+    "bytes": 120016,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\audit_weekly_zone_event_value_paths_v2r3.py",
+    "sha256": "effc36ce5cc496698f9aca1ea496046c89ca0d8e0deabe3f354dd892a94a5643"
+  },
+  "builder_final_review": {
+    "bytes": 3153,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_V2R3_FINAL_IMPLEMENTATION_REVIEW_20261102.md",
+    "sha256": "756a8e9321c7ea728e2e9692cba5be2c5b3a8001aef249d79a3cef8e14a6b57f"
+  },
+  "builder_tests": {
+    "bytes": 52481,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_audit_weekly_zone_event_value_paths_v2r3.py",
+    "sha256": "30686f927bfdd566ab1a355bd2c42ded7be181198320fe8ea51911d9d2966b83"
+  },
+  "contract": {
+    "bytes": 14061,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_RESOURCE_WAIT_AMENDMENT_20261102.md",
+    "sha256": "b4f9980897ee8834e296d025f8bdbf8d30e3a7bedb97d558e4ebc6ad8aa25dab"
+  },
+  "launcher": {
+    "bytes": 45860,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\launch_weekly_zone_event_value_paths_audit06_20261102.py",
+    "sha256": "e051b1cfef41cbbff1e24f8b74e69940ae9869a3d207a9b8eea9ddd94364d0dc"
+  },
+  "resource_helper": {
+    "bytes": 31463,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\level_oracle_20261018\\launch_monthly_test_index_v2_audit_20261024.py",
+    "sha256": "3cfe55a6a2926007d91d44215c8a7c0a28801efaca189fcf306c275e352ed046"
+  },
+  "runtime_binding": {
+    "bytes": 4314,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_VALUE_PATH_B06_AUDIT_RUNTIME_BINDING_20261102.md",
+    "sha256": "a62ef18805190e0835b9388bef69a5974d26b61144c3d4a99ceafa384e60b54e"
+  },
+  "spot_final_review": {
+    "bytes": 1486,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\WEEKLY_ZONE_EVENT_SPOT_PATH_FINAL_REVIEW_20261102.md",
+    "sha256": "221004483dd77fb5112bbb05ca2ec44191c31cfb19a26815b2950c82e721a140"
+  },
+  "spot_module": {
+    "bytes": 40814,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\weekly_zone_event_spot_paths.py",
+    "sha256": "0953d344b28992da4b92c561daa7663bb48fe89ea309f6323f53b39c6a0dbd38"
+  },
+  "spot_tests": {
+    "bytes": 33144,
+    "path": "C:\\Users\\\u00c1lvaro Schwiedop\\Desktop\\KriptaStudios\\Gex-Dashboard-Live\\research_papers\\JEPA\\weekly_multiday_20261101\\test_weekly_zone_event_spot_paths.py",
+    "sha256": "80d91442dafbf8b2beace31b46eb117913e410a1ccb820ee467f2d0c24d9d3eb"
+  }
+}

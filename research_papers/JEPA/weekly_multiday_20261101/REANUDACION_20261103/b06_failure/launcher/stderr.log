@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r3.py", line 1948, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r3.py", line 1939, in main
+    audit = run(absolute(args.producer_root), args.producer_manifest_sha256, absolute(args.producer_exit),
+                args.producer_exit_sha256, args.auditor_sha256, args.tests_sha256,
+                cli_pin(args, "review"), cli_pin(args, "runtime-binding"), cli_pin(args, "launcher"),
+                absolute(args.output), absolute(args.observer))
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r3.py", line 1800, in run
+    compare_rows(cache_admission, expected_cache, "cache_admission")
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r3.py", line 998, in compare_rows
+    require(list(left) == list(right), f"{label} schema/order row {index}")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r3.py", line 238, in require
+    raise AuditError(message)
+AuditError: cache_admission schema/order row 0

@@ -1,0 +1,28 @@
+{
+  "changed_pins": [],
+  "cpu_affinity": 1,
+  "creation_epoch": 1793644105.584635,
+  "elapsed_seconds": 35124.6120217,
+  "exit_code": 1,
+  "metadata_error": null,
+  "pid": 8616,
+  "process_times": {
+    "creation_epoch": 1793644105.584635,
+    "exit_epoch": 1793679228.9527311,
+    "kernel_seconds": 2101.609375,
+    "user_seconds": 28968.375
+  },
+  "resource_wait_invalid_evidence": [],
+  "resource_wait_pins": {
+    "audit_child": {
+      "bytes": 73256,
+      "path": "D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_observer_06\\resource_wait.jsonl",
+      "sha256": "54cdf7bfd3821c333a2c74f68845845323a5a51b4ea3eefa81b4e9e456d6758a"
+    },
+    "launcher": null
+  },
+  "retry": false,
+  "source": "subprocess.Popen.wait_retained_handle",
+  "utc": "2026-11-03T04:13:50.191487+00:00",
+  "value_child_exit_code": 1
+}
