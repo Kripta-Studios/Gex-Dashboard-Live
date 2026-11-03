@@ -1,0 +1,24 @@
+{
+  "changed_pins": [],
+  "cpu_affinity": 1,
+  "creation_epoch": 1793695999.8273456,
+  "elapsed_seconds": 318.637613400002,
+  "exit_code": 1,
+  "metadata_error": null,
+  "pid": 50544,
+  "process_times": {
+    "creation_epoch": 1793695999.8273456,
+    "exit_epoch": 1793696318.0144825,
+    "kernel_seconds": 52.390625,
+    "user_seconds": 191.203125
+  },
+  "resource_wait_invalid_evidence": [],
+  "resource_wait_pins": {
+    "audit_child": null,
+    "launcher": null
+  },
+  "retry": false,
+  "source": "subprocess.Popen.wait_retained_handle",
+  "utc": "2026-11-03T08:58:38.459416+00:00",
+  "value_child_exit_code": 1
+}

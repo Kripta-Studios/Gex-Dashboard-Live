@@ -1,0 +1,50 @@
+Traceback (most recent call last):
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 451, in unit
+    yield details
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 1791, in run
+    decisions, selector_counts = select_contracts(plans, journal=journal)
+                                 ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 935, in select_contracts
+    with journal.unit("SELECT_1030_SOURCE", plan["plan_id"], [path]) as details:
+         ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python314\Lib\contextlib.py", line 148, in __exit__
+    next(self.gen)
+    ~~~~^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 456, in unit
+    self.append(stage, "COMPLETED", identity, pins_before=before, pins_after=after, details=details)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 439, in append
+    with self.path.open("ab") as stream:
+         ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Program Files\Python314\Lib\pathlib\__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_observer_07\\journal.jsonl'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 1953, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 1944, in main
+    audit = run(absolute(args.producer_root), args.producer_manifest_sha256, absolute(args.producer_exit),
+                args.producer_exit_sha256, args.auditor_sha256, args.tests_sha256,
+                cli_pin(args, "review"), cli_pin(args, "runtime-binding"), cli_pin(args, "launcher"),
+                absolute(args.output), absolute(args.observer))
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 1790, in run
+    with journal.unit("SELECT_1030", "ALL", [Path(plan["entry_path"]) for plan in plans if plan["status"] == "PLANNED"]):
+         ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python314\Lib\contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 453, in unit
+    self.append(stage, "ERROR", identity, error=type(error).__name__, details=details)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Álvaro Schwiedop\Desktop\KriptaStudios\Gex-Dashboard-Live\research_papers\JEPA\weekly_multiday_20261101\audit_weekly_zone_event_value_paths_v2r4.py", line 439, in append
+    with self.path.open("ab") as stream:
+         ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Program Files\Python314\Lib\pathlib\__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: 'D:\\GexResearchArtifacts\\weekly_multiday_20261101\\weekly_zone_event_value_paths_audit_observer_07\\journal.jsonl'

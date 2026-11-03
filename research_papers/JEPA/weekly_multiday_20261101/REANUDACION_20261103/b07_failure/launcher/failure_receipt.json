@@ -1,0 +1,16 @@
+{
+  "changed_pins": [],
+  "closing_pin_differences": [],
+  "exit_code": 1,
+  "metadata_error": null,
+  "partial_output_not_authorized_for_adoption": true,
+  "resource_wait_invalid_evidence": [],
+  "resource_wait_pins": {
+    "audit_child": null,
+    "launcher": null
+  },
+  "retry": false,
+  "status": "VALUE_CHILD_OR_CLOSURE_FAILED",
+  "utc": "2026-11-03T08:58:38.459921+00:00",
+  "value_child_exit_code": 1
+}
