@@ -1,5 +1,19 @@
 # AI Agent Hand-off: Current Production Reality
 
+Checkpoint3-nov09:11UTC: B08 ACTIVO, NO RELANZAR. Rootsession68406,
+childPID15392/parent58724, creaciónCIM09:10:54.611174UTC. Publicado4d73ce7f
+19filesexactos; launcher785315ef/58511B,binding790001a5/3219B,auditorc30e.
+80repo/69external pins exactos; CLI TESTS R4f919, suiteidentidad24b9 separada.
+Cincofocales5PASS0.47s/compile0/Ruff0,root0bb1a7exit0,pytest55668retenido;
+15pins/snapshots exactos,archivo28copias394775B/c9124f5f/c33be861,reviewSHIP.
+20R4/136R3heredadossinrerun. RootCIM/stat09:11:16 confirma vivo,stderr0,
+exit ausente,journal80398Bcreciendo. NOcontenidoobserver/leído ni countsetapas.
+IMPORTANTE: mientrasvivo sólohandle/CIM/stat; NOabrirlogs/journals/observer.
+Despuéscierreterminal leerevidencia completa. Fallo07 causado porFile.ReadLines
+delmonitorroot, archivado,noadoptable;06tambiéncerrado. No nuevosagentes/D/suites.
+Esperarmisma68406/PID15392. DespuésBfullcierre/admisión,C/auditorC/D A-B-C.
+Goalactivo,sinPnLnuevo/modelo/promoción. Ver WEEKLY_ZONE_EVENT_VALUE_PATH_B08_START_20261103.md.
+
 Checkpoint3-nov09:02UTC: B07 FALLIDO/CERRADO, NO RELANZAR. Root33599exit1
 retenido93abd2; PID50544creation1793695999.8273456 exit1793696318.0144825.
 metadataerrornull/changedpins[]/retryfalse/output07ausente.2784footers+157SELECT.
